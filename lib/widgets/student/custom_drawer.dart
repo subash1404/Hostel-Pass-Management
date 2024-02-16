@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hostel_pass_management/pages/common/login_page.dart';
+import 'package:hostel_pass_management/pages/common/profile_page.dart';
 import 'package:hostel_pass_management/pages/student/announcements_page.dart';
 import 'package:hostel_pass_management/pages/student/homepage.dart';
 import 'package:hostel_pass_management/pages/student/rules_page.dart';
@@ -40,7 +42,14 @@ class CustomDrawer extends StatelessWidget {
             title: Text("Home"),
           ),
           ListTile(
-            onTap: () {},
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfilePage(),
+                ),
+              );
+            },
             leading: Icon(Icons.person),
             title: Text("Profile"),
           ),
@@ -75,7 +84,14 @@ class CustomDrawer extends StatelessWidget {
             leading: Icon(Icons.developer_mode),
           ),
           ListTile(
-            onTap: () {},
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => LoginPage(),
+                ),
+              );
+            },
             title: Text("Logout"),
             leading: Icon(Icons.logout_rounded),
           )

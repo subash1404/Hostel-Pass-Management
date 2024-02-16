@@ -28,7 +28,7 @@ class Homepage extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const NewPassPage(),
+                  builder: (context) => NewPassPage(),
                 ),
               );
             },
