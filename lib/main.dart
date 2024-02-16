@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hostel_pass_management/pages/common/splash_page.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 final theme = ThemeData(
   colorScheme: ColorScheme.fromSeed(
