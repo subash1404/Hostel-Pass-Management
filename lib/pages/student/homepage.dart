@@ -34,17 +34,23 @@ class Homepage extends StatelessWidget {
             },
             borderRadius: BorderRadius.circular(20),
             child: Ink(
-              width: 60,
+              width: 130,
               height: 60,
               decoration: BoxDecoration(
                 color: colorScheme.primaryContainer,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Center(
-                child: Icon(
-                  Icons.add,
-                  size: 25,
-                  color: colorScheme.onPrimaryContainer,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.add,
+                      size: 25,
+                      color: colorScheme.onPrimaryContainer,
+                    ),
+                    Text("New Pass")
+                  ],
                 ),
               ),
             ),
