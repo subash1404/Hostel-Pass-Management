@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:hostel_pass_management/pages/login.dart';
-import 'package:hostel_pass_management/pages/newpass.dart';
-import 'package:hostel_pass_management/pages/profile.dart';
-import 'package:hostel_pass_management/pages/splash.dart';
+import 'package:hostel_pass_management/pages/common/splash_page.dart';
 
 final theme = ThemeData(
   colorScheme: ColorScheme.fromSeed(
@@ -22,8 +18,12 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: theme,
-      home: ProfilePage(),
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home: SplashPage(),
     );
   }
 }
