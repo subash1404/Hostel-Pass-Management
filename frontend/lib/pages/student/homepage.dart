@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hostel_pass_management/pages/student/new_pass_page.dart';
+import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:hostel_pass_management/widgets/student/active_passes.dart';
 import 'package:hostel_pass_management/widgets/student/custom_drawer.dart';
 import 'package:hostel_pass_management/widgets/student/pass_log.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Homepage extends StatelessWidget {
   const Homepage({super.key});
@@ -10,7 +12,7 @@ class Homepage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
-
+    SharedPreferences? prefs = SharedPreferencesManager.preferences;
     return Scaffold(
       appBar: AppBar(
         title: const Text('SVCE Hostel'),

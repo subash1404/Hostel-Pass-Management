@@ -10,7 +10,6 @@ const { v4: uuidv4 } = require("uuid");
 const { aesEncrypt, aesDecrypt } = require("../utils/aes");
 
 router.post("/newPass", async (req, res) => {
-  console.log(process.env.AES_KEY);
   try {
     const {
       studentId,

@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 
 class NewPassPage extends StatefulWidget {
   const NewPassPage({Key? key}) : super(key: key);
@@ -213,26 +217,72 @@ class _NewPassPageState extends State<NewPassPage> {
     return '$hour:$minute $period';
   }
 
-  void _submitForm() {
+  Future<void> _submitForm() async {
     if (_formKey.currentState?.validate() ?? false) {
       if (passType == null) {
-        _showSnackBar("Please Select the Pass type");
-      } else if (_reasonController.text.isEmpty) {
-        _showSnackBar("Please enter the reason");
-      } else if (inDate != null &&
-          inTime != null &&
-          outDate != null &&
-          outTime != null) {
-        print("Destination: ${_destinationController.text}");
-        print("Reason: ${_reasonController.text}");
-        print("In Date: ${_formatDate(inDate!)}");
-        print("In Time: ${_formatTime(inTime!)}");
-        print("Out Date: ${_formatDate(outDate!)}");
-        print("Out Time: ${_formatTime(outTime!)}");
-        print(passType);
-      } else {
-        _showSnackBar("Please select all date and time fields.");
+        return _showSnackBar("Please Select the Pass type");
       }
+
+      if (inDate == null ||
+          inTime == null ||
+          outDate == null ||
+          outTime == null) {
+        return _showSnackBar("Please select all date and time fields.");
+      }
+
+      if (_reasonController.text.isEmpty) {
+        return _showSnackBar("Please enter the reason");
+      }
+
+      try {
+        var response = await http.post(
+          Uri.parse("${dotenv.env["BACKEND_BASE_API"]}/pass/newPass"),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(
+            {
+              "studentId": "sljdfvn",
+              "destination": _destinationController.text,
+              "type": passType,
+              "reason": _reasonController.text,
+              "inDate": _formatDate(inDate!),
+              "inTime": _formatTime(inTime!),
+              "outDate": _formatDate(outDate!),
+              "outTime": _formatTime(outTime!),
+            },
+          ),
+        );
+
+        var responseData = jsonDecode(response.body);
+
+        if (response.statusCode > 399) {
+          throw responseData["message"];
+        }
+
+        if (!mounted) {
+          return;
+        }
+      } catch (error) {
+        if (!mounted) {
+          return;
+        }
+
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              error.toString(),
+            ),
+          ),
+        );
+      }
+
+      debugPrint("Destination: ${_destinationController.text}");
+      debugPrint("Reason: ${_reasonController.text}");
+      debugPrint("In Date: ${_formatDate(inDate!)}");
+      debugPrint("In Time: ${_formatTime(inTime!)}");
+      debugPrint("Out Date: ${_formatDate(outDate!)}");
+      debugPrint("Out Time: ${_formatTime(outTime!)}");
+      debugPrint(passType);
     }
   }
 
