@@ -45,7 +45,7 @@ const transporter = nodemailer.createTransport({
 //       studentId: "2021it0668",
 //       year: 3,
 //     }).save();
-    
+
 //     res.send();
 //   } catch (e) {
 //     res.status(500).send();
@@ -94,6 +94,90 @@ router.post("/login", async (req, res) => {
   });
 });
 
+router.get("/dummyOtp", async (req, res) => {
+  const otp = "988643";
+  try {
+    const mailOptions = {
+      from: "SVCE HOSTEL MANAGEMENT SYSTEM",
+      to: "naveen.akash0904@gmail.com",
+      subject: "Hostel Password Reset OTP",
+      html: `
+        <html>
+          <head>
+          <style>
+          body {
+            font-family: 'Arial', sans-serif;
+            background-color: #fffbff;
+            margin: 0;
+            padding: 0;
+          }
+
+          .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fffbff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          }
+
+          .header {
+            background-color: #e4d5fb;
+            color: #6f43c0;
+            text-align: center;
+            padding: 20px;
+          }
+
+          .content {
+            padding: 30px;
+            text-align: center;
+          }
+
+          .content h2 {
+            color: #6f43c0;
+          }
+
+          .otp {
+            font-size: 24px;
+            font-weight: bold;
+            color: #6f43c0;
+            margin-top: 20px;
+          }
+
+          .footer {
+            background-color: #eeeeee;
+            padding: 10px;
+            text-align: center;
+            font-size: 12px;
+          }
+        </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <h1>SVCE Hostel Management System</h1>
+              </div>
+              <div class="content">
+                <h2>Hi Nanthanavalli</h2>
+                <p>You have requested to reset your password. Use the following OTP:</p>
+                <div class="otp">${otp}</div>
+              </div>
+              <div class="footer">
+                <p>If you did not request a password reset, please ignore this email.</p>
+              </div>
+            </div>
+          </body>
+        </html>
+      `,
+    };
+    await transporter.sendMail(mailOptions);
+    res.send("Dummy email sent successfully!");
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal server error");
+  }
+});
+
 router.post("/forgotPassword", async (req, res) => {
   try {
     const { email } = req.body;
@@ -118,7 +202,73 @@ router.post("/forgotPassword", async (req, res) => {
       from: process.env.EMAIL,
       to: user.email,
       subject: "Password Reset OTP",
-      html: `<h1 style={color: blue;}>Your OTP for password reset is: ${otp}</h1>`,
+      html: `
+      <html>
+      <head>
+        <style>
+          body {
+            font-family: 'Arial', sans-serif;
+            background-color: #fffbff;
+            margin: 0;
+            padding: 0;
+          }
+
+          .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fffbff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          }
+
+          .header {
+            background-color: #e4d5fb;
+            color: #6f43c0;
+            text-align: center;
+            padding: 20px;
+          }
+
+          .content {
+            padding: 30px;
+            text-align: center;
+          }
+
+          .content h2 {
+            color: #6f43c0;
+          }
+
+          .otp {
+            font-size: 24px;
+            font-weight: bold;
+            color: #6f43c0;
+            margin-top: 20px;
+          }
+
+          .footer {
+            background-color: #eeeeee;
+            padding: 10px;
+            text-align: center;
+            font-size: 12px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>SVCE Hostel Management System</h1>
+          </div>
+          <div class="content">
+            <h2>Hi ${user.username}</h2>
+            <p>You have requested to reset your password. Use the following OTP:</p>
+            <div class="otp">${otp}</div>
+          </div>
+          <div class="footer">
+            <p>If you did not request a password reset, please ignore this email.</p>
+          </div>
+        </div>
+      </body>
+    </html>`,
     };
 
     await transporter.sendMail(mailOptions);
