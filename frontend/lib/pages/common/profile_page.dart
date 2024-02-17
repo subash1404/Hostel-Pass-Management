@@ -4,18 +4,13 @@ import 'package:hostel_pass_management/widgets/common/profile_item.dart';
 import 'package:hostel_pass_management/widgets/student/custom_drawer.dart';
 
 class ProfilePage extends StatelessWidget {
-  ProfilePage({super.key});
-  String? username;
-  String? email;
-  String? userId;
-  String? phno;
-  String? city;
-  String? college;
-  String? branch;
+  const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // ignore: unused_local_variable
     TextTheme textTheme = Theme.of(context).textTheme;
+    // ignore: unused_local_variable
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     TextStyle customFont = GoogleFonts.lato();
 

@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:hostel_pass_management/models/pass_model.dart';
 import 'package:hostel_pass_management/widgets/student/pass_item.dart';
 
 class ActivePasses extends StatelessWidget {
-  const ActivePasses({super.key});
+  const ActivePasses({
+    super.key,
+    required this.pass,
+  });
+  final Pass? pass;
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +18,7 @@ class ActivePasses extends StatelessWidget {
       margin: const EdgeInsets.all(15),
       // padding: EdgeInsets.all(20),
       width: double.infinity,
-      height: 175,
+      // height: 175,
       decoration: BoxDecoration(
         color: colorScheme.background,
         borderRadius: BorderRadius.circular(20),
@@ -37,20 +42,25 @@ class ActivePasses extends StatelessWidget {
             ),
           ),
           const Divider(height: 0),
-          Expanded(
-            child: Column(
-              // mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+          Column(
+            children: [
+              if (pass != null)
                 PassItem(
-                  dateTime: "12 / 04 / 2024  5:30pm",
-                  type: "Gatepass",
-                  status: "Approved",
+                  inTime: pass!.inTime,
+                  outTime: pass!.outTime,
+                  inDate: pass!.inDate,
+                  outDate: pass!.outDate,
+                  type: pass!.type,
+                  status: pass!.status,
+                )
+              else
+                const Padding(
+                  padding: EdgeInsets.all(20.0),
+                  child: Center(
+                    child: Text("No Currently Active Passes"),
+                  ),
                 ),
-                // Center(
-                //   child: Text("No Currently Active Passes"),
-                // ),
-              ],
-            ),
+            ],
           )
         ],
       ),

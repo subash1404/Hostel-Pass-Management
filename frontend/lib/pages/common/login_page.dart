@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:hostel_pass_management/pages/common/forget_password.dart';
-import 'package:hostel_pass_management/pages/student/homepage.dart';
+import 'package:hostel_pass_management/pages/student/student_page.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:hostel_pass_management/utils/validators.dart';
 import 'package:http/http.dart' as http;
@@ -37,13 +37,31 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
       var responseData = jsonDecode(response.body);
-      await prefs?.setString("email", responseData["email"]);
       if (response.statusCode > 399) {
         throw responseData["message"];
       }
+
+      await prefs?.setString('jwtToken', responseData['jwtToken']);
+      await prefs?.setString('uid', responseData['uid']);
+      await prefs?.setString('studentId', responseData['studentId']);
+      await prefs?.setString('email', responseData['email']);
+      await prefs?.setString('name', responseData['name']);
+      await prefs?.setString('role', responseData['role']);
+      await prefs?.setString('phno', responseData['phno']);
+      await prefs?.setInt('block', responseData['block']);
+      await prefs?.setString('dept', responseData['dept']);
+      await prefs?.setString('fatherName', responseData['fatherName']);
+      await prefs?.setString('motherName', responseData['motherName']);
+      await prefs?.setString('fatherphno', responseData['fatherphno']);
+      await prefs?.setString('motherphno', responseData['motherphno']);
+      await prefs?.setString('regNo', responseData['regNo']);
+      await prefs?.setInt('year', responseData['year']);
+      await prefs?.setString('section', responseData['section']);
+      await prefs?.setInt('roomNo', responseData['roomNo']);
+
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => Homepage(),
+          builder: (context) => StudentPage(),
         ),
       );
     } catch (err) {
@@ -134,6 +152,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: unused_local_variable
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
 
@@ -231,7 +250,7 @@ class _LoginPageState extends State<LoginPage> {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const Homepage(),
+                              builder: (context) => const StudentPage(),
                             ),
                           );
                         },

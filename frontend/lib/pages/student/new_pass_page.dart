@@ -2,17 +2,22 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hostel_pass_management/models/pass_model.dart';
+import 'package:hostel_pass_management/providers/pass_provider.dart';
+import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
-class NewPassPage extends StatefulWidget {
+class NewPassPage extends ConsumerStatefulWidget {
   const NewPassPage({Key? key}) : super(key: key);
 
   @override
   _NewPassPageState createState() => _NewPassPageState();
 }
 
-class _NewPassPageState extends State<NewPassPage> {
+class _NewPassPageState extends ConsumerState<NewPassPage> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _destinationController = TextEditingController();
   TextEditingController _reasonController = TextEditingController();
@@ -21,76 +26,101 @@ class _NewPassPageState extends State<NewPassPage> {
   DateTime? outDate;
   TimeOfDay? outTime;
   String? passType;
+  SharedPreferences? prefs = SharedPreferencesManager.preferences;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("New Pass"),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextFormField(
-                  controller: _destinationController,
-                  maxLength: 20,
-                  decoration: const InputDecoration(
-                    labelText: "Destination",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
+    return Hero(
+      tag: "newpass",
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("New Pass"),
+          centerTitle: true,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(20),
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextFormField(
+                    controller: _destinationController,
+                    maxLength: 20,
+                    decoration: const InputDecoration(
+                      labelText: "Destination",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                      ),
                     ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter the destination';
+                      }
+                      return null;
+                    },
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter the destination';
-                    }
-                    return null;
-                  },
-                ),
-                const Text(
-                  "Select Pass Type",
-                ),
-                Row(
-                  children: [
-                    _buildRadio("GatePass"),
-                    _buildRadio("StayPass"),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Text("Leaving Date and Time"),
-                const SizedBox(height: 8),
-                _buildDateTimePicker("In", inDate, inTime),
-                const SizedBox(height: 20),
-                Text("Returning Date and Time"),
-                const SizedBox(height: 8),
-                _buildDateTimePicker("Out", outDate, outTime),
-                const SizedBox(height: 20),
-                Text("Reason"),
-                const SizedBox(height: 8),
-                TextField(
-                  controller: _reasonController,
-                  decoration: const InputDecoration(
-                    hintText: 'Enter your Reason here...',
-                    border: OutlineInputBorder(),
+                  const Text(
+                    "Select Pass Type",
                   ),
-                  keyboardType: TextInputType.text,
-                  maxLines: null,
-                  onChanged: (text) {},
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    _submitForm();
-                  },
-                  child: const Text('Submit'),
-                ),
-              ],
+                  Row(
+                    children: [
+                      _buildRadio("GatePass"),
+                      _buildRadio("StayPass"),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Text("Leaving Date and Time"),
+                  const SizedBox(height: 8),
+                  _buildDateTimePicker("In", inDate, inTime),
+                  const SizedBox(height: 20),
+                  Text("Returning Date and Time"),
+                  const SizedBox(height: 8),
+                  _buildDateTimePicker("Out", outDate, outTime),
+                  const SizedBox(height: 20),
+                  Text("Reason"),
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: _reasonController,
+                    decoration: const InputDecoration(
+                      hintText: 'Enter your Reason here...',
+                      border: OutlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.text,
+                    maxLines: null,
+                    onChanged: (text) {},
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      _submitForm();
+                    },
+                    child: const Text('Submit'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      ref.read(passProvider.notifier).addPass(
+                            Pass(
+                              passId: "passId",
+                              studentId: "studentId",
+                              qrId: "qrId",
+                              status: "Pending",
+                              destination: "destination",
+                              type: "Gatepass",
+                              isActive: true,
+                              reason: "reason",
+                              inDate: "43-45-2498",
+                              inTime: "12:43 PM",
+                              outDate: "34-65-9876",
+                              outTime: "23:65 AM",
+                            ),
+                          );
+                    },
+                    child: Text("Add Dummy Pass"),
+                  )
+                ],
+              ),
             ),
           ),
         ),
@@ -207,7 +237,7 @@ class _NewPassPageState extends State<NewPassPage> {
   }
 
   String _formatDate(DateTime date) {
-    return DateFormat('yyyy-MM-dd').format(date);
+    return DateFormat('dd-MM-yyyy').format(date);
   }
 
   String _formatTime(TimeOfDay time) {
@@ -240,7 +270,7 @@ class _NewPassPageState extends State<NewPassPage> {
           headers: {"Content-Type": "application/json"},
           body: jsonEncode(
             {
-              "studentId": "sljdfvn",
+              "studentId": prefs!.getString("studentId"),
               "destination": _destinationController.text,
               "type": passType,
               "reason": _reasonController.text,
@@ -261,6 +291,22 @@ class _NewPassPageState extends State<NewPassPage> {
         if (!mounted) {
           return;
         }
+        ref.read(passProvider.notifier).addPass(
+              Pass(
+                passId: responseData["passId"],
+                studentId: prefs!.getString("studentId")!,
+                qrId: responseData["encQrId"],
+                status: responseData["status"],
+                destination: responseData["destination"],
+                type: responseData["type"],
+                isActive: responseData["isActive"],
+                reason: responseData["reason"],
+                inDate: responseData["inDate"],
+                inTime: responseData["inTime"],
+                outDate: responseData["outDate"],
+                outTime: responseData["outTime"],
+              ),
+            );
       } catch (error) {
         if (!mounted) {
           return;

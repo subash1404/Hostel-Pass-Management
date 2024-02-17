@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hostel_pass_management/pages/common/login_page.dart';
 import 'package:hostel_pass_management/pages/common/profile_page.dart';
 import 'package:hostel_pass_management/pages/student/announcements_page.dart';
-import 'package:hostel_pass_management/pages/student/homepage.dart';
+import 'package:hostel_pass_management/pages/student/student_page.dart';
 import 'package:hostel_pass_management/pages/student/rules_page.dart';
 
 class CustomDrawer extends StatelessWidget {
@@ -34,7 +34,7 @@ class CustomDrawer extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Homepage(),
+                  builder: (context) => StudentPage(),
                 ),
               );
             },

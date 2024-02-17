@@ -3,7 +3,7 @@ const schema = mongoose.Schema;
 
 const StudentSchema = new schema(
   {
-    studentid: {
+    studentId: {
       type: String,
       required: true,
     },
@@ -23,7 +23,7 @@ const StudentSchema = new schema(
       type: String,
       required: true,
     },
-    phno: {
+    phNo: {
       type: String,
       required: true,
     },
@@ -35,11 +35,11 @@ const StudentSchema = new schema(
       type: String,
       required: true,
     },
-    fatherphno: {
+    fatherPhNo: {
       type: String,
       required: true,
     },
-    motherphno: {
+    motherPhNo: {
       type: String,
       required: true,
     },
@@ -48,7 +48,7 @@ const StudentSchema = new schema(
       required: true,
     },
     year: {
-      type: String,
+      type: Number,
       required: true,
     },
     section: {

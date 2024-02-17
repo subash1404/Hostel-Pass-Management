@@ -5,23 +5,23 @@ const UserSchema = new schema(
   {
     uid: {
       type: String,
-      // required: true,
+      required: true,
     },
     username: {
       type: String,
-      // required: true,
+      required: true,
     },
     email: {
       type: String,
-      // required: true,
+      required: true,
     },
     password: {
       type: String,
-      // required: true,
+      required: true,
     },
     role: {
       type: String,
-      // required: true,
+      required: true,
       enum: ["Student", "RT", "Warden", "Security"],
     },
     otpSecret: {

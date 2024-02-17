@@ -17,6 +17,7 @@ class RulesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
+    // ignore: unused_local_variable
     ColorScheme colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(

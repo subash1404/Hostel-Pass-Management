@@ -45,6 +45,8 @@ router.post("/newPass", async (req, res) => {
     res.json({
       passId: pass.passId,
       encQrId: aesEncrypt(pass.qrId, process.env.AES_KEY),
+      destination: pass.destination,
+      reason: pass.reason,
       isActive: pass.isActive,
       inTime: pass.expectedEntryTime,
       inDate: pass.expectedEntryDate,

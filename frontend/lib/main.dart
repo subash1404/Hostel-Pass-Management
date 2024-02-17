@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hostel_pass_management/pages/common/splash_page.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final theme = ThemeData(
   colorScheme: ColorScheme.fromSeed(
@@ -13,9 +14,11 @@ final theme = ThemeData(
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await SharedPreferences.getInstance();
+  await SharedPreferencesManager.init();
   await dotenv.load();
-  runApp(const App());
+  runApp(
+    const ProviderScope(child: App()),
+  );
 }
 
 class App extends StatelessWidget {
