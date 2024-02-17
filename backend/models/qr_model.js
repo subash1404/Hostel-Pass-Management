@@ -1,32 +1,28 @@
 const mongoose = require("mongoose");
 const schema = mongoose.Schema;
 
-const UserSchema = new schema(
+const QrSchema = new schema(
   {
-    uid: {
+    qrId: {
       type: String,
       required: true,
     },
-    username: {
+    passId: {
       type: String,
       required: true,
     },
-    email: {
+    studentId: {
       type: String,
       required: true,
     },
-    password: {
+    exitScanAt: {
       type: String,
-      required: true,
     },
-    role: {
+    entryScanAt: {
       type: String,
-      required: true,
-      enum: ["Student", "RT", "Warden", "Security"],
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("users", UserSchema);
-
+module.exports = mongoose.model("qrs", QrSchema);

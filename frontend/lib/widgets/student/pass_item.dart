@@ -149,7 +149,7 @@ class _BottomSheetState extends State<BottomSheet> {
                   ),
                   child: QrImageView(
                     data:
-                        "sqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiopsqwertyuiop",
+                        "ba0330c57c3e5d36301fb438067149a155e5ae16aba10c270ee1536d00b9bbf8234186567ec6cbaeb727fd1403a05e37",
                   ),
                 ),
                 const SizedBox(height: 25),

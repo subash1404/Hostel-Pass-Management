@@ -1,32 +1,39 @@
 const mongoose = require("mongoose");
 const schema = mongoose.Schema;
+const { v4: uuidv4 } = require("uuid");
 
-const UserSchema = new schema(
+const RtSchema = new schema(
   {
+    rtId: {
+      type: String,
+      required: true,
+      default: "rt_" + uuidv4(),
+    },
     uid: {
       type: String,
       required: true,
     },
-    username: {
+    name: {
+      type: String,
+      required: true,
+    },
+    photoPath: {
       type: String,
       required: true,
     },
     email: {
       type: String,
+    },
+    block: {
+      type: Number,
       required: true,
     },
-    password: {
+    phno: {
       type: String,
       required: true,
-    },
-    role: {
-      type: String,
-      required: true,
-      enum: ["Student", "RT", "Warden", "Security"],
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("users", UserSchema);
-
+module.exports = mongoose.model("rts", RtSchema);
