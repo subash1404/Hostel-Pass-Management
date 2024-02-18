@@ -4,12 +4,16 @@ import 'package:hostel_pass_management/pages/common/profile_page.dart';
 import 'package:hostel_pass_management/pages/student/announcements_page.dart';
 import 'package:hostel_pass_management/pages/student/student_page.dart';
 import 'package:hostel_pass_management/pages/student/rules_page.dart';
+import 'package:hostel_pass_management/utils/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
+    SharedPreferences? prefs = SharedPreferencesManager.preferences;
+
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
 
@@ -84,7 +88,8 @@ class CustomDrawer extends StatelessWidget {
             leading: Icon(Icons.developer_mode),
           ),
           ListTile(
-            onTap: () {
+            onTap: () async {
+              await prefs!.clear();
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(

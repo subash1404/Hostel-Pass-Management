@@ -39,32 +39,32 @@ const PassSchema = new schema(
     scannedBy: {
       type: String,
     },
-    expectedExitTime: {
+    expectedOutTime: {
       type: String,
       required: true,
     },
-    actualExitTime: {
+    actualOutTime: {
       type: String,
     },
-    expectedEntryTime: {
-      type: String,
-      required: true,
-    },
-    actualEntryTime: {
-      type: String,
-    },
-    expectedExitDate: {
+    expectedInTime: {
       type: String,
       required: true,
     },
-    actualExitDate: {
+    actualInTime: {
       type: String,
     },
-    expectedEntryDate: {
+    expectedOutDate: {
       type: String,
       required: true,
     },
-    actualEntryDate: {
+    actualOutDate: {
+      type: String,
+    },
+    expectedInDate: {
+      type: String,
+      required: true,
+    },
+    actualInDate: {
       type: String,
     },
     isEntryLate: {

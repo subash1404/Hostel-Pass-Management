@@ -1,27 +1,51 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/pages/common/login_page.dart';
+import 'package:hostel_pass_management/pages/student/student_page.dart';
+import 'package:hostel_pass_management/providers/pass_provider.dart';
+import 'package:hostel_pass_management/utils/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class SplashPage extends StatefulWidget {
+class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});
   @override
-  State<SplashPage> createState() {
+  ConsumerState<SplashPage> createState() {
     return _SplashPageState();
   }
 }
 
-class _SplashPageState extends State<SplashPage> {
-  @override
-  void initState() {
-    super.initState();
-    Timer(Duration(seconds: 3), () {
+class _SplashPageState extends ConsumerState<SplashPage> {
+  SharedPreferences? prefs = SharedPreferencesManager.preferences;
+
+  void tokenCheck() async {
+    ref.read(passProvider.notifier).loadPassFromDB();
+
+    if (prefs!.getString("jwtToken") == null) {
+      Future.delayed(const Duration(seconds: 3), () {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => LoginPage(),
+          ),
+        );
+      });
+      return;
+    }
+
+    Future.delayed(const Duration(seconds: 3), () {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => LoginPage(),
+          builder: (context) => StudentPage(),
         ),
       );
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    tokenCheck();
   }
 
   @override

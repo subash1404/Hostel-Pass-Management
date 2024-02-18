@@ -267,7 +267,10 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
       try {
         var response = await http.post(
           Uri.parse("${dotenv.env["BACKEND_BASE_API"]}/pass/newPass"),
-          headers: {"Content-Type": "application/json"},
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": prefs!.getString("jwtToken")!,
+          },
           body: jsonEncode(
             {
               "studentId": prefs!.getString("studentId"),

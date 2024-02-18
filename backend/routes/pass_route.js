@@ -9,6 +9,17 @@ const Student = require("../models/student_model");
 const { v4: uuidv4 } = require("uuid");
 const { aesEncrypt, aesDecrypt } = require("../utils/aes");
 
+router.get("/getPass", async (req, res) => {
+  try {
+    const passes = await Pass.find({ studentId: req.body.USER_studentId });
+    console.log(req.body.USER_studentId);
+    console.log(passes);
+    res.json({ data: passes });
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 router.post("/newPass", async (req, res) => {
   try {
     const {
@@ -32,10 +43,10 @@ router.post("/newPass", async (req, res) => {
       destination,
       type,
       reason,
-      expectedEntryTime: inTime,
-      expectedEntryDate: inDate,
-      expectedExitTime: outTime,
-      expectedExitDate: outDate,
+      expectedInTime: inTime,
+      expectedInDate: inDate,
+      expectedOutTime: outTime,
+      expectedOutDate: outDate,
       studentId,
       isActive: true,
       qrId,
@@ -48,10 +59,10 @@ router.post("/newPass", async (req, res) => {
       destination: pass.destination,
       reason: pass.reason,
       isActive: pass.isActive,
-      inTime: pass.expectedEntryTime,
-      inDate: pass.expectedEntryDate,
-      outTime: pass.expectedExitTime,
-      outDate: pass.expectedExitDate,
+      inTime: pass.expectedInTime,
+      inDate: pass.expectedInDate,
+      outTime: pass.expectedOutTime,
+      outDate: pass.expectedOutDate,
       status: pass.status,
       type: pass.type,
     });
@@ -60,5 +71,7 @@ router.post("/newPass", async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
+router.delete("/deletePass", async (req, res) => {});
 
 module.exports = router;

@@ -9,6 +9,7 @@ const bcrypt = require("bcrypt");
 const cors = require("cors");
 const helmet = require("helmet");
 require("dotenv").config();
+const checkAuth = require("./middleware/checkAuth");
 
 app.use(helmet());
 app.use(cors());
@@ -32,4 +33,4 @@ mongoose
   });
 
 app.use("/user", userRoute);
-app.use("/pass", passRoute);
+app.use("/pass", checkAuth, passRoute);

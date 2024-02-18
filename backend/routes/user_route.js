@@ -68,7 +68,25 @@ router.post("/login", async (req, res) => {
   }
 
   const jwtToken = jwt.sign(
-    { id: user._id, email: user.email },
+    {
+      uid: user.uid,
+      studentId: student.studentId,
+      email: user.email,
+      username: user.username,
+      role: user.role,
+      phNo: student.phNo,
+      block: student.block,
+      dept: student.dept,
+      fatherName: student.fatherName,
+      motherName: student.motherName,
+      fatherPhNo: student.fatherPhNo,
+      motherPhNo: student.motherPhNo,
+      regNo: student.regNo,
+      year: student.year,
+      section: student.section,
+      roomNo: student.roomNo,
+      photoPath: student.photoPath,
+    },
     process.env.JWT_KEY
   );
 
@@ -79,13 +97,13 @@ router.post("/login", async (req, res) => {
     email: user.email,
     name: user.username,
     role: user.role,
-    phno: student.phNo,
+    phNo: student.phNo,
     block: student.block,
     dept: student.dept,
     fatherName: student.fatherName,
     motherName: student.motherName,
-    fatherphno: student.fatherPhNo,
-    motherphno: student.motherPhNo,
+    fatherPhNo: student.fatherPhNo,
+    motherPhNo: student.motherPhNo,
     regNo: student.regNo,
     year: student.year,
     section: student.section,

@@ -1,21 +1,23 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/pages/common/forget_password.dart';
 import 'package:hostel_pass_management/pages/student/student_page.dart';
+import 'package:hostel_pass_management/providers/pass_provider.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:hostel_pass_management/utils/validators.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends ConsumerStatefulWidget {
   LoginPage({Key? key}) : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends ConsumerState<LoginPage> {
   final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
@@ -47,17 +49,19 @@ class _LoginPageState extends State<LoginPage> {
       await prefs?.setString('email', responseData['email']);
       await prefs?.setString('name', responseData['name']);
       await prefs?.setString('role', responseData['role']);
-      await prefs?.setString('phno', responseData['phno']);
+      await prefs?.setString('phNo', responseData['phNo']);
       await prefs?.setInt('block', responseData['block']);
       await prefs?.setString('dept', responseData['dept']);
       await prefs?.setString('fatherName', responseData['fatherName']);
       await prefs?.setString('motherName', responseData['motherName']);
-      await prefs?.setString('fatherphno', responseData['fatherphno']);
-      await prefs?.setString('motherphno', responseData['motherphno']);
+      await prefs?.setString('fatherPhNo', responseData['fatherPhNo']);
+      await prefs?.setString('motherPhNo', responseData['motherPhNo']);
       await prefs?.setString('regNo', responseData['regNo']);
       await prefs?.setInt('year', responseData['year']);
       await prefs?.setString('section', responseData['section']);
       await prefs?.setInt('roomNo', responseData['roomNo']);
+
+      await ref.read(passProvider.notifier).loadPassFromDB();
 
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
@@ -68,6 +72,7 @@ class _LoginPageState extends State<LoginPage> {
       if (!mounted) {
         return;
       }
+      print(err);
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

@@ -25,8 +25,6 @@ class _StudentPageState extends ConsumerState<StudentPage> {
     final List<Pass> passes = ref.watch(passProvider);
     final activePass = ref.read(passProvider.notifier).getActivePass();
 
-    print(prefs?.getString("email"));
-
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
