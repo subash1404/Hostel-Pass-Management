@@ -20,7 +20,16 @@ class _SplashPageState extends ConsumerState<SplashPage> {
   SharedPreferences? prefs = SharedPreferencesManager.preferences;
 
   void tokenCheck() async {
-    ref.read(passProvider.notifier).loadPassFromDB();
+    try {
+      await ref.read(passProvider.notifier).loadPassFromDB();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+        ),
+      );
+      return;
+    }
 
     if (prefs!.getString("jwtToken") == null) {
       Future.delayed(const Duration(seconds: 3), () {

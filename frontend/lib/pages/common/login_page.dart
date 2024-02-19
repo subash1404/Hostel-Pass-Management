@@ -11,13 +11,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
-  LoginPage({Key? key}) : super(key: key);
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  LoginPageState createState() => LoginPageState();
 }
 
-class _LoginPageState extends ConsumerState<LoginPage> {
+class LoginPageState extends ConsumerState<LoginPage> {
   final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
@@ -65,14 +65,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => StudentPage(),
+          builder: (context) => const StudentPage(),
         ),
       );
     } catch (err) {
       if (!mounted) {
         return;
       }
-      print(err);
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

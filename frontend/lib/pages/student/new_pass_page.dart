@@ -100,22 +100,22 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                   ),
                   TextButton(
                     onPressed: () {
-                      ref.read(passProvider.notifier).addPass(
-                            Pass(
-                              passId: "passId",
-                              studentId: "studentId",
-                              qrId: "qrId",
-                              status: "Pending",
-                              destination: "destination",
-                              type: "Gatepass",
-                              isActive: true,
-                              reason: "reason",
-                              inDate: "43-45-2498",
-                              inTime: "12:43 PM",
-                              outDate: "34-65-9876",
-                              outTime: "23:65 AM",
-                            ),
-                          );
+                      // ref.read(passProvider.notifier).addPass(
+                      //       Pass(
+                      //         passId: "passId",
+                      //         studentId: "studentId",
+                      //         qrId: "qrId",
+                      //         status: "Pending",
+                      //         destination: "destination",
+                      //         type: "Gatepass",
+                      //         isActive: true,
+                      //         reason: "reason",
+                      //         inDate: "43-45-2498",
+                      //         inTime: "12:43 PM",
+                      //         outDate: "34-65-9876",
+                      //         outTime: "23:65 AM",
+                      //       ),
+                      //     );
                     },
                     child: Text("Add Dummy Pass"),
                   )
@@ -135,12 +135,14 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
           value: value,
           groupValue: passType,
           onChanged: (selectedValue) {
-            setState(() {
-              passType = selectedValue;
-              if (passType == "GatePass") {
-                outDate = inDate;
-              }
-            });
+            if (selectedValue != null) {
+              setState(() {
+                passType = selectedValue;
+                if (passType == "GatePass") {
+                  outDate = inDate;
+                }
+              });
+            }
           },
         ),
         Text(value),
@@ -265,57 +267,29 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
       }
 
       try {
-        var response = await http.post(
-          Uri.parse("${dotenv.env["BACKEND_BASE_API"]}/pass/newPass"),
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": prefs!.getString("jwtToken")!,
-          },
-          body: jsonEncode(
-            {
-              "studentId": prefs!.getString("studentId"),
-              "destination": _destinationController.text,
-              "type": passType,
-              "reason": _reasonController.text,
-              "inDate": _formatDate(inDate!),
-              "inTime": _formatTime(inTime!),
-              "outDate": _formatDate(outDate!),
-              "outTime": _formatTime(outTime!),
-            },
-          ),
-        );
-
-        var responseData = jsonDecode(response.body);
-
-        if (response.statusCode > 399) {
-          throw responseData["message"];
-        }
-
+        await ref.read(passProvider.notifier).addPass(
+              destination: _destinationController.text,
+              inDate: _formatDate(inDate!),
+              inTime: _formatTime(inTime!),
+              outDate: _formatDate(outDate!),
+              outTime: _formatTime(outTime!),
+              reason: _reasonController.text,
+              type: passType!,
+            );
         if (!mounted) {
           return;
         }
-        ref.read(passProvider.notifier).addPass(
-              Pass(
-                passId: responseData["passId"],
-                studentId: prefs!.getString("studentId")!,
-                qrId: responseData["encQrId"],
-                status: responseData["status"],
-                destination: responseData["destination"],
-                type: responseData["type"],
-                isActive: responseData["isActive"],
-                reason: responseData["reason"],
-                inDate: responseData["inDate"],
-                inTime: responseData["inTime"],
-                outDate: responseData["outDate"],
-                outTime: responseData["outTime"],
-              ),
-            );
+        Navigator.pop(context);
       } catch (error) {
         if (!mounted) {
           return;
         }
+        Navigator.pop(context);
+        await Future.delayed(const Duration(milliseconds: 1));
 
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).clearSnackBars();
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -324,14 +298,6 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
           ),
         );
       }
-
-      debugPrint("Destination: ${_destinationController.text}");
-      debugPrint("Reason: ${_reasonController.text}");
-      debugPrint("In Date: ${_formatDate(inDate!)}");
-      debugPrint("In Time: ${_formatTime(inTime!)}");
-      debugPrint("Out Date: ${_formatDate(outDate!)}");
-      debugPrint("Out Time: ${_formatTime(outTime!)}");
-      debugPrint(passType);
     }
   }
 

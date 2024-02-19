@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/models/pass_model.dart';
@@ -15,7 +16,7 @@ class PassNotifier extends StateNotifier<List<Pass>> {
     if (prefs!.getString("jwtToken") == null) {
       return;
     }
-    
+
     try {
       var response = await http.get(
         Uri.parse("${dotenv.env["BACKEND_BASE_API"]}/pass/getPass"),
@@ -51,13 +52,62 @@ class PassNotifier extends StateNotifier<List<Pass>> {
         );
       }
       state = tempPasses;
-    } catch (error) {
-      print(error);
+    } catch (e) {
+      throw "Something went wrong";
     }
   }
 
-  void addPass(Pass pass) {
-    state = [...state, pass];
+  Future<void> addPass({
+    required String destination,
+    required String type,
+    required String reason,
+    required String inDate,
+    required String inTime,
+    required String outDate,
+    required String outTime,
+  }) async {
+    try {
+      var response = await http.post(
+        Uri.parse("${dotenv.env["BACKEND_BASE_API"]}/pass/newPass"),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": prefs!.getString("jwtToken")!,
+        },
+        body: jsonEncode(
+          {
+            "studentId": prefs!.getString("studentId"),
+            "destination": destination,
+            "type": type,
+            "reason": reason,
+            "inDate": inDate,
+            "inTime": inTime,
+            "outDate": outDate,
+            "outTime": outTime,
+          },
+        ),
+      );
+      var responseData = jsonDecode(response.body);
+
+      state = [
+        ...state,
+        Pass(
+          passId: responseData["passId"],
+          studentId: prefs!.getString("studentId")!,
+          qrId: responseData["encQrId"],
+          status: responseData["status"],
+          destination: responseData["destination"],
+          type: responseData["type"],
+          isActive: responseData["isActive"],
+          reason: responseData["reason"],
+          inDate: responseData["inDate"],
+          inTime: responseData["inTime"],
+          outDate: responseData["outDate"],
+          outTime: responseData["outTime"],
+        )
+      ];
+    } catch (e) {
+      throw "Something went wrong";
+    }
   }
 
   void deletePass(String passId) {

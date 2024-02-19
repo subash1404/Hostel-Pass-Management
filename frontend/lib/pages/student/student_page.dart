@@ -50,7 +50,7 @@ class _StudentPageState extends ConsumerState<StudentPage> {
                   }
                 : () {
                     showModalBottomSheet(
-                      scrollControlDisabledMaxHeightRatio: 0.6,
+                      scrollControlDisabledMaxHeightRatio: 0.7,
                       context: context,
                       builder: (context) {
                         return QrBottomSheet();
@@ -114,6 +114,7 @@ class _QrBottomSheetState extends ConsumerState<QrBottomSheet> {
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
+    Pass activePass = ref.read(passProvider.notifier).getActivePass()!;
 
     return Column(
       children: [
@@ -139,16 +140,20 @@ class _QrBottomSheetState extends ConsumerState<QrBottomSheet> {
                 ),
                 const SizedBox(height: 20),
                 Container(
-                  height: 350,
-                  width: 350,
+                  // height: 350,
+                  width: double.infinity,
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     color: colorScheme.primaryContainer,
                   ),
-                  child: QrImageView(
-                    data: ref.read(passProvider.notifier).getActivePass()!.qrId,
-                  ),
+                  child: activePass.status == "Approved"
+                      ? QrImageView(
+                          data: activePass.qrId,
+                        )
+                      : const Center(
+                          child: Text("Pass not yet approved"),
+                        ),
                 ),
                 const SizedBox(height: 25),
                 const Text(

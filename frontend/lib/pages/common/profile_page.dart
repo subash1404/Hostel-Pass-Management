@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:hostel_pass_management/widgets/common/profile_item.dart';
 import 'package:hostel_pass_management/widgets/student/custom_drawer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+  ProfilePage({super.key});
+  SharedPreferences? prefs = SharedPreferencesManager.preferences;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +22,9 @@ class ProfilePage extends StatelessWidget {
         appBar: AppBar(
           // backgroundColor: const Color.fromARGB(255, 153, 0, 255),
           // foregroundColor: Colors.white,
-          title: const Text("Profile"),
+          title: const Text(
+            "Profile",
+          ),
           // centerTitle: true,
         ),
         drawer: const CustomDrawer(),
@@ -37,11 +42,10 @@ class ProfilePage extends StatelessWidget {
                       height: 16,
                     ),
                     Text(
-                      "Subash",
+                      prefs!.getString("name")!,
                       textAlign: TextAlign.center,
                       style: customFont.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                          fontWeight: FontWeight.bold, fontSize: 30),
                     ),
                     const SizedBox(
                       height: 8,
@@ -76,26 +80,31 @@ class ProfilePage extends StatelessWidget {
                     const SizedBox(
                       height: 12,
                     ),
-                    const ProfileItem(
-                        path: "assets/images/svce.png",
-                        attribute: "Year",
-                        value: "subash@gmail.com"),
-                    const ProfileItem(
-                        path: "assets/images/svce.png",
-                        attribute: "Department",
-                        value: "64623434455"),
-                    const ProfileItem(
-                        path: "assets/images/svce.png",
-                        attribute: "Section",
-                        value: "Chennai"),
-                    const ProfileItem(
-                        path: "assets/images/svce.png",
-                        attribute: "Admission Number",
-                        value: "Sri venkateswara"),
-                    const ProfileItem(
-                        path: "assets/images/svce.png",
-                        attribute: "Branch",
-                        value: "Information Technology"),
+                    ProfileItem(
+                      path: "assets/images/svce.png",
+                      attribute: "Year",
+                      value: "${prefs!.getInt("year")}",
+                    ),
+                    ProfileItem(
+                      path: "assets/images/svce.png",
+                      attribute: "Department",
+                      value: prefs!.getString("dept")!,
+                    ),
+                    ProfileItem(
+                      path: "assets/images/svce.png",
+                      attribute: "Section",
+                      value: prefs!.getString("section")!,
+                    ),
+                    ProfileItem(
+                      path: "assets/images/svce.png",
+                      attribute: "Admission Number",
+                      value: prefs!.getString("studentId")!,
+                    ),
+                    // ProfileItem(
+                    //   path: "assets/images/svce.png",
+                    //   attribute: "Branch",
+                    //   value: "Information Technology",
+                    // ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: Text(
@@ -108,26 +117,32 @@ class ProfilePage extends StatelessWidget {
                     const SizedBox(
                       height: 12,
                     ),
-                    const ProfileItem(
-                        path: "assets/images/svce.png",
-                        attribute: "Email",
-                        value: "subash@gmail.com"),
-                    const ProfileItem(
-                        path: "assets/images/svce.png",
-                        attribute: "Phone No",
-                        value: "64623434455"),
-                    const ProfileItem(
-                        path: "assets/images/svce.png",
-                        attribute: "Father's Name",
-                        value: "Chennai"),
-                    const ProfileItem(
-                        path: "assets/images/svce.png",
-                        attribute: "Mother's Name",
-                        value: "Sri venkateswara"),
-                    const ProfileItem(
-                        path: "assets/images/svce.png",
-                        attribute: "Parent's Phone Number",
-                        value: "Information Technology"),
+                    ProfileItem(
+                      path: "assets/images/svce.png",
+                      attribute: "Email",
+                      value: prefs!.getString("dept")!,
+                    ),
+                    ProfileItem(
+                      path: "assets/images/svce.png",
+                      attribute: "Phone No",
+                      value: prefs!.getString("phNo")!,
+                    ),
+                    ProfileItem(
+                      path: "assets/images/svce.png",
+                      attribute: "Father's Name",
+                      value: prefs!.getString("fatherName")!,
+                    ),
+                    ProfileItem(
+                      path: "assets/images/svce.png",
+                      attribute: "Mother's Name",
+                      value: prefs!.getString("motherName")!,
+                    ),
+                    ProfileItem(
+                      path: "assets/images/svce.png",
+                      attribute: "Parent's Phone Number",
+                      value:
+                          "${prefs!.getString("fatherPhNo")!}  /  ${prefs!.getString("motherPhNo")!}",
+                    ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: Text(
@@ -140,14 +155,16 @@ class ProfilePage extends StatelessWidget {
                     const SizedBox(
                       height: 12,
                     ),
-                    const ProfileItem(
-                        path: "assets/images/svce.png",
-                        attribute: "Block No",
-                        value: "subash@gmail.com"),
-                    const ProfileItem(
-                        path: "assets/images/svce.png",
-                        attribute: "Room No",
-                        value: "64623434455"),
+                    ProfileItem(
+                      path: "assets/images/svce.png",
+                      attribute: "Block No",
+                      value: prefs!.getInt("block").toString(),
+                    ),
+                    ProfileItem(
+                      path: "assets/images/svce.png",
+                      attribute: "Room No",
+                      value: prefs!.getInt("roomNo").toString(),
+                    ),
                   ],
                 ),
               )
