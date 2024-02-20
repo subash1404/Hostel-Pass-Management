@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/pages/common/login_page.dart';
 import 'package:hostel_pass_management/pages/student/student_page.dart';
-import 'package:hostel_pass_management/providers/pass_provider.dart';
+import 'package:hostel_pass_management/providers/student_pass_provider.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -21,7 +21,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
 
   void tokenCheck() async {
     try {
-      await ref.read(passProvider.notifier).loadPassFromDB();
+      await ref.read(studentPassProvider.notifier).loadPassFromDB();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

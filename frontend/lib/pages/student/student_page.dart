@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/models/pass_model.dart';
 import 'package:hostel_pass_management/pages/student/new_pass_page.dart';
-import 'package:hostel_pass_management/providers/pass_provider.dart';
+import 'package:hostel_pass_management/providers/student_pass_provider.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:hostel_pass_management/widgets/student/active_passes.dart';
 import 'package:hostel_pass_management/widgets/student/custom_drawer.dart';
@@ -22,8 +22,8 @@ class _StudentPageState extends ConsumerState<StudentPage> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Pass> passes = ref.watch(passProvider);
-    final activePass = ref.read(passProvider.notifier).getActivePass();
+    final List<Pass> passes = ref.watch(studentPassProvider);
+    final activePass = ref.read(studentPassProvider.notifier).getActivePass();
 
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
@@ -114,7 +114,7 @@ class _QrBottomSheetState extends ConsumerState<QrBottomSheet> {
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
-    Pass activePass = ref.read(passProvider.notifier).getActivePass()!;
+    Pass activePass = ref.read(studentPassProvider.notifier).getActivePass()!;
 
     return Column(
       children: [
@@ -140,16 +140,17 @@ class _QrBottomSheetState extends ConsumerState<QrBottomSheet> {
                 ),
                 const SizedBox(height: 20),
                 Container(
-                  // height: 350,
+                  height: MediaQuery.of(context).size.width * .85,
                   width: double.infinity,
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     color: colorScheme.primaryContainer,
                   ),
-                  child: activePass.status == "Approved"
+                  child: activePass.status == "approved"
                       ? QrImageView(
                           data: activePass.qrId,
+                          semanticsLabel: "skuf",
                         )
                       : const Center(
                           child: Text("Pass not yet approved"),

@@ -31,7 +31,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
 
   void verifyOTP() async {
     var response = await http.post(
-      Uri.parse("${dotenv.env["BACKEND_BASE_API"]}/user/verifyOtp"),
+      Uri.parse("${dotenv.env["BACKEND_BASE_API"]}/auth/verifyOtp"),
       headers: {"Content-Type": "application/json"},
       body: jsonEncode(
         {
@@ -83,7 +83,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     });
     try {
       var response = await http.post(
-        Uri.parse("${dotenv.env["BACKEND_BASE_API"]}/user/resetPassword"),
+        Uri.parse("${dotenv.env["BACKEND_BASE_API"]}/auth/resetPassword"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(
           {

@@ -2,18 +2,21 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
-const User = require("../models/user_model");
-const Pass = require("../models/pass_model");
-const QR = require("../models/qr_model");
-const Student = require("../models/student_model");
+const User = require("../../models/user_model");
+const Pass = require("../../models/pass_model");
+const QR = require("../../models/qr_model");
+const Student = require("../../models/student_model");
 const { v4: uuidv4 } = require("uuid");
-const { aesEncrypt, aesDecrypt } = require("../utils/aes");
+const { aesEncrypt, aesDecrypt } = require("../../utils/aes");
 
 router.get("/getPass", async (req, res) => {
   try {
     const passes = await Pass.find({ studentId: req.body.USER_studentId });
-    console.log(req.body.USER_studentId);
-    console.log(passes);
+    passes.forEach((pass) => {
+      if (pass.isActive) {
+        pass.qrId = aesEncrypt(pass.qrId, process.env.AES_KEY);
+      }
+    });
     res.json({ data: passes });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error" });
@@ -50,7 +53,7 @@ router.post("/newPass", async (req, res) => {
       studentId,
       isActive: true,
       qrId,
-      status: "Pending",
+      status: "pending",
     }).save();
 
     res.json({

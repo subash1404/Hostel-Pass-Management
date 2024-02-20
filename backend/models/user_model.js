@@ -22,7 +22,7 @@ const UserSchema = new schema(
     role: {
       type: String,
       required: true,
-      enum: ["Student", "RT", "Warden", "Security"],
+      enum: ["student", "rt", "warden", "security"],
     },
     otpSecret: {
       type: String,

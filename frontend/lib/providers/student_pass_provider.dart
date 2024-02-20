@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/models/pass_model.dart';
@@ -8,8 +7,8 @@ import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
-class PassNotifier extends StateNotifier<List<Pass>> {
-  PassNotifier() : super([]);
+class StudentPassNotifier extends StateNotifier<List<Pass>> {
+  StudentPassNotifier() : super([]);
   SharedPreferences? prefs = SharedPreferencesManager.preferences;
 
   Future<void> loadPassFromDB() async {
@@ -19,7 +18,8 @@ class PassNotifier extends StateNotifier<List<Pass>> {
 
     try {
       var response = await http.get(
-        Uri.parse("${dotenv.env["BACKEND_BASE_API"]}/pass/getPass"),
+        Uri.parse(
+            "${dotenv.env["BACKEND_BASE_API"]}/${prefs!.getString("role")}/pass/getPass"),
         headers: {
           "Content-Type": "application/json",
           "Authorization": prefs!.getString("jwtToken")!,
@@ -68,7 +68,8 @@ class PassNotifier extends StateNotifier<List<Pass>> {
   }) async {
     try {
       var response = await http.post(
-        Uri.parse("${dotenv.env["BACKEND_BASE_API"]}/pass/newPass"),
+        Uri.parse(
+            "${dotenv.env["BACKEND_BASE_API"]}/${prefs!.getString("role")}/pass/newPass"),
         headers: {
           "Content-Type": "application/json",
           "Authorization": prefs!.getString("jwtToken")!,
@@ -123,6 +124,7 @@ class PassNotifier extends StateNotifier<List<Pass>> {
   }
 }
 
-final passProvider = StateNotifierProvider<PassNotifier, List<Pass>>(
-  (ref) => PassNotifier(),
+final studentPassProvider =
+    StateNotifierProvider<StudentPassNotifier, List<Pass>>(
+  (ref) => StudentPassNotifier(),
 );

@@ -1,13 +1,9 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hostel_pass_management/models/pass_model.dart';
-import 'package:hostel_pass_management/providers/pass_provider.dart';
+import 'package:hostel_pass_management/providers/student_pass_provider.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:intl/intl.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NewPassPage extends ConsumerStatefulWidget {
@@ -267,7 +263,7 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
       }
 
       try {
-        await ref.read(passProvider.notifier).addPass(
+        await ref.read(studentPassProvider.notifier).addPass(
               destination: _destinationController.text,
               inDate: _formatDate(inDate!),
               inTime: _formatTime(inTime!),

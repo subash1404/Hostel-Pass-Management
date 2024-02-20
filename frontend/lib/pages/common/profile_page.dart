@@ -6,11 +6,11 @@ import 'package:hostel_pass_management/widgets/student/custom_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatelessWidget {
-  ProfilePage({super.key});
-  SharedPreferences? prefs = SharedPreferencesManager.preferences;
+  const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    SharedPreferences? prefs = SharedPreferencesManager.preferences;
     // ignore: unused_local_variable
     TextTheme textTheme = Theme.of(context).textTheme;
     // ignore: unused_local_variable
@@ -83,22 +83,22 @@ class ProfilePage extends StatelessWidget {
                     ProfileItem(
                       path: "assets/images/svce.png",
                       attribute: "Year",
-                      value: "${prefs!.getInt("year")}",
+                      value: "${prefs.getInt("year")}",
                     ),
                     ProfileItem(
                       path: "assets/images/svce.png",
                       attribute: "Department",
-                      value: prefs!.getString("dept")!,
+                      value: prefs.getString("dept")!,
                     ),
                     ProfileItem(
                       path: "assets/images/svce.png",
                       attribute: "Section",
-                      value: prefs!.getString("section")!,
+                      value: prefs.getString("section")!,
                     ),
                     ProfileItem(
                       path: "assets/images/svce.png",
                       attribute: "Admission Number",
-                      value: prefs!.getString("studentId")!,
+                      value: prefs.getString("studentId")!,
                     ),
                     // ProfileItem(
                     //   path: "assets/images/svce.png",
@@ -120,28 +120,28 @@ class ProfilePage extends StatelessWidget {
                     ProfileItem(
                       path: "assets/images/svce.png",
                       attribute: "Email",
-                      value: prefs!.getString("dept")!,
+                      value: prefs.getString("dept")!,
                     ),
                     ProfileItem(
                       path: "assets/images/svce.png",
                       attribute: "Phone No",
-                      value: prefs!.getString("phNo")!,
+                      value: prefs.getString("phNo")!,
                     ),
                     ProfileItem(
                       path: "assets/images/svce.png",
                       attribute: "Father's Name",
-                      value: prefs!.getString("fatherName")!,
+                      value: prefs.getString("fatherName")!,
                     ),
                     ProfileItem(
                       path: "assets/images/svce.png",
                       attribute: "Mother's Name",
-                      value: prefs!.getString("motherName")!,
+                      value: prefs.getString("motherName")!,
                     ),
                     ProfileItem(
                       path: "assets/images/svce.png",
                       attribute: "Parent's Phone Number",
                       value:
-                          "${prefs!.getString("fatherPhNo")!}  /  ${prefs!.getString("motherPhNo")!}",
+                          "${prefs.getString("fatherPhNo")!}  /  ${prefs.getString("motherPhNo")!}",
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -158,12 +158,12 @@ class ProfilePage extends StatelessWidget {
                     ProfileItem(
                       path: "assets/images/svce.png",
                       attribute: "Block No",
-                      value: prefs!.getInt("block").toString(),
+                      value: prefs.getInt("block").toString(),
                     ),
                     ProfileItem(
                       path: "assets/images/svce.png",
                       attribute: "Room No",
-                      value: prefs!.getInt("roomNo").toString(),
+                      value: prefs.getInt("roomNo").toString(),
                     ),
                   ],
                 ),

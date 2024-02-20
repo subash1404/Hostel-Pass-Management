@@ -23,7 +23,7 @@ const PassSchema = new schema(
     status: {
       type: String,
       required: true,
-      enum: ["Pending", "Approved", "Rejected", "Expired", "Deleted", "Completed"],
+      enum: ["pending", "approved", "rejected", "expired", "deleted", "completed"],
     },
     destination: {
       type: String,

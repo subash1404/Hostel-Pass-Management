@@ -2,8 +2,10 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
-const userRoute = require("./routes/user_route");
-const passRoute = require("./routes/pass_route");
+const authController = require("./controllers/common/auth_controller");
+const studentRoute = require("./routes/student_route");
+const rtRoute = require("./routes/rt_route");
+const wardenRoute = require("./routes/warden_route");
 const app = express();
 const bcrypt = require("bcrypt");
 const cors = require("cors");
@@ -32,5 +34,7 @@ mongoose
     console.log(err);
   });
 
-app.use("/user", userRoute);
-app.use("/pass", checkAuth, passRoute);
+app.use("/auth", authController);
+app.use("/student", checkAuth, studentRoute);
+app.use("/warden", checkAuth, wardenRoute);
+app.use("/rt", checkAuth, rtRoute);
