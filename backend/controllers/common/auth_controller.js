@@ -63,7 +63,7 @@ router.post("/login", async (req, res) => {
       uid: user.uid,
       studentId: student.studentId,
       email: user.email,
-      name: user.username,
+      username: user.username,
       role: user.role,
       phNo: student.phNo,
       block: student.block,
@@ -80,8 +80,32 @@ router.post("/login", async (req, res) => {
     });
   } else if (user.role == "rt") {
     const rt = await Rt.findOne({ uid: user.uid });
-    const jwtToken = jwt.sign({}, process.env.JWT_KEY);
-    res.json({});
+    const jwtToken = jwt.sign(
+      {
+        uid: user.uid,
+        rtId: rt.rtId,
+        username: rt.username,
+        email: rt.email,
+        photoPath: rt.photoPath,
+        permanentBlock: rt.permanentBlock,
+        temporaryBlock: rt.temporaryBlock,
+        phNo: rt.phNo,
+        role: user.role,
+      },
+      process.env.JWT_KEY
+    );
+    res.json({
+      jwtToken,
+      uid: user.uid,
+      rtId: rt.rtId,
+      username: rt.username,
+      email: rt.email,
+      photoPath: rt.photoPath,
+      permanentBlock: rt.permanentBlock,
+      temporaryBlock: rt.temporaryBlock,
+      phNo: rt.phNo,
+      role: user.role,
+    });
   } else if (user.role == "warden") {
     const warden = await Warden.findOne({ uid: user.uid });
     const jwtToken = jwt.sign({}, process.env.JWT_KEY);

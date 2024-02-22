@@ -83,7 +83,7 @@ class _StudentPageState extends ConsumerState<StudentPage> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
-      drawer: const CustomDrawer(),
+      drawer: const StudentDrawer(),
       body: Column(
         children: [
           ActivePasses(

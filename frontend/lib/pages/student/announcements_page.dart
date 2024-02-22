@@ -14,7 +14,7 @@ class AnnouncementsPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Announcements'),
       ),
-      drawer: const CustomDrawer(),
+      drawer: const StudentDrawer(),
       body: SingleChildScrollView(
         child: Column(
           children: [

@@ -7,8 +7,8 @@ import 'package:hostel_pass_management/pages/student/rules_page.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class StudentDrawer extends StatelessWidget {
-  const StudentDrawer({super.key});
+class RtDrawer extends StatelessWidget {
+  const RtDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {

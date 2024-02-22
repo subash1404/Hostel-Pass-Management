@@ -22,8 +22,17 @@ const checkAuth = (req, res, next) => {
       req.body.USER_section = result.section;
       req.body.USER_roomNo = result.roomNo;
       req.body.USER_photoPath = result.photoPath;
-    } else if (result.role == "warden") {
     } else if (result.role == "rt") {
+      req.body.USER_uid = result.uid;
+      req.body.USER_rtId = result.rtId;
+      req.body.USER_email = result.email;
+      req.body.USER_username = result.username;
+      req.body.USER_role = result.role;
+      req.body.USER_phNo = result.phNo;
+      req.body.USER_temporaryBlock = result.temporaryBlock;
+      req.body.USER_permanentBlock = result.permanentBlock;
+      req.body.USER_photoPath = result.photoPath;
+    } else if (result.role == "warden") {
     } else if (result.role == "security") {
     }
     next();

@@ -27,7 +27,7 @@ class ProfilePage extends StatelessWidget {
           ),
           // centerTitle: true,
         ),
-        drawer: const CustomDrawer(),
+        drawer: const StudentDrawer(),
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,7 +42,7 @@ class ProfilePage extends StatelessWidget {
                       height: 16,
                     ),
                     Text(
-                      prefs!.getString("name")!,
+                      prefs!.getString("username")!,
                       textAlign: TextAlign.center,
                       style: customFont.copyWith(
                           fontWeight: FontWeight.bold, fontSize: 30),

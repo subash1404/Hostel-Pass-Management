@@ -13,7 +13,7 @@ const RtSchema = new schema(
       type: String,
       required: true,
     },
-    name: {
+    username: {
       type: String,
       required: true,
     },
@@ -24,11 +24,16 @@ const RtSchema = new schema(
     email: {
       type: String,
     },
-    block: {
+    permanentBlock: {
       type: Number,
       required: true,
     },
-    phno: {
+    temporaryBlock: {
+      type: Array,
+      default: [],
+      required: false,
+    },
+    phNo: {
       type: String,
       required: true,
     },

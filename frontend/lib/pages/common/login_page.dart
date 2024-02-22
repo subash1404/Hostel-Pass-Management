@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/pages/common/forget_password.dart';
+import 'package:hostel_pass_management/pages/rt/rt_page.dart';
 import 'package:hostel_pass_management/pages/student/student_page.dart';
 import 'package:hostel_pass_management/providers/student_pass_provider.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
@@ -48,7 +49,7 @@ class LoginPageState extends ConsumerState<LoginPage> {
         await prefs?.setString('uid', responseData['uid']);
         await prefs?.setString('studentId', responseData['studentId']);
         await prefs?.setString('email', responseData['email']);
-        await prefs?.setString('name', responseData['name']);
+        await prefs?.setString('username', responseData['username']);
         await prefs?.setString('role', responseData['role']);
         await prefs?.setString('phNo', responseData['phNo']);
         await prefs?.setInt('block', responseData['block']);
@@ -70,6 +71,31 @@ class LoginPageState extends ConsumerState<LoginPage> {
           ),
         );
       } else if (responseData["role"] == "rt") {
+        await prefs?.setString('jwtToken', responseData['jwtToken']);
+        await prefs?.setString('uid', responseData['uid']);
+        await prefs?.setString('rtId', responseData['rtId']);
+        await prefs?.setString('username', responseData['username']);
+        await prefs?.setString('photoPath', responseData['photoPath']);
+        await prefs?.setString('email', responseData['email']);
+        await prefs?.setString('role', responseData['role']);
+        await prefs?.setString('phNo', responseData['phNo']);
+        await prefs?.setInt('permanentBlock', responseData['permanentBlock']);
+
+        List<String> temporaryBlock = [];
+
+        responseData["temporaryBlock"].forEach(
+          (block) {
+            temporaryBlock.add(block.toString());
+          },
+        );
+
+        await prefs?.setStringList('temporaryBlock', temporaryBlock);
+
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const RtPage(),
+          ),
+        );
       } else if (responseData["role"] == "warden") {
       } else if (responseData["role"] == "security") {}
     } catch (err) {

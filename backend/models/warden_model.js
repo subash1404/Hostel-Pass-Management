@@ -13,7 +13,7 @@ const WardenSchema = new schema(
       type: String,
       required: true,
     },
-    name: {
+    username: {
       type: String,
       required: true,
     },

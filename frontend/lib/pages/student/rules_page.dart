@@ -24,7 +24,7 @@ class RulesPage extends StatelessWidget {
       appBar: AppBar(
         title: Text("Rules and Regulations"),
       ),
-      drawer: CustomDrawer(),
+      drawer: StudentDrawer(),
       body: Padding(
         padding: EdgeInsets.all(20),
         child: SingleChildScrollView(
