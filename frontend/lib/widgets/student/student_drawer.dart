@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hostel_pass_management/pages/common/developer_page.dart';
+import 'package:hostel_pass_management/pages/common/feedback_page.dart';
 import 'package:hostel_pass_management/pages/common/login_page.dart';
 import 'package:hostel_pass_management/pages/common/profile_page.dart';
 import 'package:hostel_pass_management/pages/student/announcements_page.dart';
@@ -66,7 +68,7 @@ class StudentDrawer extends StatelessWidget {
                 ),
               );
             },
-            leading: Icon(Icons.announcement),
+            leading: Icon(Icons.notification_important_rounded),
             title: Text("Announcements"),
           ),
           ListTile(
@@ -83,7 +85,26 @@ class StudentDrawer extends StatelessWidget {
           ),
           Spacer(),
           ListTile(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => FeedbackPage(),
+                ),
+              );
+            },
+            title: Text("Feedback"),
+            leading: Icon(Icons.feedback),
+          ),
+          ListTile(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DeveloperPage(),
+                ),
+              );
+            },
             title: Text("About us"),
             leading: Icon(Icons.developer_mode),
           ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hostel_pass_management/pages/common/developer_page.dart';
+import 'package:hostel_pass_management/pages/common/feedback_page.dart';
 import 'package:hostel_pass_management/pages/common/login_page.dart';
 import 'package:hostel_pass_management/pages/common/profile_page.dart';
 import 'package:hostel_pass_management/pages/rt/block_students_page.dart';
@@ -41,60 +43,60 @@ class RtDrawer extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => RtPage(),
+                  builder: (context) => const RtPage(),
                 ),
               );
             },
-            leading: Icon(Icons.home_filled),
-            title: Text("Home"),
+            leading: const Icon(Icons.home_filled),
+            title: const Text("Home"),
           ),
           ListTile(
             onTap: () {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => BlockStudentsPage(),
+                  builder: (context) => const BlockStudentsPage(),
                 ),
               );
             },
-            leading: Icon(Icons.apartment_rounded),
-            title: Text("Block Students"),
+            leading: const Icon(Icons.apartment_rounded),
+            title: const Text("Block Students"),
           ),
           ListTile(
             onTap: () {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => PassLogsPage(),
+                  builder: (context) => const PassLogsPage(),
                 ),
               );
             },
-            leading: Icon(Icons.receipt_long_rounded),
-            title: Text("Pass Logs"),
+            leading: const Icon(Icons.receipt_long_rounded),
+            title: const Text("Pass Logs"),
           ),
           ListTile(
             onTap: () {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ProfilePage(),
+                  builder: (context) => const ProfilePage(),
                 ),
               );
             },
-            leading: Icon(Icons.person),
-            title: Text("Profile"),
+            leading: const Icon(Icons.person),
+            title: const Text("Profile"),
           ),
           ListTile(
             onTap: () {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => AnnouncementsPage(),
+                  builder: (context) => const AnnouncementsPage(),
                 ),
               );
             },
-            leading: Icon(Icons.announcement),
-            title: Text("Announcements"),
+            leading: const Icon(Icons.announcement),
+            title: const Text("Announcements"),
           ),
           ListTile(
             onTap: () {
@@ -105,14 +107,33 @@ class RtDrawer extends StatelessWidget {
                 ),
               );
             },
-            title: Text("Rules and Regulations"),
-            leading: Icon(Icons.rule),
+            title: const Text("Rules and Regulations"),
+            leading: const Icon(Icons.rule),
           ),
-          Spacer(),
+          const Spacer(),
           ListTile(
-            onTap: () {},
-            title: Text("About us"),
-            leading: Icon(Icons.developer_mode),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const FeedbackPage(),
+                ),
+              );
+            },
+            title: const Text("Feedback"),
+            leading: const Icon(Icons.feedback),
+          ),
+          ListTile(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const DeveloperPage(),
+                ),
+              );
+            },
+            title: const Text("About us"),
+            leading: const Icon(Icons.developer_mode),
           ),
           ListTile(
             onTap: () async {
@@ -120,12 +141,12 @@ class RtDrawer extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => LoginPage(),
+                  builder: (context) => const LoginPage(),
                 ),
               );
             },
-            title: Text("Logout"),
-            leading: Icon(Icons.logout_rounded),
+            title: const Text("Logout"),
+            leading: const Icon(Icons.logout_rounded),
           )
         ],
       ),

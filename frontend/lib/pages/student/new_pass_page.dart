@@ -85,7 +85,6 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                     ),
                     keyboardType: TextInputType.text,
                     maxLines: null,
-                    onChanged: (text) {},
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
