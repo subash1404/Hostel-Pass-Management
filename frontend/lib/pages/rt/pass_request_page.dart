@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:hostel_pass_management/widgets/rt/custom_drawer.dart';
+import 'package:hostel_pass_management/widgets/rt/rt_drawer.dart';
 
 class PassRequestPage extends StatefulWidget {
   const PassRequestPage({super.key});
@@ -43,7 +43,43 @@ class _PassRequestPageState extends State<PassRequestPage> {
             ),
           ),
           const SizedBox(height: 20),
-          const Divider()
+          const Divider(),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 255, 198, 198),
+                    ),
+                    onPressed: () {},
+                    child: const Text(
+                      "Deny",
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 255, 57, 43),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 179, 255, 181),
+                    ),
+                    onPressed: () {},
+                    child: const Text(
+                      "Approve",
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 57, 139, 60),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
         ],
       ),
     );

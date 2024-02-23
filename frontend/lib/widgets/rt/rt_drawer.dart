@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hostel_pass_management/pages/common/login_page.dart';
 import 'package:hostel_pass_management/pages/common/profile_page.dart';
+import 'package:hostel_pass_management/pages/rt/block_students_page.dart';
+import 'package:hostel_pass_management/pages/rt/pass_logs_page.dart';
+import 'package:hostel_pass_management/pages/rt/rt_page.dart';
 import 'package:hostel_pass_management/pages/student/announcements_page.dart';
 import 'package:hostel_pass_management/pages/student/student_page.dart';
 import 'package:hostel_pass_management/pages/student/rules_page.dart';
@@ -38,12 +41,36 @@ class RtDrawer extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => StudentPage(),
+                  builder: (context) => RtPage(),
                 ),
               );
             },
             leading: Icon(Icons.home_filled),
             title: Text("Home"),
+          ),
+          ListTile(
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BlockStudentsPage(),
+                ),
+              );
+            },
+            leading: Icon(Icons.apartment_rounded),
+            title: Text("Block Students"),
+          ),
+          ListTile(
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PassLogsPage(),
+                ),
+              );
+            },
+            leading: Icon(Icons.receipt_long_rounded),
+            title: Text("Pass Logs"),
           ),
           ListTile(
             onTap: () {

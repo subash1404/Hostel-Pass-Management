@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:hostel_pass_management/widgets/common/profile_item.dart';
-import 'package:hostel_pass_management/widgets/student/custom_drawer.dart';
+import 'package:hostel_pass_management/widgets/student/student_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatelessWidget {

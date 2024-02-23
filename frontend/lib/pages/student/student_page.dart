@@ -5,7 +5,7 @@ import 'package:hostel_pass_management/pages/student/new_pass_page.dart';
 import 'package:hostel_pass_management/providers/student_pass_provider.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:hostel_pass_management/widgets/student/active_passes.dart';
-import 'package:hostel_pass_management/widgets/student/custom_drawer.dart';
+import 'package:hostel_pass_management/widgets/student/student_drawer.dart';
 import 'package:hostel_pass_management/widgets/student/pass_log.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hostel_pass_management/widgets/student/custom_drawer.dart';
+import 'package:hostel_pass_management/widgets/student/student_drawer.dart';
 
 class AnnouncementsPage extends StatelessWidget {
   const AnnouncementsPage({super.key});
