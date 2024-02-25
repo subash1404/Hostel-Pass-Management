@@ -42,6 +42,7 @@ router.post("/newPass", async (req, res) => {
     await new QR({ passId, qrId, studentId }).save();
 
     const pass = await new Pass({
+      uid: req.body.USER_uid,
       passId,
       destination,
       type,

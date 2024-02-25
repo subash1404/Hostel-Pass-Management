@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const authController = require("./controllers/common/auth_controller");
+const feedbackController = require("./controllers/common/feedback_controller");
 const studentRoute = require("./routes/student_route");
 const rtRoute = require("./routes/rt_route");
 const wardenRoute = require("./routes/warden_route");
@@ -34,6 +35,7 @@ mongoose
     console.log(err);
   });
 
+app.use("/feedback", checkAuth, feedbackController);
 app.use("/auth", authController);
 app.use("/student", checkAuth, studentRoute);
 app.use("/warden", checkAuth, wardenRoute);

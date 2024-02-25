@@ -7,6 +7,10 @@ const PassSchema = new schema(
       type: String,
       required: true,
     },
+    uid: {
+      type: String,
+      required: true,
+    },
     studentId: {
       type: String,
       required: true,

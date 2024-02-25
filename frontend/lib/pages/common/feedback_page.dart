@@ -1,6 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hostel_pass_management/utils/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FeedbackPage extends StatefulWidget {
   const FeedbackPage({super.key});
@@ -12,13 +18,14 @@ class FeedbackPage extends StatefulWidget {
 class _FeedbackPageState extends State<FeedbackPage> {
   double starRating = 0;
   final TextEditingController feedbackController = TextEditingController();
+  SharedPreferences? prefs = SharedPreferencesManager.preferences;
 
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
 
-    void submitFeedback() {
+    Future<void> submitFeedback() async {
       if (feedbackController.text.isEmpty) {
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
@@ -37,9 +44,45 @@ class _FeedbackPageState extends State<FeedbackPage> {
         );
         return;
       }
+      try {
+        var response = await http.post(
+          Uri.parse("${dotenv.env["BACKEND_BASE_API"]}/feedback/newFeedback"),
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": prefs!.getString("jwtToken")!,
+          },
+          body: jsonEncode({
+            "feedback": feedbackController.text,
+            "rating": starRating,
+          }),
+        );
 
-      print(starRating);
-      print(feedbackController.text);
+        var responseData = jsonDecode(response.body);
+
+        if (response.statusCode >= 400) {
+          throw responseData["message"];
+        }
+
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              responseData["message"],
+            ),
+          ),
+        );
+
+        Navigator.pop(context);
+      } catch (e) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              e.toString(),
+            ),
+          ),
+        );
+      }
     }
 
     return Scaffold(
@@ -57,22 +100,22 @@ class _FeedbackPageState extends State<FeedbackPage> {
                   width: MediaQuery.of(context).size.width - 100,
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text(
                 "Every word you share helps us build a better experience. We're all ears for your feedback! 🌟",
                 style: textTheme.titleMedium,
                 textAlign: TextAlign.justify,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextField(
                 controller: feedbackController,
                 maxLines: null,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: "Your Feedback",
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               RatingBar.builder(
                 initialRating: 0,
                 minRating: 1,
@@ -82,7 +125,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
                 allowHalfRating: true,
                 itemCount: 5,
                 itemPadding: const EdgeInsets.symmetric(horizontal: 6.0),
-                itemBuilder: (context, _) => Icon(
+                itemBuilder: (context, _) => const Icon(
                   Icons.star_rounded,
                   color: Colors.amber,
                 ),
@@ -92,7 +135,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
                   });
                 },
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               InkWell(
                 borderRadius: BorderRadius.circular(16),
                 onTap: submitFeedback,
@@ -114,7 +157,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
             ],
           ),
         ),
