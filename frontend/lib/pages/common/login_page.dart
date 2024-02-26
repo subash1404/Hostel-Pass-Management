@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/pages/common/forget_password.dart';
 import 'package:hostel_pass_management/pages/rt/rt_page.dart';
 import 'package:hostel_pass_management/pages/student/student_page.dart';
+import 'package:hostel_pass_management/providers/block_students_provider.dart';
 import 'package:hostel_pass_management/providers/student_pass_provider.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:hostel_pass_management/utils/validators.dart';
@@ -90,6 +91,10 @@ class LoginPageState extends ConsumerState<LoginPage> {
         );
 
         await prefs?.setStringList('temporaryBlock', temporaryBlock);
+
+        await ref
+            .read(blockStudentProvider.notifier)
+            .loadBlockStudentsFromDB(blockNo: prefs!.getInt("permanentBlock")!);
 
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
