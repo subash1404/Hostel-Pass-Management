@@ -1,0 +1,68 @@
+import 'dart:convert';
+
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hostel_pass_management/models/block_student_model.dart';
+import 'package:hostel_pass_management/utils/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+
+class BlockStudentsNotifier extends StateNotifier<List<BlockStudent>> {
+  BlockStudentsNotifier() : super([]);
+  SharedPreferences? prefs = SharedPreferencesManager.preferences;
+
+  Future<void> loadBlockStudentsFromDB({required int blockNo}) async {
+    if (prefs!.getString("jwtToken") == null) {
+      return;
+    }
+
+    try {
+      var response = await http.get(
+        Uri.parse(
+            "${dotenv.env["BACKEND_BASE_API"]}/${prefs!.getString("role")}/block/$blockNo/getStudents"),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": prefs!.getString("jwtToken")!,
+        },
+      );
+
+      var responseData = jsonDecode(response.body);
+
+      if (response.statusCode > 399) {
+        throw responseData["message"];
+      }
+
+      List<BlockStudent> tempStudents = [];
+      for (var student in responseData) {
+        print(student);
+        tempStudents.add(
+          BlockStudent(
+              studentId: student['studentId'],
+              uid: student['uid'],
+              username: student['username'],
+              block: student['block'],
+              dept: student['dept'],
+              fatherName: student['fatherName'],
+              fatherPhNo: student['fatherPhNo'],
+              motherName: student['motherName'],
+              motherPhNo: student['motherPhNo'],
+              phNo: student['phNo'],
+              photoPath: student['photoPath'],
+              regNo: student['regNo'],
+              section: student['section'],
+              year: student['year'],
+              roomNo: student['roomNo']),
+        );
+      }
+      print(tempStudents);
+      state = tempStudents;
+    } catch (e) {
+      throw "Something went wrong";
+    }
+  }
+}
+
+final blockStudentProvider =
+    StateNotifierProvider<BlockStudentsNotifier, List<BlockStudent>>(
+  (ref) => BlockStudentsNotifier(),
+);

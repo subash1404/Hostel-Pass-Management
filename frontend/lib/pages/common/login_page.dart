@@ -1,21 +1,25 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/pages/common/forget_password.dart';
+import 'package:hostel_pass_management/pages/rt/rt_page.dart';
 import 'package:hostel_pass_management/pages/student/student_page.dart';
+import 'package:hostel_pass_management/providers/block_students_provider.dart';
+import 'package:hostel_pass_management/providers/student_pass_provider.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:hostel_pass_management/utils/validators.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-class LoginPage extends StatefulWidget {
-  LoginPage({Key? key}) : super(key: key);
+class LoginPage extends ConsumerStatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  LoginPageState createState() => LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class LoginPageState extends ConsumerState<LoginPage> {
   final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
@@ -27,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
     }
     try {
       var response = await http.post(
-        Uri.parse("${dotenv.env["BACKEND_BASE_API"]}/user/login"),
+        Uri.parse("${dotenv.env["BACKEND_BASE_API"]}/auth/login"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(
           {
@@ -41,29 +45,64 @@ class _LoginPageState extends State<LoginPage> {
         throw responseData["message"];
       }
 
-      await prefs?.setString('jwtToken', responseData['jwtToken']);
-      await prefs?.setString('uid', responseData['uid']);
-      await prefs?.setString('studentId', responseData['studentId']);
-      await prefs?.setString('email', responseData['email']);
-      await prefs?.setString('name', responseData['name']);
-      await prefs?.setString('role', responseData['role']);
-      await prefs?.setString('phno', responseData['phno']);
-      await prefs?.setInt('block', responseData['block']);
-      await prefs?.setString('dept', responseData['dept']);
-      await prefs?.setString('fatherName', responseData['fatherName']);
-      await prefs?.setString('motherName', responseData['motherName']);
-      await prefs?.setString('fatherphno', responseData['fatherphno']);
-      await prefs?.setString('motherphno', responseData['motherphno']);
-      await prefs?.setString('regNo', responseData['regNo']);
-      await prefs?.setInt('year', responseData['year']);
-      await prefs?.setString('section', responseData['section']);
-      await prefs?.setInt('roomNo', responseData['roomNo']);
+      if (responseData["role"] == "student") {
+        await prefs?.setString('jwtToken', responseData['jwtToken']);
+        await prefs?.setString('uid', responseData['uid']);
+        await prefs?.setString('studentId', responseData['studentId']);
+        await prefs?.setString('email', responseData['email']);
+        await prefs?.setString('username', responseData['username']);
+        await prefs?.setString('role', responseData['role']);
+        await prefs?.setString('phNo', responseData['phNo']);
+        await prefs?.setInt('block', responseData['block']);
+        await prefs?.setString('dept', responseData['dept']);
+        await prefs?.setString('fatherName', responseData['fatherName']);
+        await prefs?.setString('motherName', responseData['motherName']);
+        await prefs?.setString('fatherPhNo', responseData['fatherPhNo']);
+        await prefs?.setString('motherPhNo', responseData['motherPhNo']);
+        await prefs?.setString('regNo', responseData['regNo']);
+        await prefs?.setInt('year', responseData['year']);
+        await prefs?.setString('section', responseData['section']);
+        await prefs?.setInt('roomNo', responseData['roomNo']);
 
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => StudentPage(),
-        ),
-      );
+        await ref.read(studentPassProvider.notifier).loadPassFromDB();
+
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const StudentPage(),
+          ),
+        );
+      } else if (responseData["role"] == "rt") {
+        await prefs?.setString('jwtToken', responseData['jwtToken']);
+        await prefs?.setString('uid', responseData['uid']);
+        await prefs?.setString('rtId', responseData['rtId']);
+        await prefs?.setString('username', responseData['username']);
+        await prefs?.setString('photoPath', responseData['photoPath']);
+        await prefs?.setString('email', responseData['email']);
+        await prefs?.setString('role', responseData['role']);
+        await prefs?.setString('phNo', responseData['phNo']);
+        await prefs?.setInt('permanentBlock', responseData['permanentBlock']);
+
+        List<String> temporaryBlock = [];
+
+        responseData["temporaryBlock"].forEach(
+          (block) {
+            temporaryBlock.add(block.toString());
+          },
+        );
+
+        await prefs?.setStringList('temporaryBlock', temporaryBlock);
+
+        await ref
+            .read(blockStudentProvider.notifier)
+            .loadBlockStudentsFromDB(blockNo: prefs!.getInt("permanentBlock")!);
+
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const RtPage(),
+          ),
+        );
+      } else if (responseData["role"] == "warden") {
+      } else if (responseData["role"] == "security") {}
     } catch (err) {
       if (!mounted) {
         return;
@@ -104,7 +143,7 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       var response = await http.post(
-        Uri.parse("${dotenv.env["BACKEND_BASE_API"]}/user/forgotPassword"),
+        Uri.parse("${dotenv.env["BACKEND_BASE_API"]}/auth/forgotPassword"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(
           {

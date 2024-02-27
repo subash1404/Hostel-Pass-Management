@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hostel_pass_management/widgets/student/custom_drawer.dart';
+import 'package:hostel_pass_management/widgets/student/student_drawer.dart';
 
 class AnnouncementsPage extends StatelessWidget {
   const AnnouncementsPage({super.key});
@@ -14,7 +14,7 @@ class AnnouncementsPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Announcements'),
       ),
-      drawer: const CustomDrawer(),
+      drawer: const StudentDrawer(),
       body: SingleChildScrollView(
         child: Column(
           children: [

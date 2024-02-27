@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:hostel_pass_management/pages/common/developer_page.dart';
+import 'package:hostel_pass_management/pages/common/feedback_page.dart';
 import 'package:hostel_pass_management/pages/common/login_page.dart';
 import 'package:hostel_pass_management/pages/common/profile_page.dart';
 import 'package:hostel_pass_management/pages/student/announcements_page.dart';
 import 'package:hostel_pass_management/pages/student/student_page.dart';
 import 'package:hostel_pass_management/pages/student/rules_page.dart';
+import 'package:hostel_pass_management/utils/shared_preferences.dart';
+import 'package:hostel_pass_management/widgets/rt/rt_drawer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class CustomDrawer extends StatelessWidget {
-  const CustomDrawer({super.key});
+class StudentDrawer extends StatelessWidget {
+  const StudentDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
+    SharedPreferences? prefs = SharedPreferencesManager.preferences;
+
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
 
@@ -62,7 +69,7 @@ class CustomDrawer extends StatelessWidget {
                 ),
               );
             },
-            leading: Icon(Icons.announcement),
+            leading: Icon(Icons.notification_important_rounded),
             title: Text("Announcements"),
           ),
           ListTile(
@@ -79,12 +86,32 @@ class CustomDrawer extends StatelessWidget {
           ),
           Spacer(),
           ListTile(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => FeedbackPage(),
+                ),
+              );
+            },
+            title: Text("Feedback"),
+            leading: Icon(Icons.feedback),
+          ),
+          ListTile(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DeveloperPage(),
+                ),
+              );
+            },
             title: Text("About us"),
             leading: Icon(Icons.developer_mode),
           ),
           ListTile(
-            onTap: () {
+            onTap: () async {
+              await prefs!.clear();
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(

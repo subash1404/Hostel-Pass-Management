@@ -1,27 +1,73 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/pages/common/login_page.dart';
+import 'package:hostel_pass_management/pages/rt/rt_page.dart';
+import 'package:hostel_pass_management/pages/student/student_page.dart';
+import 'package:hostel_pass_management/providers/student_pass_provider.dart';
+import 'package:hostel_pass_management/utils/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class SplashPage extends StatefulWidget {
+class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});
   @override
-  State<SplashPage> createState() {
+  ConsumerState<SplashPage> createState() {
     return _SplashPageState();
   }
 }
 
-class _SplashPageState extends State<SplashPage> {
+class _SplashPageState extends ConsumerState<SplashPage> {
+  SharedPreferences? prefs = SharedPreferencesManager.preferences;
+
+  void tokenCheck() async {
+    try {
+      if (prefs!.getString("jwtToken") != null) {
+        if (prefs!.getString("role") == "student") {
+          await ref.read(studentPassProvider.notifier).loadPassFromDB();
+          Future.delayed(const Duration(seconds: 3), () {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => StudentPage(),
+              ),
+            );
+          });
+        } else if (prefs!.getString("role") == "rt") {
+          Future.delayed(const Duration(seconds: 3), () {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                // builder: (context) => RtPage(),
+                builder: (context) => LoginPage(),
+              ),
+            );
+          });
+        }
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+        ),
+      );
+      return;
+    }
+
+    if (prefs!.getString("jwtToken") == null) {
+      Future.delayed(const Duration(seconds: 3), () {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => LoginPage(),
+          ),
+        );
+      });
+      return;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 3), () {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => LoginPage(),
-        ),
-      );
-    });
+    tokenCheck();
   }
 
   @override

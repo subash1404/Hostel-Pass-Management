@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hostel_pass_management/widgets/student/custom_drawer.dart';
+import 'package:hostel_pass_management/widgets/student/student_drawer.dart';
 
 class RulesPage extends StatelessWidget {
   RulesPage({super.key});
@@ -24,7 +24,7 @@ class RulesPage extends StatelessWidget {
       appBar: AppBar(
         title: Text("Rules and Regulations"),
       ),
-      drawer: CustomDrawer(),
+      drawer: StudentDrawer(),
       body: Padding(
         padding: EdgeInsets.all(20),
         child: SingleChildScrollView(

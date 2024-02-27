@@ -10,7 +10,7 @@ class Pass {
     required this.reason,
     required this.inDate,
     required this.inTime,
-    required this.outDate,
+    required this.outDate, 
     required this.outTime,
   });
 

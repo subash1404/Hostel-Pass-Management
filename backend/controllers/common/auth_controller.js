@@ -2,12 +2,14 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
-const User = require("../models/user_model");
+const User = require("../../models/user_model");
 const nodemailer = require("nodemailer");
 const speakeasy = require("speakeasy");
 require("dotenv").config();
 const { v4: uuidv4 } = require("uuid");
-const Student = require("../models/student_model");
+const Student = require("../../models/student_model");
+const Rt = require("../../models/rt_model");
+const Warden = require("../../models/warden_model");
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -17,41 +19,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// router.get("/dummy", async (req, res) => {
-//   const uid = "user_" + uuidv4();
-//   try {
-//     await new User({
-//       username: "Naveen",
-//       email: "naveen.akash0904@gmail.com",
-//       password: "$2b$10$sW1Ay1MBfv7/Tv33C4bdaOmvPTP3Vd/LFah/Dw2XDqfEBX2ZCoLRK",
-//       uid: uid,
-//       role: "Student",
-//     }).save();
-
-//     await new Student({
-//       block: 3,
-//       dept: "Information Technology",
-//       fatherName: "Kamal",
-//       motherName: "Priya",
-//       fatherPhNo: "1234567890",
-//       motherPhNo: "0987654321",
-//       name: "Naveen",
-//       uid: uid,
-//       phNo: "6789054321",
-//       photoPath: "/sd/sd/sd",
-//       regNo: "2127210801066",
-//       roomNo: 312,
-//       section: "B",
-//       studentId: "2021it0668",
-//       year: 3,
-//     }).save();
-
-//     res.send();
-//   } catch (e) {
-//     res.status(500).send();
-//   }
-// });
-
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
@@ -60,38 +27,90 @@ router.post("/login", async (req, res) => {
     return res.status(401).json({ message: "User not found" });
   }
 
-  const student = await Student.findOne({ uid: user.uid });
-
   const isValidPassword = await bcrypt.compare(password, user.password);
   if (!isValidPassword) {
     return res.status(401).json({ message: "Invalid Credentials" });
   }
 
-  const jwtToken = jwt.sign(
-    { id: user._id, email: user.email },
-    process.env.JWT_KEY
-  );
+  if (user.role == "student") {
+    const student = await Student.findOne({ uid: user.uid });
 
-  res.json({
-    jwtToken,
-    uid: user.uid,
-    studentId: student.studentId,
-    email: user.email,
-    name: user.username,
-    role: user.role,
-    phno: student.phNo,
-    block: student.block,
-    dept: student.dept,
-    fatherName: student.fatherName,
-    motherName: student.motherName,
-    fatherphno: student.fatherPhNo,
-    motherphno: student.motherPhNo,
-    regNo: student.regNo,
-    year: student.year,
-    section: student.section,
-    roomNo: student.roomNo,
-    photoPath: student.photoPath,
-  });
+    const jwtToken = jwt.sign(
+      {
+        uid: user.uid,
+        studentId: student.studentId,
+        email: user.email,
+        username: user.username,
+        role: user.role,
+        phNo: student.phNo,
+        block: student.block,
+        dept: student.dept,
+        fatherName: student.fatherName,
+        motherName: student.motherName,
+        fatherPhNo: student.fatherPhNo,
+        motherPhNo: student.motherPhNo,
+        regNo: student.regNo,
+        year: student.year,
+        section: student.section,
+        roomNo: student.roomNo,
+        photoPath: student.photoPath,
+      },
+      process.env.JWT_KEY
+    );
+
+    res.json({
+      jwtToken,
+      uid: user.uid,
+      studentId: student.studentId,
+      email: user.email,
+      username: user.username,
+      role: user.role,
+      phNo: student.phNo,
+      block: student.block,
+      dept: student.dept,
+      fatherName: student.fatherName,
+      motherName: student.motherName,
+      fatherPhNo: student.fatherPhNo,
+      motherPhNo: student.motherPhNo,
+      regNo: student.regNo,
+      year: student.year,
+      section: student.section,
+      roomNo: student.roomNo,
+      photoPath: student.photoPath,
+    });
+  } else if (user.role == "rt") {
+    const rt = await Rt.findOne({ uid: user.uid });
+    const jwtToken = jwt.sign(
+      {
+        uid: user.uid,
+        rtId: rt.rtId,
+        username: rt.username,
+        email: rt.email,
+        photoPath: rt.photoPath,
+        permanentBlock: rt.permanentBlock,
+        temporaryBlock: rt.temporaryBlock,
+        phNo: rt.phNo,
+        role: user.role,
+      },
+      process.env.JWT_KEY
+    );
+    res.json({
+      jwtToken,
+      uid: user.uid,
+      rtId: rt.rtId,
+      username: rt.username,
+      email: rt.email,
+      photoPath: rt.photoPath,
+      permanentBlock: rt.permanentBlock,
+      temporaryBlock: rt.temporaryBlock,
+      phNo: rt.phNo,
+      role: user.role,
+    });
+  } else if (user.role == "warden") {
+    const warden = await Warden.findOne({ uid: user.uid });
+    const jwtToken = jwt.sign({}, process.env.JWT_KEY);
+    res.json({});
+  }
 });
 
 router.get("/dummyOtp", async (req, res) => {
@@ -345,5 +364,59 @@ router.post("/resetPassword", async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
+// router.get("/dummy", async (req, res) => {
+//   const uid = "user_" + uuidv4();
+//   const wardenId = "warden_" + uuidv4();
+//   try {
+//     await new User({
+//       username: "WARDEN",
+//       email: "naveen.akash0904@gmail.com",
+//       password: "$2b$10$sW1Ay1MBfv7/Tv33C4bdaOmvPTP3Vd/LFah/Dw2XDqfEBX2ZCoLRK",
+//       uid: uid,
+//       role: "warden",
+//     }).save();
+
+//     await new Warden({
+//       // WARDEN
+//       email: "naveen.akash0904@gmail.com",
+//       name: "Warden",
+//       phno: "1234567890",
+//       uid: uid,
+//       photoPath: "lskm/sv/sdv",
+//       wardenId: wardenId,
+
+//       // RT
+//       // email: "naveen.akash0904@gmail.com",
+//       // name: "RT",
+//       // phno: "9876543210",
+//       // photoPath: "sd/sd/sd",
+//       // uid: uid,
+//       // rtId: rtId,
+//       // block: 3,
+
+//       // STUDENT
+//       // block: 3,
+//       // dept: "Information Technology",
+//       // fatherName: "Kamal",
+//       // motherName: "Priya",
+//       // fatherPhNo: "1234567890",
+//       // motherPhNo: "0987654321",
+//       // name: "Naveen",
+//       // uid: uid,
+//       // phNo: "6789054321",
+//       // photoPath: "/sd/sd/sd",
+//       // regNo: "2127210801066",
+//       // roomNo: 312,
+//       // section: "B",
+//       // studentId: "2021it0668",
+//       // year: 3,
+//     }).save();
+
+//     res.send();
+//   } catch (e) {
+//     res.status(500).send();
+//   }
+// });
 
 module.exports = router;
