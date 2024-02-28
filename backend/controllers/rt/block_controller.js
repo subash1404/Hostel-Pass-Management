@@ -2,11 +2,9 @@ const express = require("express");
 const router = express.Router();
 const Student = require("../../models/student_model");
 
-router.get("/:blockNo/getStudents", async (req, res, next) => {
-  console.log("hehe");
-  const { blockNo } = req.params;
+router.get("/getStudents", async (req, res, next) => {
   try {
-    const filteredStudents = await Student.find({ block: blockNo });
+    const filteredStudents = await Student.find({ blockNo: req.body.USER_permanentBlock });
     res.json(filteredStudents);
   } catch (e) {
     console.log(e);

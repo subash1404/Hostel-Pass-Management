@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:hostel_pass_management/models/pass_model.dart';
+import 'package:hostel_pass_management/models/pass_request_model.dart';
 import 'package:hostel_pass_management/widgets/rt/rt_drawer.dart';
 
 class PassRequestPage extends StatefulWidget {
-  const PassRequestPage({super.key});
+  const PassRequestPage({required this.pass, super.key});
+
+  final PassRequest pass;
 
   @override
   State<PassRequestPage> createState() => _PassRequestPageState();
@@ -19,68 +23,92 @@ class _PassRequestPageState extends State<PassRequestPage> {
       appBar: AppBar(
         title: const Text("Pass Request"),
       ),
-      body: Column(
-        children: [
-          const SizedBox(height: 20),
-          Center(
-            child: Text(
-              "Student Name",
-              textAlign: TextAlign.center,
-              style: textTheme.headlineLarge,
-            ),
-          ),
-          const SizedBox(height: 20),
-          Container(
-            width: 150,
-            height: 150,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: colorScheme.primaryContainer,
-            ),
-            child: const Icon(
-              Icons.person,
-              size: 60,
-            ),
-          ),
-          const SizedBox(height: 20),
-          const Divider(),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 255, 198, 198),
-                    ),
-                    onPressed: () {},
-                    child: const Text(
-                      "Deny",
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 255, 57, 43),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 20),
+              Center(
+                child: Container(
+                  width: 150,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: colorScheme.primaryContainer,
+                  ),
+                  child: const Icon(
+                    Icons.person,
+                    size: 60,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Center(
+                child: Text(
+                  widget.pass.studentName,
+                  textAlign: TextAlign.center,
+                  style: textTheme.headlineLarge,
+                ),
+              ),
+              const SizedBox(height: 10),
+              const Divider(),
+              const SizedBox(height: 10),
+              Text("Year: ${widget.pass.year}"),
+              const SizedBox(height: 10),
+              Text("Department: ${widget.pass.dept}"),
+              const SizedBox(height: 10),
+              Text("Room No: ${widget.pass.roomNo}"),
+              const SizedBox(height: 10),
+              Text("Phone No: ${widget.pass.phNo}"),
+              const SizedBox(height: 10),
+              Text("Pass type: ${widget.pass.type}"),
+              const SizedBox(height: 10),
+              Text("Destination: ${widget.pass.destination}"),
+              const SizedBox(height: 10),
+              Text("Leave on: ${widget.pass.expectedOutDate} ${widget.pass.expectedOutTime}"),
+              const SizedBox(height: 10),
+              Text("Return on: ${widget.pass.expectedInDate} ${widget.pass.expectedInTime}"),
+              const SizedBox(height: 10),
+              Text("Reason: ${widget.pass.reason}"),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 255, 198, 198),
+                      ),
+                      onPressed: () {},
+                      child: const Text(
+                        "Deny",
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 255, 57, 43),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 179, 255, 181),
-                    ),
-                    onPressed: () {},
-                    child: const Text(
-                      "Approve",
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 57, 139, 60),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 179, 255, 181),
+                      ),
+                      onPressed: () {},
+                      child: const Text(
+                        "Approve",
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 57, 139, 60),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          )
-        ],
+                ],
+              )
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/pages/common/login_page.dart';
 import 'package:hostel_pass_management/pages/rt/rt_page.dart';
 import 'package:hostel_pass_management/pages/student/student_page.dart';
+import 'package:hostel_pass_management/providers/block_students_provider.dart';
+import 'package:hostel_pass_management/providers/rt_pass_provider.dart';
 import 'package:hostel_pass_management/providers/student_pass_provider.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,22 +27,26 @@ class _SplashPageState extends ConsumerState<SplashPage> {
       if (prefs!.getString("jwtToken") != null) {
         if (prefs!.getString("role") == "student") {
           await ref.read(studentPassProvider.notifier).loadPassFromDB();
-          Future.delayed(const Duration(seconds: 3), () {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 builder: (context) => StudentPage(),
               ),
             );
-          });
         } else if (prefs!.getString("role") == "rt") {
-          Future.delayed(const Duration(seconds: 3), () {
+          await ref
+              .read(blockStudentProvider.notifier)
+              .loadBlockStudentsFromDB();
+
+          await ref
+              .read(rtPassProvider.notifier)
+              .loadPassRequestsFromDB();
+
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 // builder: (context) => RtPage(),
-                builder: (context) => LoginPage(),
+                builder: (context) => RtPage(),
               ),
             );
-          });
         }
       }
     } catch (e) {

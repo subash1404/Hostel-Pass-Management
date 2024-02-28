@@ -158,7 +158,7 @@ class ProfilePage extends StatelessWidget {
                     ProfileItem(
                       path: "assets/images/svce.png",
                       attribute: "Block No",
-                      value: prefs.getInt("block").toString(),
+                      value: prefs.getInt("blockNo").toString(),
                     ),
                     ProfileItem(
                       path: "assets/images/svce.png",

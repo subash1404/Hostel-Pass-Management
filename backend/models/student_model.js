@@ -55,7 +55,7 @@ const StudentSchema = new schema(
       type: String,
       required: true,
     },
-    block: {
+    blockNo: {
       type: Number,
       required: true,
     },

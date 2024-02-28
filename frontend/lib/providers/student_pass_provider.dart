@@ -32,9 +32,9 @@ class StudentPassNotifier extends StateNotifier<List<Pass>> {
         throw responseData["message"];
       }
 
-      List<Pass> tempPasses = [];
+      List<Pass> passes = [];
       for (var pass in responseData["data"]) {
-        tempPasses.add(
+        passes.add(
           Pass(
             passId: pass["passId"],
             studentId: pass["studentId"],
@@ -44,14 +44,14 @@ class StudentPassNotifier extends StateNotifier<List<Pass>> {
             type: pass["type"],
             isActive: pass["isActive"],
             reason: pass["reason"],
-            inDate: pass["expectedInDate"],
-            inTime: pass["expectedInTime"],
-            outDate: pass["expectedOutDate"],
-            outTime: pass["expectedOutTime"],
+            expectedInDate: pass["expectedInDate"],
+            expectedInTime: pass["expectedInTime"],
+            expectedOutDate: pass["expectedOutDate"],
+            expectedOutTime: pass["expectedOutTime"],
           ),
         );
       }
-      state = tempPasses;
+      state = passes;
     } catch (e) {
       throw "Something went wrong";
     }
@@ -94,16 +94,16 @@ class StudentPassNotifier extends StateNotifier<List<Pass>> {
         Pass(
           passId: responseData["passId"],
           studentId: prefs!.getString("studentId")!,
-          qrId: responseData["encQrId"],
+          qrId: responseData["qrId"],
           status: responseData["status"],
           destination: responseData["destination"],
           type: responseData["type"],
           isActive: responseData["isActive"],
           reason: responseData["reason"],
-          inDate: responseData["inDate"],
-          inTime: responseData["inTime"],
-          outDate: responseData["outDate"],
-          outTime: responseData["outTime"],
+          expectedInDate: responseData["inDate"],
+          expectedInTime: responseData["inTime"],
+          expectedOutDate: responseData["outDate"],
+          expectedOutTime: responseData["outTime"],
         )
       ];
     } catch (e) {

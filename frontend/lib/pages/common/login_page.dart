@@ -5,6 +5,7 @@ import 'package:hostel_pass_management/pages/common/forget_password.dart';
 import 'package:hostel_pass_management/pages/rt/rt_page.dart';
 import 'package:hostel_pass_management/pages/student/student_page.dart';
 import 'package:hostel_pass_management/providers/block_students_provider.dart';
+import 'package:hostel_pass_management/providers/rt_pass_provider.dart';
 import 'package:hostel_pass_management/providers/student_pass_provider.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:hostel_pass_management/utils/validators.dart';
@@ -53,7 +54,7 @@ class LoginPageState extends ConsumerState<LoginPage> {
         await prefs?.setString('username', responseData['username']);
         await prefs?.setString('role', responseData['role']);
         await prefs?.setString('phNo', responseData['phNo']);
-        await prefs?.setInt('block', responseData['block']);
+        await prefs?.setInt('blockNo', responseData['blockNo']);
         await prefs?.setString('dept', responseData['dept']);
         await prefs?.setString('fatherName', responseData['fatherName']);
         await prefs?.setString('motherName', responseData['motherName']);
@@ -94,7 +95,11 @@ class LoginPageState extends ConsumerState<LoginPage> {
 
         await ref
             .read(blockStudentProvider.notifier)
-            .loadBlockStudentsFromDB(blockNo: prefs!.getInt("permanentBlock")!);
+            .loadBlockStudentsFromDB();
+
+        await ref
+            .read(rtPassProvider.notifier)
+            .loadPassRequestsFromDB();
 
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(

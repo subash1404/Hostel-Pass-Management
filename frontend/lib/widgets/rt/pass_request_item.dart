@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:hostel_pass_management/models/pass_model.dart';
+import 'package:hostel_pass_management/models/pass_request_model.dart';
 import 'package:hostel_pass_management/pages/rt/pass_request_page.dart';
 
 class PassRequestItem extends StatelessWidget {
-  const PassRequestItem({super.key});
+  const PassRequestItem({required this.pass, super.key});
+  final PassRequest pass;
 
   @override
   Widget build(BuildContext context) {
@@ -14,44 +17,39 @@ class PassRequestItem extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => PassRequestPage(),
+            builder: (context) => PassRequestPage(pass: pass),
           ),
         );
       },
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.fromLTRB(15, 10, 10, 10),
-            width: double.infinity,
-            child: Row(
-              children: [
-                Container(
-                  height: 55,
-                  width: 55,
-                  decoration: BoxDecoration(
-                    color: colorScheme.primaryContainer,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.person),
-                ),
-                const SizedBox(width: 20),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Student Name",
-                      style: textTheme.bodyLarge!.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const Text("Gatepass")
-                  ],
-                )
-              ],
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(15, 10, 10, 10),
+        width: double.infinity,
+        child: Row(
+          children: [
+            Container(
+              height: 55,
+              width: 55,
+              decoration: BoxDecoration(
+                color: colorScheme.primaryContainer,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.person),
             ),
-          ),
-          const Divider(height: 0)
-        ],
+            const SizedBox(width: 20),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  pass.studentName,
+                  style: textTheme.bodyLarge!.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Text("Gatepass")
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

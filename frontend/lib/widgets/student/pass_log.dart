@@ -66,8 +66,8 @@ class PassLog extends StatelessWidget {
                         (pass) => DataRow(
                           cells: [
                             DataCell(Text(pass.status)),
-                            DataCell(Text("${pass.inDate} ${pass.inTime}")),
-                            DataCell(Text("${pass.outDate} ${pass.outTime}")),
+                            DataCell(Text("${pass.expectedInDate} ${pass.expectedInTime}")),
+                            DataCell(Text("${pass.expectedOutDate} ${pass.expectedOutTime}")),
                             DataCell(Text(pass.type)),
                           ],
                         ),
