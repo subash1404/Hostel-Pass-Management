@@ -67,9 +67,11 @@ class _PassRequestPageState extends State<PassRequestPage> {
               const SizedBox(height: 10),
               Text("Destination: ${widget.pass.destination}"),
               const SizedBox(height: 10),
-              Text("Leave on: ${widget.pass.expectedOutDate} ${widget.pass.expectedOutTime}"),
+              Text(
+                  "Leave on: ${widget.pass.expectedOutDate} ${widget.pass.expectedOutTime}"),
               const SizedBox(height: 10),
-              Text("Return on: ${widget.pass.expectedInDate} ${widget.pass.expectedInTime}"),
+              Text(
+                  "Return on: ${widget.pass.expectedInDate} ${widget.pass.expectedInTime}"),
               const SizedBox(height: 10),
               Text("Reason: ${widget.pass.reason}"),
               const SizedBox(height: 10),
@@ -78,7 +80,8 @@ class _PassRequestPageState extends State<PassRequestPage> {
                   Expanded(
                     child: TextButton(
                       style: TextButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 255, 198, 198),
+                        backgroundColor:
+                            const Color.fromARGB(255, 255, 198, 198),
                       ),
                       onPressed: () {},
                       child: const Text(
@@ -93,7 +96,8 @@ class _PassRequestPageState extends State<PassRequestPage> {
                   Expanded(
                     child: TextButton(
                       style: TextButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 179, 255, 181),
+                        backgroundColor:
+                            const Color.fromARGB(255, 179, 255, 181),
                       ),
                       onPressed: () {},
                       child: const Text(
