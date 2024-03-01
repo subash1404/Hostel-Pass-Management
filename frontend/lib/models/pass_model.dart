@@ -8,10 +8,14 @@ class Pass {
     required this.type,
     required this.isActive,
     required this.reason,
-    required this.inDate,
-    required this.inTime,
-    required this.outDate, 
-    required this.outTime,
+    required this.expectedInTime,
+    required this.expectedInDate,
+    required this.expectedOutTime, 
+    required this.expectedOutDate,    
+    // this.actualInTime,
+    // this.actualInDate,
+    // this.actualOutTime, 
+    // this.actualOutDate,
   });
 
   final String passId;
@@ -22,8 +26,12 @@ class Pass {
   final String type;
   final bool isActive;
   final String reason;
-  final String inTime;
-  final String inDate;
-  final String outTime;
-  final String outDate;
+  final String expectedInTime;
+  final String expectedInDate;
+  final String expectedOutTime;
+  final String expectedOutDate;
+  // final String? actualInTime;
+  // final String? actualInDate;
+  // final String? actualOutTime;
+  // final String? actualOutDate;
 }

@@ -12,7 +12,7 @@ class BlockStudent {
     required this.motherPhNo,
     required this.dept,
     required this.year,
-    required this.block,
+    required this.blockNo,
     required this.roomNo,
     required this.section,
   });
@@ -30,6 +30,6 @@ class BlockStudent {
   final String dept;
   final String section;
   final int year;
-  final int block;
+  final int blockNo;
   final int roomNo;
 }

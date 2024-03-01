@@ -46,10 +46,10 @@ class ActivePasses extends StatelessWidget {
             children: [
               if (pass != null)
                 PassItem(
-                  inTime: pass!.inTime,
-                  outTime: pass!.outTime,
-                  inDate: pass!.inDate,
-                  outDate: pass!.outDate,
+                  inTime: pass!.expectedInTime,
+                  outTime: pass!.expectedOutTime,
+                  inDate: pass!.expectedInDate,
+                  outDate: pass!.expectedOutDate,
                   type: pass!.type,
                   status: pass!.status,
                 )

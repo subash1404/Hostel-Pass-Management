@@ -149,7 +149,7 @@ class _QrBottomSheetState extends ConsumerState<QrBottomSheet> {
                   ),
                   child: activePass.status == "approved"
                       ? QrImageView(
-                          data: activePass.qrId,
+                          data: activePass.qrId!,
                           semanticsLabel: "skuf",
                         )
                       : const Center(

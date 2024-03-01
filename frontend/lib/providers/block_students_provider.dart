@@ -11,7 +11,7 @@ class BlockStudentsNotifier extends StateNotifier<List<BlockStudent>> {
   BlockStudentsNotifier() : super([]);
   SharedPreferences? prefs = SharedPreferencesManager.preferences;
 
-  Future<void> loadBlockStudentsFromDB({required int blockNo}) async {
+  Future<void> loadBlockStudentsFromDB() async {
     if (prefs!.getString("jwtToken") == null) {
       return;
     }
@@ -19,7 +19,7 @@ class BlockStudentsNotifier extends StateNotifier<List<BlockStudent>> {
     try {
       var response = await http.get(
         Uri.parse(
-            "${dotenv.env["BACKEND_BASE_API"]}/${prefs!.getString("role")}/block/$blockNo/getStudents"),
+            "${dotenv.env["BACKEND_BASE_API"]}/${prefs!.getString("role")}/block/getStudents"),
         headers: {
           "Content-Type": "application/json",
           "Authorization": prefs!.getString("jwtToken")!,
@@ -32,15 +32,15 @@ class BlockStudentsNotifier extends StateNotifier<List<BlockStudent>> {
         throw responseData["message"];
       }
 
-      List<BlockStudent> tempStudents = [];
+      List<BlockStudent> blockStudents = [];
       for (var student in responseData) {
         print(student);
-        tempStudents.add(
+        blockStudents.add(
           BlockStudent(
               studentId: student['studentId'],
               uid: student['uid'],
               username: student['username'],
-              block: student['block'],
+              blockNo: student['blockNo'],
               dept: student['dept'],
               fatherName: student['fatherName'],
               fatherPhNo: student['fatherPhNo'],
@@ -54,8 +54,8 @@ class BlockStudentsNotifier extends StateNotifier<List<BlockStudent>> {
               roomNo: student['roomNo']),
         );
       }
-      print(tempStudents);
-      state = tempStudents;
+      print(blockStudents);
+      state = blockStudents;
     } catch (e) {
       throw "Something went wrong";
     }

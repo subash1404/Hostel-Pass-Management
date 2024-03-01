@@ -92,7 +92,7 @@ class _BlockStudentsPageState extends ConsumerState<BlockStudentsPage> {
                         ),
                       ),
                       DataCell(
-                        Text((student.block).toString()),
+                        Text((student.blockNo).toString()),
                       ),
                       DataCell(
                         Text(
