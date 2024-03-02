@@ -7,7 +7,7 @@ import 'package:hostel_pass_management/widgets/rt/rt_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BlockStudentsPage extends ConsumerStatefulWidget {
-  const BlockStudentsPage({super.key});
+  const BlockStudentsPage({Key? key});
 
   @override
   ConsumerState<BlockStudentsPage> createState() => _BlockStudentsPageState();
@@ -26,37 +26,28 @@ class _BlockStudentsPageState extends ConsumerState<BlockStudentsPage> {
     return Scaffold(
       drawer: const RtDrawer(),
       appBar: AppBar(
-        title: const Text('SVCE Hostel'),
+        title: const Text('Block Students'),
         centerTitle: true,
+        backgroundColor: const Color.fromARGB(255, 141, 204, 255),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 10, 0, 10),
-            child: Text(
-              "Block Students",
-              style: textTheme.titleLarge,
-            ),
-          ),
-          const Divider(height: 0),
-          DataTable(
-            headingRowHeight: 30,
-            dataRowMinHeight: 75,
-            dataRowMaxHeight: 75,
-            horizontalMargin: 15,
-            columns: const [
-              DataColumn(label: Text('Student Details')),
-              DataColumn(
-                label: Text('Year'),
-              ),
-              DataColumn(label: Text('Dept')),
-            ],
-            rows: blockStudents
-                .map(
-                  (student) => DataRow(
-                    cells: [
-                      DataCell(
+          Expanded(
+            child: ListView.builder(
+              itemCount: blockStudents.length,
+              itemBuilder: (BuildContext context, int index) {
+                final student = blockStudents[index];
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => Placeholder()));
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        right: 24.0, top: 8, bottom: 8, left: 8),
+                    child: Column(
+                      children: [
                         Row(
                           children: [
                             Container(
@@ -76,36 +67,43 @@ class _BlockStudentsPageState extends ConsumerState<BlockStudentsPage> {
                               ),
                             ),
                             const SizedBox(width: 15),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  student.username,
-                                  style: textTheme.bodyLarge!
-                                      .copyWith(fontWeight: FontWeight.w500),
-                                ),
-                                Text("Room No: ${student.roomNo}")
-                              ],
-                            )
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    student.username,
+                                    style: textTheme.bodyLarge!
+                                        .copyWith(fontWeight: FontWeight.w500),
+                                  ),
+                                  Text("Room No: ${student.roomNo}")
+                                ],
+                              ),
+                            ),
+                            SizedBox(width: 20),
+                            Text(
+                              student.dept,
+                              overflow: TextOverflow.clip,
+                            ),
                           ],
                         ),
-                      ),
-                      DataCell(
-                        Text((student.blockNo).toString()),
-                      ),
-                      DataCell(
-                        Text(
-                          student.dept,
-                          overflow: TextOverflow.clip,
+                        SizedBox(
+                          height: 8,
                         ),
-                      ),
-                    ],
+                        Divider(
+                          height: 1, // Adjust the height as needed
+                          thickness: 1, // Adjust the thickness as needed
+                          color: Color.fromARGB(
+                              255, 219, 219, 219), // Adjust the color as needed
+                        ),
+                      ],
+                    ),
                   ),
-                )
-                .toList(),
+                );
+              },
+            ),
           ),
-          const Divider(height: 0),
         ],
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hostel_pass_management/pages/common/splash_page.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hostel_pass_management/pages/student/new_pass_page.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

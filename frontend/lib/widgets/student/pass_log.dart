@@ -56,7 +56,6 @@ class PassLog extends StatelessWidget {
                   columnSpacing: 20,
                   dataRowMaxHeight: 60,
                   columns: const [
-                    DataColumn(label: Text('Status')),
                     DataColumn(label: Text('From')),
                     DataColumn(label: Text('To')),
                     DataColumn(label: Text('Type')),
@@ -65,9 +64,10 @@ class PassLog extends StatelessWidget {
                       .map(
                         (pass) => DataRow(
                           cells: [
-                            DataCell(Text(pass.status)),
-                            DataCell(Text("${pass.expectedInDate} ${pass.expectedInTime}")),
-                            DataCell(Text("${pass.expectedOutDate} ${pass.expectedOutTime}")),
+                            DataCell(Text(
+                                "${pass.expectedInDate} ${pass.expectedInTime}")),
+                            DataCell(Text(
+                                "${pass.expectedOutDate} ${pass.expectedOutTime}")),
                             DataCell(Text(pass.type)),
                           ],
                         ),
