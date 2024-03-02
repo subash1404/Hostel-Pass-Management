@@ -15,10 +15,6 @@ const StudentSchema = new schema(
       type: String,
       required: true,
     },
-    photoPath: {
-      type: String,
-      required: true,
-    },
     uid: {
       type: String,
       required: true,

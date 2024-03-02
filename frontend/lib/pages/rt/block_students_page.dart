@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/providers/block_students_provider.dart';
@@ -28,7 +30,6 @@ class _BlockStudentsPageState extends ConsumerState<BlockStudentsPage> {
       appBar: AppBar(
         title: const Text('Block Students'),
         centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 141, 204, 255),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -54,17 +55,22 @@ class _BlockStudentsPageState extends ConsumerState<BlockStudentsPage> {
                               width: 50,
                               height: 50,
                               alignment: Alignment.center,
+                              clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: colorScheme.primaryContainer,
                               ),
-                              child: Text(
-                                student.username[0],
-                                style: textTheme.titleLarge!.copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  color: colorScheme.onPrimaryContainer,
-                                ),
+                              child: Image.memory(
+                                base64Decode(student.profileBuffer),
+                                fit: BoxFit.cover,
                               ),
+                              // child: Text(
+                              //   student.username[0],
+                              //   style: textTheme.titleLarge!.copyWith(
+                              //     fontWeight: FontWeight.w500,
+                              //     color: colorScheme.onPrimaryContainer,
+                              //   ),
+                              // ),
                             ),
                             const SizedBox(width: 15),
                             Expanded(

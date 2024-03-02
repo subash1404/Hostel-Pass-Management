@@ -4,7 +4,7 @@ class BlockStudent {
     required this.uid,
     required this.username,
     required this.regNo,
-    required this.photoPath,
+    required this.profileBuffer,
     required this.phNo,
     required this.fatherName,
     required this.fatherPhNo,
@@ -21,7 +21,7 @@ class BlockStudent {
   final String studentId;
   final String username;
   final String regNo;
-  final String photoPath;
+  final String profileBuffer;
   final String phNo;
   final String fatherName;
   final String motherName;

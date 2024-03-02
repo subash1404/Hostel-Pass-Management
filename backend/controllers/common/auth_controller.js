@@ -1,5 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
+const path = require("path");
+const fs = require("fs");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const User = require("../../models/user_model");
@@ -32,7 +34,7 @@ router.post("/login", async (req, res) => {
     return res.status(401).json({ message: "Invalid Credentials" });
   }
 
-  if (user.role == "student") {
+  if (user.role == "student") { 
     const student = await Student.findOne({ uid: user.uid });
 
     const jwtToken = jwt.sign(
@@ -53,10 +55,20 @@ router.post("/login", async (req, res) => {
         year: student.year,
         section: student.section,
         roomNo: student.roomNo,
-        photoPath: student.photoPath,
       },
       process.env.JWT_KEY
     );
+
+
+    const photoFilePath = path.join(
+      __dirname +
+        "../../../images/profiles/students/" +
+        student.studentId +
+        ".jpg"
+    );
+
+    const photoBuffer = fs.readFileSync(photoFilePath);
+    const profileBuffer = photoBuffer.toString("base64");
 
     res.json({
       jwtToken,
@@ -76,7 +88,7 @@ router.post("/login", async (req, res) => {
       year: student.year,
       section: student.section,
       roomNo: student.roomNo,
-      photoPath: student.photoPath,
+      profileBuffer,
     });
   } else if (user.role == "rt") {
     const rt = await Rt.findOne({ uid: user.uid });
@@ -86,7 +98,6 @@ router.post("/login", async (req, res) => {
         rtId: rt.rtId,
         username: rt.username,
         email: rt.email,
-        photoPath: rt.photoPath,
         permanentBlock: rt.permanentBlock,
         temporaryBlock: rt.temporaryBlock,
         phNo: rt.phNo,
@@ -100,7 +111,6 @@ router.post("/login", async (req, res) => {
       rtId: rt.rtId,
       username: rt.username,
       email: rt.email,
-      photoPath: rt.photoPath,
       permanentBlock: rt.permanentBlock,
       temporaryBlock: rt.temporaryBlock,
       phNo: rt.phNo,

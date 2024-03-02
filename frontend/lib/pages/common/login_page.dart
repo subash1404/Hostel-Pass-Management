@@ -64,6 +64,7 @@ class LoginPageState extends ConsumerState<LoginPage> {
         await prefs?.setInt('year', responseData['year']);
         await prefs?.setString('section', responseData['section']);
         await prefs?.setInt('roomNo', responseData['roomNo']);
+        await prefs?.setString('profileBuffer', responseData['profileBuffer']);
 
         await ref.read(studentPassProvider.notifier).loadPassFromDB();
 
@@ -77,7 +78,6 @@ class LoginPageState extends ConsumerState<LoginPage> {
         await prefs?.setString('uid', responseData['uid']);
         await prefs?.setString('rtId', responseData['rtId']);
         await prefs?.setString('username', responseData['username']);
-        await prefs?.setString('photoPath', responseData['photoPath']);
         await prefs?.setString('email', responseData['email']);
         await prefs?.setString('role', responseData['role']);
         await prefs?.setString('phNo', responseData['phNo']);

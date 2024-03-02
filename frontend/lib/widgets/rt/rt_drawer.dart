@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hostel_pass_management/pages/common/developer_page.dart';
-import 'package:hostel_pass_management/pages/common/feedback_page.dart';
+import 'package:hostel_pass_management/pages/common/bug_report_page.dart';
 import 'package:hostel_pass_management/pages/common/login_page.dart';
 import 'package:hostel_pass_management/pages/common/profile_page.dart';
 import 'package:hostel_pass_management/pages/rt/block_students_page.dart';
@@ -116,12 +116,12 @@ class RtDrawer extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const FeedbackPage(),
+                  builder: (context) => const BugReportPage(),
                 ),
               );
             },
-            title: const Text("Feedback"),
-            leading: const Icon(Icons.feedback),
+            title: Text("Bug Report"),
+            leading: Icon(Icons.bug_report_rounded),
           ),
           ListTile(
             onTap: () {

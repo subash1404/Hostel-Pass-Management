@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -34,7 +35,6 @@ class BlockStudentsNotifier extends StateNotifier<List<BlockStudent>> {
 
       List<BlockStudent> blockStudents = [];
       for (var student in responseData) {
-        print(student);
         blockStudents.add(
           BlockStudent(
               studentId: student['studentId'],
@@ -47,14 +47,13 @@ class BlockStudentsNotifier extends StateNotifier<List<BlockStudent>> {
               motherName: student['motherName'],
               motherPhNo: student['motherPhNo'],
               phNo: student['phNo'],
-              photoPath: student['photoPath'],
+              profileBuffer: student['profileBuffer'],
               regNo: student['regNo'],
               section: student['section'],
               year: student['year'],
               roomNo: student['roomNo']),
         );
       }
-      print(blockStudents);
       state = blockStudents;
     } catch (e) {
       throw "Something went wrong";

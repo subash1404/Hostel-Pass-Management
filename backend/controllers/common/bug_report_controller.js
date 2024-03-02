@@ -1,18 +1,17 @@
 const express = require("express");
-const Feedback = require("../../models/feedback_model");
+const BugReport = require("../../models/bug_report_model");
 const router = express.Router();
 
-router.post("/newFeedback", (req, res, next) => {
+router.post("/newReport", (req, res, next) => {
   try {
-    const { rating, feedback } = req.body;
-    new Feedback({
+    const { report } = req.body;
+    new BugReport({
       uid: req.body.USER_uid,
       role: req.body.USER_role,
       username: req.body.USER_username, 
-      feedback: feedback,
-      rating: rating
+      report: report,
     }).save();
-    res.json({ message: "Your feedback recorded successfully" });
+    res.json({ message: "Bug Report Submitted Successfully!" });
   } catch {
     res.status(400).json({ message: "Internal Server Error" });
   }

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
@@ -16,6 +18,7 @@ class ProfilePage extends StatelessWidget {
     // ignore: unused_local_variable
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     TextStyle customFont = GoogleFonts.lato();
+    // print(prefs!.getString("profileBuffer"));
 
     return Scaffold(
       body: Scaffold(
@@ -50,10 +53,15 @@ class ProfilePage extends StatelessWidget {
                     const SizedBox(
                       height: 8,
                     ),
-                    Image.asset(
-                      'assets/images/none.png',
+                    Container(
                       height: 150,
                       width: 150,
+                      clipBehavior: Clip.antiAlias,
+                      decoration: const BoxDecoration(shape: BoxShape.circle),
+                      child: Image.memory(
+                        base64Decode(prefs.getString("profileBuffer")!),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                     const SizedBox(
                       height: 16,

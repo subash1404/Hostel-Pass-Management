@@ -8,16 +8,16 @@ import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-class FeedbackPage extends StatefulWidget {
-  const FeedbackPage({super.key});
+class BugReportPage extends StatefulWidget {
+  const BugReportPage({super.key});
 
   @override
-  State<FeedbackPage> createState() => _FeedbackPageState();
+  State<BugReportPage> createState() => BugReportPageState();
 }
 
-class _FeedbackPageState extends State<FeedbackPage> {
+class BugReportPageState extends State<BugReportPage> {
   double starRating = 0;
-  final TextEditingController feedbackController = TextEditingController();
+  final TextEditingController reportController = TextEditingController();
   SharedPreferences? prefs = SharedPreferencesManager.preferences;
 
   @override
@@ -26,7 +26,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
 
     Future<void> submitFeedback() async {
-      if (feedbackController.text.isEmpty) {
+      if (reportController.text.isEmpty) {
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -46,14 +46,14 @@ class _FeedbackPageState extends State<FeedbackPage> {
       }
       try {
         var response = await http.post(
-          Uri.parse("${dotenv.env["BACKEND_BASE_API"]}/feedback/newFeedback"),
+          Uri.parse("${dotenv.env["BACKEND_BASE_API"]}/bugReport/newReport"),
           headers: {
             "Content-Type": "application/json",
             "Authorization": prefs!.getString("jwtToken")!,
           },
           body: jsonEncode({
-            "feedback": feedbackController.text,
-            "rating": starRating,
+            "report": reportController.text,
+            // "rating": starRating,
           }),
         );
 
@@ -87,7 +87,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Feedback"),
+        title: const Text("Bug Report"),
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
@@ -96,45 +96,45 @@ class _FeedbackPageState extends State<FeedbackPage> {
             children: [
               Center(
                 child: SvgPicture.asset(
-                  "assets/images/feedback.svg",
+                  "assets/images/bug_report.svg",
                   width: MediaQuery.of(context).size.width - 100,
                 ),
               ),
               const SizedBox(height: 20),
               Text(
-                "Every word you share helps us build a better experience. We're all ears for your feedback! 🌟",
+                "Encountered a bug 🐞? Help us enhance the app experience.",
                 style: textTheme.titleMedium,
                 textAlign: TextAlign.justify,
               ),
               const SizedBox(height: 20),
               TextField(
-                controller: feedbackController,
+                controller: reportController,
                 maxLines: null,
                 decoration: const InputDecoration(
-                  labelText: "Your Feedback",
+                  labelText: "Bug Report",
                   border: OutlineInputBorder(),
                 ),
               ),
-              const SizedBox(height: 20),
-              RatingBar.builder(
-                initialRating: 0,
-                minRating: 1,
-                direction: Axis.horizontal,
-                glow: true,
-                glowColor: Colors.amber,
-                allowHalfRating: true,
-                itemCount: 5,
-                itemPadding: const EdgeInsets.symmetric(horizontal: 6.0),
-                itemBuilder: (context, _) => const Icon(
-                  Icons.star_rounded,
-                  color: Colors.amber,
-                ),
-                onRatingUpdate: (rating) {
-                  setState(() {
-                    starRating = rating;
-                  });
-                },
-              ),
+              // const SizedBox(height: 20),
+              // RatingBar.builder(
+              //   initialRating: 0,
+              //   minRating: 1,
+              //   direction: Axis.horizontal,
+              //   glow: true,
+              //   glowColor: Colors.amber,
+              //   allowHalfRating: true,
+              //   itemCount: 5,
+              //   itemPadding: const EdgeInsets.symmetric(horizontal: 6.0),
+              //   itemBuilder: (context, _) => const Icon(
+              //     Icons.star_rounded,
+              //     color: Colors.amber,
+              //   ),
+              //   onRatingUpdate: (rating) {
+              //     setState(() {
+              //       starRating = rating;
+              //     });
+              //   },
+              // ),
               const SizedBox(height: 30),
               InkWell(
                 borderRadius: BorderRadius.circular(16),
@@ -148,7 +148,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
                   height: 50,
                   child: Center(
                     child: Text(
-                      "Submit Feedback",
+                      "Report",
                       style: textTheme.bodyLarge!.copyWith(
                         fontWeight: FontWeight.w500,
                       ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hostel_pass_management/pages/common/developer_page.dart';
-import 'package:hostel_pass_management/pages/common/feedback_page.dart';
+import 'package:hostel_pass_management/pages/common/bug_report_page.dart';
 import 'package:hostel_pass_management/pages/common/login_page.dart';
 import 'package:hostel_pass_management/pages/common/profile_page.dart';
 import 'package:hostel_pass_management/pages/student/announcements_page.dart';
@@ -90,12 +90,12 @@ class StudentDrawer extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => FeedbackPage(),
+                  builder: (context) => BugReportPage(),
                 ),
               );
             },
-            title: Text("Feedback"),
-            leading: Icon(Icons.feedback),
+            title: Text("Bug Report"),
+            leading: Icon(Icons.bug_report_rounded),
           ),
           ListTile(
             onTap: () {

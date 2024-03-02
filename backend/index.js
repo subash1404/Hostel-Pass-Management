@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const authController = require("./controllers/common/auth_controller");
-const feedbackController = require("./controllers/common/feedback_controller");
+const bugReportController = require("./controllers/common/bug_report_controller");
 const studentRoute = require("./routes/student_route");
 const rtRoute = require("./routes/rt_route");
 const wardenRoute = require("./routes/warden_route");
@@ -13,6 +13,8 @@ const cors = require("cors");
 const helmet = require("helmet");
 require("dotenv").config();
 const checkAuth = require("./middleware/checkAuth");
+const path = require("path");
+const fs = require("fs");
 
 app.use(helmet());
 app.use(cors());
@@ -20,6 +22,13 @@ app.use(bodyParser.json());
 
 app.use("/test", (req, res) => {
   res.json({ message: "Hello from server" });
+});
+
+app.get("/fetchPhoto", (req, res) => {
+  let filePath = path.join(__dirname, "/images/profiles/students/" + "2021it0668.jpg");
+  const photoBuffer = fs.readFileSync(filePath);
+  const base64Image = photoBuffer.toString('base64');
+  res.send(base64Image);
 });
 
 mongoose
@@ -35,7 +44,7 @@ mongoose
     console.log(err);
   });
 
-app.use("/feedback", checkAuth, feedbackController);
+app.use("/bugReport", checkAuth, bugReportController);
 app.use("/auth", authController);
 app.use("/student", checkAuth, studentRoute);
 app.use("/warden", checkAuth, wardenRoute);
