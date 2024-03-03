@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hostel_pass_management/models/pass_request_model.dart';
 import 'package:hostel_pass_management/providers/rt_pass_provider.dart';
 import 'package:hostel_pass_management/widgets/rt/rt_drawer.dart';
 import 'package:hostel_pass_management/widgets/rt/pass_request_item.dart';
@@ -15,13 +16,16 @@ class _RtPageState extends ConsumerState<RtPage> {
   @override
   Widget build(BuildContext context) {
     final passRequests = ref.watch(rtPassProvider);
+    // print(passRequests);
+    List<PassRequest> pendingPasses =
+        passRequests.where((pass) => pass.status == 'Pending').toList();
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      drawer: RtDrawer(),
+      drawer: const RtDrawer(),
       appBar: AppBar(
-        title: Text('SVCE Hostel'),
+        title: const Text('SVCE Hostel'),
         centerTitle: true,
       ),
       body: Column(
@@ -35,8 +39,8 @@ class _RtPageState extends ConsumerState<RtPage> {
               style: textTheme.titleLarge,
             ),
           ),
-          if (passRequests.every((pass) => pass.status != "pending"))
-            Expanded(
+          if (pendingPasses.length == 0)
+            const Expanded(
               child: Center(
                 child: Text("No pass requests. Enjoy!!"),
               ),
@@ -45,11 +49,9 @@ class _RtPageState extends ConsumerState<RtPage> {
             Expanded(
               child: ListView.builder(
                 itemBuilder: (context, index) {
-                  if (passRequests[index].status == "pending") {
-                    return PassRequestItem(pass: passRequests[index]);
-                  }
+                  return PassRequestItem(pass: pendingPasses[index]);
                 },
-                itemCount: passRequests.length,
+                itemCount: pendingPasses.length,
               ),
             ),
         ],

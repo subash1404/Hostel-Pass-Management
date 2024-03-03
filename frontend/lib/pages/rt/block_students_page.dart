@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hostel_pass_management/pages/common/profile_page.dart';
 import 'package:hostel_pass_management/providers/block_students_provider.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:hostel_pass_management/widgets/common/profile_item.dart';
@@ -42,7 +43,7 @@ class _BlockStudentsPageState extends ConsumerState<BlockStudentsPage> {
                 return GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => Placeholder()));
+                        MaterialPageRoute(builder: (context) => ProfilePage()));
                   },
                   child: Padding(
                     padding: const EdgeInsets.only(
