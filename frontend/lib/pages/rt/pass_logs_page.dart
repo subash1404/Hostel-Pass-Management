@@ -1,15 +1,65 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hostel_pass_management/models/pass_request_model.dart';
+import 'package:hostel_pass_management/providers/rt_pass_provider.dart';
+import 'package:hostel_pass_management/widgets/rt/pass_request_item.dart';
+import 'package:hostel_pass_management/widgets/rt/rt_drawer.dart';
 
-class PassLogsPage extends StatefulWidget {
-  const PassLogsPage({super.key});
+class PassLogsPage extends ConsumerStatefulWidget {
+  const PassLogsPage({Key? key}) : super(key: key);
 
   @override
-  State<PassLogsPage> createState() => _PassLogsPageState();
+  ConsumerState<PassLogsPage> createState() => _PassLogsPageState();
 }
 
-class _PassLogsPageState extends State<PassLogsPage> {
+class _PassLogsPageState extends ConsumerState<PassLogsPage>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    final passRequests = ref.watch(rtPassProvider);
+    List<PassRequest> inUsePasses =
+        passRequests.where((pass) => pass.status == 'In use').toList();
+    List<PassRequest> usedPasses =
+        passRequests.where((pass) => pass.status == 'Used').toList();
+
+    return Scaffold(
+      drawer: const RtDrawer(),
+      appBar: AppBar(
+        title: const Text('SVCE Hostel'),
+        centerTitle: true,
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: const [
+            Tab(text: 'In Use'),
+            Tab(text: 'Used'),
+          ],
+        ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          ListView.builder(
+            itemCount: inUsePasses.length,
+            itemBuilder: (context, index) {
+              return PassRequestItem(pass: inUsePasses[index]);
+            },
+          ),
+          ListView.builder(
+            itemCount: usedPasses.length,
+            itemBuilder: (context, index) {
+              return PassRequestItem(pass: usedPasses[index]);
+            },
+          ),
+        ],
+      ),
+    );
   }
 }
