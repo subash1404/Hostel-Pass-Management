@@ -50,6 +50,7 @@ class RtPassRequestsNotifier extends StateNotifier<List<PassRequest>> {
             expectedInTime: pass["expectedInTime"],
             expectedOutDate: pass["expectedOutDate"],
             expectedOutTime: pass["expectedOutTime"],
+            isSpecialPass: pass["isSpecialPass"],
 
             // This Class Constructor parameters
             studentName: pass["studentName"],

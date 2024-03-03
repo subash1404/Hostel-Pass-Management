@@ -1,11 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const blockController = require("../controllers/rt/block_controller");
+const passController = require("../controllers/warden/pass_controller");
 
-
-// router.use("/rt", rtController);
-
-router.use("/block", blockController);
-
+router.use("/pass", passController);
 
 module.exports = router;

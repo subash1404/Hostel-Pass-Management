@@ -17,6 +17,7 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
   DateTime? outDate;
   TimeOfDay? outTime;
   String? passType;
+  bool isSpecialPass = false;
 
   bool isTimeOfDayBefore(TimeOfDay first, TimeOfDay second) {
     if (first.hour < second.hour) {
@@ -97,6 +98,30 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                 Text("Returning Time"),
                 const SizedBox(height: 8),
                 _buildDateTimePicker("In", inDate, inTime),
+                const SizedBox(height: 20),
+                DropdownButtonFormField(
+                  value: "Normal Pass",
+                    items: const [
+                      DropdownMenuItem(
+                        value: "Normal Pass",
+                        child: Text("Normal Pass"),
+                      ),
+                      DropdownMenuItem(
+                        value: "Special Pass",
+                        child: Text("Special Pass"),
+                      ),
+                    ],
+                    onChanged: (value) {
+                      if (value == "Normal Pass") {
+                        setState(() {
+                          isSpecialPass = false;
+                        });
+                      } else {
+                        setState(() {
+                          isSpecialPass = true;
+                        });
+                      }
+                    }),
                 const SizedBox(height: 20),
                 TextField(
                     controller: _reasonController,
@@ -269,6 +294,7 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
             outTime: _formatTime(outTime!),
             reason: _reasonController.text,
             type: passType!,
+            isSpecialPass: isSpecialPass,
           );
       if (!mounted) {
         return;

@@ -48,6 +48,7 @@ class StudentPassNotifier extends StateNotifier<List<Pass>> {
             expectedInTime: pass["expectedInTime"],
             expectedOutDate: pass["expectedOutDate"],
             expectedOutTime: pass["expectedOutTime"],
+            isSpecialPass: pass["isSpecialPass"],
           ),
         );
       }
@@ -65,6 +66,7 @@ class StudentPassNotifier extends StateNotifier<List<Pass>> {
     required String inTime,
     required String outDate,
     required String outTime,
+    required bool isSpecialPass,
   }) async {
     try {
       var response = await http.post(
@@ -84,6 +86,7 @@ class StudentPassNotifier extends StateNotifier<List<Pass>> {
             "inTime": inTime,
             "outDate": outDate,
             "outTime": outTime,
+            "isSpecialPass": isSpecialPass,
           },
         ),
       );
@@ -104,6 +107,7 @@ class StudentPassNotifier extends StateNotifier<List<Pass>> {
           expectedInTime: responseData["inTime"],
           expectedOutDate: responseData["outDate"],
           expectedOutTime: responseData["outTime"],
+          isSpecialPass: responseData["isSpecialPass"],
         )
       ];
     } catch (e) {

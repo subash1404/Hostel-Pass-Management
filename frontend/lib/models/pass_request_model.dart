@@ -15,6 +15,7 @@ class PassRequest extends Pass {
     required super.expectedInDate,
     required super.expectedOutTime,
     required super.expectedOutDate,
+    required super.isSpecialPass,
 
     // This Class Constructor parameters
     required this.dept,

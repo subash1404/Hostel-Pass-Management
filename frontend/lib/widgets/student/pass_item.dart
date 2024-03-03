@@ -34,12 +34,12 @@ class _PassItemState extends State<PassItem> {
     Color statusColor;
 
     switch (widget.status) {
-      case 'pending':
-        statusText = 'Pending';
+      case 'Pending':
+        statusText = widget.status;
         statusColor = colorScheme.background;
         break;
-      case 'approved':
-        statusText = 'Approved';
+      case 'Approved' || 'In use':
+        statusText = widget.status;
         statusColor = const Color.fromARGB(255, 190, 255, 192);
         break;
       // case 'Rejected':

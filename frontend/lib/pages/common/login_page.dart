@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/pages/common/forget_password.dart';
 import 'package:hostel_pass_management/pages/rt/rt_page.dart';
 import 'package:hostel_pass_management/pages/student/student_page.dart';
+import 'package:hostel_pass_management/pages/warden/warden_page.dart';
 import 'package:hostel_pass_management/providers/block_students_provider.dart';
 import 'package:hostel_pass_management/providers/rt_pass_provider.dart';
 import 'package:hostel_pass_management/providers/student_pass_provider.dart';
@@ -93,13 +94,9 @@ class LoginPageState extends ConsumerState<LoginPage> {
 
         await prefs?.setStringList('temporaryBlock', temporaryBlock);
 
-        await ref
-            .read(blockStudentProvider.notifier)
-            .loadBlockStudentsFromDB();
+        await ref.read(blockStudentProvider.notifier).loadBlockStudentsFromDB();
 
-        await ref
-            .read(rtPassProvider.notifier)
-            .loadPassRequestsFromDB();
+        await ref.read(rtPassProvider.notifier).loadPassRequestsFromDB();
 
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
@@ -107,6 +104,19 @@ class LoginPageState extends ConsumerState<LoginPage> {
           ),
         );
       } else if (responseData["role"] == "warden") {
+        await prefs?.setString('jwtToken', responseData['jwtToken']);
+        await prefs?.setString('uid', responseData['uid']);
+        await prefs?.setString('wardenId', responseData['wardenId']);
+        await prefs?.setString('username', responseData['username']);
+        await prefs?.setString('email', responseData['email']);
+        await prefs?.setString('role', responseData['role']);
+        await prefs?.setString('phNo', responseData['phNo']);
+
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const WardenPage(),
+          ),
+        );
       } else if (responseData["role"] == "security") {}
     } catch (err) {
       if (!mounted) {

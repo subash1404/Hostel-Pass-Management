@@ -34,7 +34,7 @@ router.post("/login", async (req, res) => {
     return res.status(401).json({ message: "Invalid Credentials" });
   }
 
-  if (user.role == "student") { 
+  if (user.role == "student") {
     const student = await Student.findOne({ uid: user.uid });
 
     const jwtToken = jwt.sign(
@@ -58,7 +58,6 @@ router.post("/login", async (req, res) => {
       },
       process.env.JWT_KEY
     );
-
 
     const photoFilePath = path.join(
       __dirname +
@@ -118,8 +117,26 @@ router.post("/login", async (req, res) => {
     });
   } else if (user.role == "warden") {
     const warden = await Warden.findOne({ uid: user.uid });
-    const jwtToken = jwt.sign({}, process.env.JWT_KEY);
-    res.json({});
+    const jwtToken = jwt.sign(
+      {
+        uid: user.uid,
+        wardenId: warden.wardenId,
+        username: warden.username,
+        email: warden.email,
+        phNo: warden.phNo,
+        role: user.role,
+      },
+      process.env.JWT_KEY
+    );
+    res.json({
+      jwtToken,
+      uid: user.uid,
+      wardenId: warden.wardenId,
+      username: warden.username,
+      email: warden.email,
+      phNo: warden.phNo,
+      role: user.role,
+    });
   }
 });
 

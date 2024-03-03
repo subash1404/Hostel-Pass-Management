@@ -17,10 +17,6 @@ const RtSchema = new schema(
       type: String,
       required: true,
     },
-    photoPath: {
-      type: String,
-      required: true,
-    },
     email: {
       type: String,
     },

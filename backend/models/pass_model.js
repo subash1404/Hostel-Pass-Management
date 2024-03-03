@@ -81,6 +81,10 @@ const PassSchema = new schema(
       type: String,
       required: true,
     },
+    isSpecialPass: {
+      type: Boolean,
+      required: true,
+    },
   },
   { timestamps: true }
 );
