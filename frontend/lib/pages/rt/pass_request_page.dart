@@ -5,10 +5,11 @@ import 'package:hostel_pass_management/models/pass_request_model.dart';
 import 'package:hostel_pass_management/widgets/rt/rt_drawer.dart';
 
 class PassRequestPage extends StatefulWidget {
-  const PassRequestPage({required this.pass, super.key});
+  const PassRequestPage(
+      {required this.pass, required this.passRequest, super.key});
 
   final PassRequest pass;
-
+  final bool passRequest;
   @override
   State<PassRequestPage> createState() => _PassRequestPageState();
 }
@@ -75,40 +76,43 @@ class _PassRequestPageState extends State<PassRequestPage> {
               const SizedBox(height: 10),
               Text("Reason: ${widget.pass.reason}"),
               const SizedBox(height: 10),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        backgroundColor:
-                            const Color.fromARGB(255, 255, 198, 198),
-                      ),
-                      onPressed: () {},
-                      child: const Text(
-                        "Deny",
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 255, 57, 43),
+              Visibility(
+                visible: widget.passRequest,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          backgroundColor:
+                              const Color.fromARGB(255, 255, 198, 198),
+                        ),
+                        onPressed: () {},
+                        child: const Text(
+                          "Deny",
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 255, 57, 43),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        backgroundColor:
-                            const Color.fromARGB(255, 179, 255, 181),
-                      ),
-                      onPressed: () {},
-                      child: const Text(
-                        "Approve",
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 57, 139, 60),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          backgroundColor:
+                              const Color.fromARGB(255, 179, 255, 181),
+                        ),
+                        onPressed: () {},
+                        child: const Text(
+                          "Approve",
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 57, 139, 60),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               )
             ],
           ),

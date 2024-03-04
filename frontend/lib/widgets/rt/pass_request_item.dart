@@ -4,8 +4,10 @@ import 'package:hostel_pass_management/models/pass_request_model.dart';
 import 'package:hostel_pass_management/pages/rt/pass_request_page.dart';
 
 class PassRequestItem extends StatelessWidget {
-  const PassRequestItem({required this.pass, super.key});
+  const PassRequestItem(
+      {required this.pass, required this.passRequest, super.key});
   final PassRequest pass;
+  final bool passRequest;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +19,10 @@ class PassRequestItem extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => PassRequestPage(pass: pass),
+            builder: (context) => PassRequestPage(
+              pass: pass,
+              passRequest: passRequest,
+            ),
           ),
         );
       },

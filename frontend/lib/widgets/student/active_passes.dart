@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/models/pass_model.dart';
+import 'package:hostel_pass_management/providers/student_pass_provider.dart';
 import 'package:hostel_pass_management/widgets/student/pass_item.dart';
 
-class ActivePasses extends StatelessWidget {
+class ActivePasses extends ConsumerStatefulWidget {
   const ActivePasses({
     super.key,
     required this.pass,
@@ -10,7 +12,70 @@ class ActivePasses extends StatelessWidget {
   final Pass? pass;
 
   @override
+  ConsumerState<ActivePasses> createState() => _ActivePassesState();
+}
+
+class _ActivePassesState extends ConsumerState<ActivePasses> {
+  void deletePassConfirmation(BuildContext context) {
+    // Create a TextEditingController to handle user input
+    TextEditingController confirmController = TextEditingController();
+
+    // Show the AlertDialog
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: Text(
+              "Type \"CONFIRM\" to delete",
+              style: TextStyle(fontSize: 18),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          content: TextField(
+            controller: confirmController,
+            decoration: InputDecoration(
+                contentPadding: EdgeInsets.all(8),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                if (confirmController.text == "CONFIRM") {
+                  deletePass();
+                  Navigator.of(context).pop();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text("Please type CONFIRM to delete"),
+                  ));
+                }
+              },
+              child: Text("Delete"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void deletePass() {
+    if (widget.pass != null) {
+      // Call the function in the provider to delete the pass
+      ref.read(studentPassProvider.notifier).deletePass(widget.pass!.passId);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final activePasses = ref.watch(studentPassProvider);
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
 
@@ -36,22 +101,35 @@ class ActivePasses extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-            child: Text(
-              "Active Pass",
-              style: textTheme.titleLarge,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Active Pass",
+                  style: textTheme.titleLarge,
+                ),
+                IconButton(
+                    onPressed: () {
+                      deletePassConfirmation(context);
+                    },
+                    icon: Icon(
+                      Icons.delete,
+                      color: colorScheme.error,
+                    ))
+              ],
             ),
           ),
           const Divider(height: 0),
           Column(
             children: [
-              if (pass != null)
+              if (widget.pass != null)
                 PassItem(
-                  inTime: pass!.expectedInTime,
-                  outTime: pass!.expectedOutTime,
-                  inDate: pass!.expectedInDate,
-                  outDate: pass!.expectedOutDate,
-                  type: pass!.type,
-                  status: pass!.status,
+                  inTime: widget.pass!.expectedInTime,
+                  outTime: widget.pass!.expectedOutTime,
+                  inDate: widget.pass!.expectedInDate,
+                  outDate: widget.pass!.expectedOutDate,
+                  type: widget.pass!.type,
+                  status: widget.pass!.status,
                 )
               else
                 const Padding(

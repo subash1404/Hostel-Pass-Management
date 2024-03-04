@@ -16,6 +16,7 @@ class _RtPageState extends ConsumerState<RtPage> {
   @override
   Widget build(BuildContext context) {
     final passRequests = ref.watch(rtPassProvider);
+    print(passRequests);
     // print(passRequests);
     List<PassRequest> pendingPasses =
         passRequests.where((pass) => pass.status == 'Pending').toList();
@@ -49,7 +50,10 @@ class _RtPageState extends ConsumerState<RtPage> {
             Expanded(
               child: ListView.builder(
                 itemBuilder: (context, index) {
-                  return PassRequestItem(pass: pendingPasses[index]);
+                  return PassRequestItem(
+                    pass: pendingPasses[index],
+                    passRequest: true,
+                  );
                 },
                 itemCount: pendingPasses.length,
               ),

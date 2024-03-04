@@ -79,6 +79,15 @@ router.post("/newPass", async (req, res) => {
   }
 });
 
-router.delete("/deletePass", async (req, res) => {});
+router.delete("/deletePass/:passId", async (req, res) => {
+  try{
+    const passId = req.params.passId;
+    await Pass.deleteOne({passId:passId});
+    res.json({message:"Pass deleted Successfully"});
+  }catch(err){
+    console.log(err);
+    res.status(500).json("Internal Server Error");
+  }
+});
 
 module.exports = router;
