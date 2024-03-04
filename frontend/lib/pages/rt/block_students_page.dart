@@ -61,10 +61,19 @@ class _BlockStudentsPageState extends ConsumerState<BlockStudentsPage> {
                                 shape: BoxShape.circle,
                                 color: colorScheme.primaryContainer,
                               ),
-                              child: Image.memory(
-                                base64Decode(student.profileBuffer),
-                                fit: BoxFit.cover,
-                              ),
+                              child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    student.username[0],
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  )),
+
+                              // child: Image.memory(
+                              //   base64Decode(student.profileBuffer),
+                              //   fit: BoxFit.cover,
+                              // ),
                               // child: Text(
                               //   student.username[0],
                               //   style: textTheme.titleLarge!.copyWith(

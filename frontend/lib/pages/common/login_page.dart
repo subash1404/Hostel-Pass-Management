@@ -68,6 +68,7 @@ class LoginPageState extends ConsumerState<LoginPage> {
         await prefs?.setString('profileBuffer', responseData['profileBuffer']);
 
         await ref.read(studentPassProvider.notifier).loadPassFromDB();
+        print("check");
 
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(

@@ -49,7 +49,10 @@ class _RtPageState extends ConsumerState<RtPage> {
             Expanded(
               child: ListView.builder(
                 itemBuilder: (context, index) {
-                  return PassRequestItem(pass: pendingPasses[index]);
+                  return PassRequestItem(
+                    pass: pendingPasses[index],
+                    passRequest: true,
+                  );
                 },
                 itemCount: pendingPasses.length,
               ),

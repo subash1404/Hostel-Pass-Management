@@ -49,13 +49,19 @@ class _PassLogsPageState extends ConsumerState<PassLogsPage>
           ListView.builder(
             itemCount: inUsePasses.length,
             itemBuilder: (context, index) {
-              return PassRequestItem(pass: inUsePasses[index]);
+              return PassRequestItem(
+                pass: inUsePasses[index],
+                passRequest: false,
+              );
             },
           ),
           ListView.builder(
             itemCount: usedPasses.length,
             itemBuilder: (context, index) {
-              return PassRequestItem(pass: usedPasses[index]);
+              return PassRequestItem(
+                pass: usedPasses[index],
+                passRequest: false,
+              );
             },
           ),
         ],
