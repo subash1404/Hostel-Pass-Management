@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hostel_pass_management/models/block_student_model.dart';
 import 'package:hostel_pass_management/pages/common/profile_page.dart';
 import 'package:hostel_pass_management/providers/block_students_provider.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
@@ -10,7 +11,8 @@ import 'package:hostel_pass_management/widgets/rt/rt_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BlockStudentsPage extends ConsumerStatefulWidget {
-  const BlockStudentsPage({Key? key});
+  const BlockStudentsPage({Key? key, this.students});
+  final List<BlockStudent>? students;
 
   @override
   ConsumerState<BlockStudentsPage> createState() => _BlockStudentsPageState();
@@ -21,7 +23,13 @@ class _BlockStudentsPageState extends ConsumerState<BlockStudentsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final blockStudents = ref.watch(blockStudentProvider);
+    final blockStudents;
+
+    if (widget.students == null) {
+      blockStudents = ref.watch(blockStudentProvider);
+    } else {
+      blockStudents = widget.students;
+    }
 
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = Theme.of(context).colorScheme;

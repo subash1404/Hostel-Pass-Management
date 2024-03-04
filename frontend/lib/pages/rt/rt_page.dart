@@ -16,6 +16,7 @@ class _RtPageState extends ConsumerState<RtPage> {
   @override
   Widget build(BuildContext context) {
     final passRequests = ref.watch(rtPassProvider);
+    print(passRequests);
     // print(passRequests);
     List<PassRequest> pendingPasses =
         passRequests.where((pass) => pass.status == 'Pending').toList();

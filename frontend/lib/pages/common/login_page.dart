@@ -6,6 +6,7 @@ import 'package:hostel_pass_management/pages/rt/rt_page.dart';
 import 'package:hostel_pass_management/pages/student/student_page.dart';
 import 'package:hostel_pass_management/pages/warden/warden_page.dart';
 import 'package:hostel_pass_management/providers/block_students_provider.dart';
+import 'package:hostel_pass_management/providers/hostel_students_provider.dart';
 import 'package:hostel_pass_management/providers/rt_pass_provider.dart';
 import 'package:hostel_pass_management/providers/student_pass_provider.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
@@ -68,7 +69,6 @@ class LoginPageState extends ConsumerState<LoginPage> {
         await prefs?.setString('profileBuffer', responseData['profileBuffer']);
 
         await ref.read(studentPassProvider.notifier).loadPassFromDB();
-        print("check");
 
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
@@ -113,6 +113,9 @@ class LoginPageState extends ConsumerState<LoginPage> {
         await prefs?.setString('role', responseData['role']);
         await prefs?.setString('phNo', responseData['phNo']);
 
+        await ref
+            .read(hostelStudentProvider.notifier)
+            .loadHostelStudentsFromDB();
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => const WardenPage(),
