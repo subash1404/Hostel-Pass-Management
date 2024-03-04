@@ -57,7 +57,9 @@ class WardenDrawer extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => RtPage(),
+                  builder: (context) => const RtPage(
+                    warden: true,
+                  ),
                 ),
               );
             },

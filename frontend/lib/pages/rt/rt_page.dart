@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/models/pass_request_model.dart';
 import 'package:hostel_pass_management/providers/rt_pass_provider.dart';
+import 'package:hostel_pass_management/providers/warden_pass_provider.dart';
 import 'package:hostel_pass_management/widgets/rt/rt_drawer.dart';
 import 'package:hostel_pass_management/widgets/rt/pass_request_item.dart';
 
 class RtPage extends ConsumerStatefulWidget {
-  const RtPage({super.key});
+  const RtPage({super.key, this.warden});
+  final bool? warden;
 
   @override
   ConsumerState<RtPage> createState() => _RtPageState();
@@ -15,8 +17,13 @@ class RtPage extends ConsumerStatefulWidget {
 class _RtPageState extends ConsumerState<RtPage> {
   @override
   Widget build(BuildContext context) {
+    // final passRequests;
+    // if (widget.warden == false) {
     final passRequests = ref.watch(rtPassProvider);
-    print(passRequests);
+    // } else {
+    //   passRequests = ref.watch(specialPassProvider);
+    // }
+    // print(passRequests);
     // print(passRequests);
     List<PassRequest> pendingPasses =
         passRequests.where((pass) => pass.status == 'Pending').toList();
