@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/pages/rt/block_students_page.dart';
 import 'package:hostel_pass_management/providers/hostel_students_provider.dart';
+import 'package:hostel_pass_management/providers/rt_pass_provider.dart';
+import 'package:hostel_pass_management/providers/warden_pass_provider.dart';
 import 'package:hostel_pass_management/widgets/warden/warden_drawer.dart';
 
 class WardenPage extends ConsumerStatefulWidget {
@@ -12,13 +14,9 @@ class WardenPage extends ConsumerStatefulWidget {
 }
 
 class _WardenPageState extends ConsumerState<WardenPage> {
-  int _selectedBlockIndex = -1; // Initially no block selected
-
   @override
   Widget build(BuildContext context) {
     final hostelStudents = ref.watch(hostelStudentProvider);
-    print(hostelStudents.length);
-
     final blocks =
         List.generate(6, (index) => index + 1); // Generating 6 blocks
 

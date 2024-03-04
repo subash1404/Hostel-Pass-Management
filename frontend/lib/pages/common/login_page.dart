@@ -9,6 +9,7 @@ import 'package:hostel_pass_management/providers/block_students_provider.dart';
 import 'package:hostel_pass_management/providers/hostel_students_provider.dart';
 import 'package:hostel_pass_management/providers/rt_pass_provider.dart';
 import 'package:hostel_pass_management/providers/student_pass_provider.dart';
+import 'package:hostel_pass_management/providers/warden_pass_provider.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:hostel_pass_management/utils/validators.dart';
 import 'package:http/http.dart' as http;
@@ -116,6 +117,7 @@ class LoginPageState extends ConsumerState<LoginPage> {
         await ref
             .read(hostelStudentProvider.notifier)
             .loadHostelStudentsFromDB();
+        await ref.read(specialPassProvider.notifier).getSpecailPassesFromDB();
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => const WardenPage(),
