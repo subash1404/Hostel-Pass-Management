@@ -19,7 +19,8 @@ class _RtPageState extends ConsumerState<RtPage> {
   Widget build(BuildContext context) {
     // final passRequests;
     // if (widget.warden == false) {
-    final passRequests = ref.watch(rtPassProvider);
+    final passRequests = ref.watch(specialPassProvider);
+    print("passes ${passRequests.length}");
     // } else {
     //   passRequests = ref.watch(specialPassProvider);
     // }
