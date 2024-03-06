@@ -52,6 +52,7 @@ class WardenPassRequestsNotifier extends StateNotifier<List<PassRequest>> {
           phNo: pass["phNo"],
           roomNo: pass["roomNo"],
           year: pass["year"],
+          blockNo: pass["blockNo"],
         ));
       }
       state = specialPasses;

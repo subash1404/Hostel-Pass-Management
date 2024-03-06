@@ -10,6 +10,7 @@ import 'package:hostel_pass_management/pages/rt/rt_page.dart';
 import 'package:hostel_pass_management/pages/student/announcements_page.dart';
 import 'package:hostel_pass_management/pages/student/student_page.dart';
 import 'package:hostel_pass_management/pages/student/rules_page.dart';
+import 'package:hostel_pass_management/pages/warden/block_details_page.dart';
 import 'package:hostel_pass_management/pages/warden/warden_page.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -66,18 +67,18 @@ class WardenDrawer extends StatelessWidget {
             leading: const Icon(Icons.apartment_rounded),
             title: const Text("Pass Requests"),
           ),
-          ListTile(
-            onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const PassLogsPage(),
-                ),
-              );
-            },
-            leading: const Icon(Icons.receipt_long_rounded),
-            title: const Text("Pass Logs"),
-          ),
+          // ListTile(
+          //   onTap: () {
+          //     Navigator.pushReplacement(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder: (context) => PassLogsPage(),
+          //       ),
+          //     );
+          //   },
+          //   leading: const Icon(Icons.receipt_long_rounded),
+          //   title: const Text("Pass Logs"),
+          // ),
           ListTile(
             onTap: () {
               Navigator.pushReplacement(
@@ -105,7 +106,7 @@ class WardenDrawer extends StatelessWidget {
           const Spacer(),
           ListTile(
             onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const BugReportPage(),
@@ -117,7 +118,7 @@ class WardenDrawer extends StatelessWidget {
           ),
           ListTile(
             onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const DeveloperPage(),

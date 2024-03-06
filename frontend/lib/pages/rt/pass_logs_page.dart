@@ -2,12 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/models/pass_request_model.dart';
 import 'package:hostel_pass_management/providers/rt_pass_provider.dart';
+import 'package:hostel_pass_management/providers/warden_pass_provider.dart';
+import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:hostel_pass_management/widgets/rt/pass_request_item.dart';
 import 'package:hostel_pass_management/widgets/rt/rt_drawer.dart';
+import 'package:hostel_pass_management/widgets/student/student_drawer.dart';
+import 'package:hostel_pass_management/widgets/warden/warden_drawer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PassLogsPage extends ConsumerStatefulWidget {
-  const PassLogsPage({Key? key}) : super(key: key);
-
+  PassLogsPage({Key? key, this.inUsePasses, this.usedPasses, this.blockNo})
+      : super(key: key);
+  final List<PassRequest>? inUsePasses;
+  final List<PassRequest>? usedPasses;
+  final int? blockNo;
   @override
   ConsumerState<PassLogsPage> createState() => _PassLogsPageState();
 }
@@ -24,14 +32,37 @@ class _PassLogsPageState extends ConsumerState<PassLogsPage>
 
   @override
   Widget build(BuildContext context) {
-    final passRequests = ref.watch(rtPassProvider);
-    List<PassRequest> inUsePasses =
-        passRequests.where((pass) => pass.status == 'In use').toList();
-    List<PassRequest> usedPasses =
-        passRequests.where((pass) => pass.status == 'Used').toList();
+    var drawer;
+    SharedPreferences? prefs = SharedPreferencesManager.preferences;
+    if (prefs!.getString("role") == "student") {
+      drawer = StudentDrawer();
+    } else if (prefs.getString("role") == "rt") {
+      drawer = RtDrawer();
+    }
+    if (prefs.getString("role") == "warden") {
+      drawer = WardenDrawer();
+    }
+    final passRequests;
+    List<PassRequest> inUsePasses = [];
+    List<PassRequest> usedPasses = [];
+    if (prefs.getString("role") == "warden" &&
+        widget.inUsePasses != null &&
+        widget.usedPasses != null) {
+      inUsePasses = widget.inUsePasses!
+          .where((pass) => pass.blockNo == widget.blockNo)
+          .toList();
+      usedPasses = widget.usedPasses!
+          .where((pass) => pass.blockNo == widget.blockNo)
+          .toList();
+    } else if (prefs.getString("role") == "rt") {
+      passRequests = ref.watch(rtPassProvider);
+      inUsePasses =
+          passRequests.where((pass) => pass.status == 'In use').toList();
+      usedPasses = passRequests.where((pass) => pass.status == 'Used').toList();
+    }
 
     return Scaffold(
-      drawer: const RtDrawer(),
+      drawer: drawer,
       appBar: AppBar(
         title: const Text('SVCE Hostel'),
         centerTitle: true,

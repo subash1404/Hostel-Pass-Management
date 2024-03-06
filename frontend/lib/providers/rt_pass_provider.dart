@@ -59,6 +59,7 @@ class RtPassRequestsNotifier extends StateNotifier<List<PassRequest>> {
             motherPhNo: pass["motherPhNo"],
             phNo: pass["phNo"],
             roomNo: pass["roomNo"],
+            blockNo: pass["blockNo"],
             year: pass["year"],
           ),
         );

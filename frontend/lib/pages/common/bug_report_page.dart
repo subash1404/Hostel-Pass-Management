@@ -5,6 +5,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
+import 'package:hostel_pass_management/widgets/rt/rt_drawer.dart';
+import 'package:hostel_pass_management/widgets/student/student_drawer.dart';
+import 'package:hostel_pass_management/widgets/warden/warden_drawer.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,6 +25,16 @@ class BugReportPageState extends State<BugReportPage> {
 
   @override
   Widget build(BuildContext context) {
+    var drawer;
+    SharedPreferences? prefs = SharedPreferencesManager.preferences;
+    if (prefs!.getString("role") == "student") {
+      drawer = StudentDrawer();
+    } else if (prefs.getString("role") == "rt") {
+      drawer = RtDrawer();
+    }
+    if (prefs.getString("role") == "warden") {
+      drawer = WardenDrawer();
+    }
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
 
@@ -89,6 +102,7 @@ class BugReportPageState extends State<BugReportPage> {
       appBar: AppBar(
         title: const Text("Bug Report"),
       ),
+      drawer: drawer,
       body: Padding(
         padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
         child: SingleChildScrollView(
