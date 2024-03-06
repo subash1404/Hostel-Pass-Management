@@ -11,7 +11,7 @@ router.get("/getPass", async (req, res) => {
     for (const student of allStudents) {
       const studentPasses = await Pass.find({
         studentId: student.studentId,
-        isSpecialPass: true,
+        // isSpecialPass: true,
       });
 
       for (const pass of studentPasses) {
@@ -22,6 +22,7 @@ router.get("/getPass", async (req, res) => {
           fatherPhNo: student.fatherPhNo,
           motherPhNo: student.motherPhNo,
           phNo: student.phNo,
+          blockNo:student.blockNo,
           roomNo: student.roomNo,
           year: student.year,
         });
