@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hostel_pass_management/providers/announcement_provider.dart';
+import 'package:hostel_pass_management/providers/rt_announcement_provider.dart';
 import 'package:hostel_pass_management/widgets/rt/rt_drawer.dart';
 
 class AnnouncementPage extends ConsumerStatefulWidget {
@@ -21,7 +21,7 @@ class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     TextTheme textTheme = Theme.of(context).textTheme;
-    final announcements = ref.watch(announcementNotifier);
+    final announcements = ref.watch(rtAnnouncementNotifier);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Announcements"),
@@ -138,7 +138,7 @@ class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
       print("Message: $message");
       try {
         await ref
-            .read(announcementNotifier.notifier)
+            .read(rtAnnouncementNotifier.notifier)
             .makeAnnouncement(title: title, message: message);
         if (!mounted) {
           return;

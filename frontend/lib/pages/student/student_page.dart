@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/models/announcement_model.dart';
 import 'package:hostel_pass_management/models/pass_model.dart';
 import 'package:hostel_pass_management/pages/student/new_pass_page.dart';
-import 'package:hostel_pass_management/providers/announcement_provider.dart';
+import 'package:hostel_pass_management/providers/rt_announcement_provider.dart';
+import 'package:hostel_pass_management/providers/student_announcement_provider.dart';
 import 'package:hostel_pass_management/providers/student_pass_provider.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:hostel_pass_management/widgets/student/active_passes.dart';
@@ -26,7 +27,9 @@ class _StudentPageState extends ConsumerState<StudentPage> {
   Widget build(BuildContext context) {
     final List<Pass> passes = ref.watch(studentPassProvider);
     final activePass = ref.read(studentPassProvider.notifier).getActivePass();
-    final List<Announcement>? announcement = ref.read(announcementNotifier);
+    final List<Announcement>? announcement =
+        ref.read(studentAnnouncementNotifier);
+    print(announcement?.length);
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(

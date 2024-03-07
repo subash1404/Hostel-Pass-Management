@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/models/pass_request_model.dart';
-import 'package:hostel_pass_management/providers/announcement_provider.dart';
+import 'package:hostel_pass_management/providers/rt_announcement_provider.dart';
 import 'package:hostel_pass_management/providers/rt_pass_provider.dart';
 import 'package:hostel_pass_management/providers/warden_pass_provider.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';

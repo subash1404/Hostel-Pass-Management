@@ -7,8 +7,8 @@ import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
-class AnnoucementNotifier extends StateNotifier<List<Announcement>> {
-  AnnoucementNotifier() : super([]);
+class RtAnnoucementNotifier extends StateNotifier<List<Announcement>> {
+  RtAnnoucementNotifier() : super([]);
   SharedPreferences? prefs = SharedPreferencesManager.preferences;
 
   Future<void> loadAnnouncementsFromDB() async {
@@ -79,7 +79,7 @@ class AnnoucementNotifier extends StateNotifier<List<Announcement>> {
   }
 }
 
-final announcementNotifier =
-    StateNotifierProvider<AnnoucementNotifier, List<Announcement>>(
-  (ref) => AnnoucementNotifier(),
+final rtAnnouncementNotifier =
+    StateNotifierProvider<RtAnnoucementNotifier, List<Announcement>>(
+  (ref) => RtAnnoucementNotifier(),
 );
