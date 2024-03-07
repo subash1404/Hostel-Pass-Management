@@ -35,6 +35,7 @@ class _RtPageState extends ConsumerState<RtPage> {
     }
     if (prefs.getString("role") == "rt") {
       passRequests = ref.watch(rtPassProvider);
+      print("Rt pass requests ${passRequests.length}");
     } else {
       passRequests = ref.watch(specialPassProvider);
     }

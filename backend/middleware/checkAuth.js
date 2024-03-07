@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-const checkAuth = (req, res, next) => {
+const checkAuth = (req, res, next) =>  {
   const token = req.headers.authorization;
   try {
     const result = jwt.verify(token, process.env.JWT_KEY);
@@ -28,7 +28,7 @@ const checkAuth = (req, res, next) => {
       req.body.USER_username = result.username;
       req.body.USER_role = result.role;
       req.body.USER_phNo = result.phNo;
-      req.body.USER_temporaryBlock = result.temporaryBlock;
+      req.body.USER_temporaryBlock =result.temporaryBlock;
       req.body.USER_permanentBlock = result.permanentBlock;
     } else if (result.role == "warden") {
       req.body.USER_uid = result.uid;

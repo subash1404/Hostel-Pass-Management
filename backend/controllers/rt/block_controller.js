@@ -10,6 +10,7 @@ router.get("/getStudents", async (req, res, next) => {
     const filteredStudents = await Student.find({
       blockNo: req.body.USER_permanentBlock,
     });
+    console.log(req.body.USER_permanentBlock);
 
     let blockStudents = [];
 

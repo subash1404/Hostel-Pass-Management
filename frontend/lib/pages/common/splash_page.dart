@@ -44,12 +44,10 @@ class _SplashPageState extends ConsumerState<SplashPage> {
           await ref
               .read(blockStudentProvider.notifier)
               .loadBlockStudentsFromDB();
-
-          await ref.read(rtPassProvider.notifier).loadPassRequestsFromDB();
           await ref
               .read(rtAnnouncementNotifier.notifier)
               .loadAnnouncementsFromDB();
-
+          await ref.read(rtPassProvider.notifier).loadPassRequestsFromDB();
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               // builder: (context) => RtPage(),
