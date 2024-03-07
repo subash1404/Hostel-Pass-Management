@@ -5,6 +5,7 @@ import 'package:hostel_pass_management/pages/common/forget_password.dart';
 import 'package:hostel_pass_management/pages/rt/rt_page.dart';
 import 'package:hostel_pass_management/pages/student/student_page.dart';
 import 'package:hostel_pass_management/pages/warden/warden_page.dart';
+import 'package:hostel_pass_management/providers/announcement_provider.dart';
 import 'package:hostel_pass_management/providers/block_students_provider.dart';
 import 'package:hostel_pass_management/providers/hostel_students_provider.dart';
 import 'package:hostel_pass_management/providers/rt_pass_provider.dart';
@@ -99,6 +100,7 @@ class LoginPageState extends ConsumerState<LoginPage> {
         await ref.read(blockStudentProvider.notifier).loadBlockStudentsFromDB();
 
         await ref.read(rtPassProvider.notifier).loadPassRequestsFromDB();
+        await ref.read(announcementNotifier.notifier).loadAnnouncementsFromDB();
 
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
