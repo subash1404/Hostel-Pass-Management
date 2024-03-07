@@ -15,6 +15,10 @@ router.get("/getPass", async (req, res) => {
     const rt = await Rt.findOne({
       uid: req.body.USER_uid,
     });
+
+    if(!rt){
+      return res.status(404).json({message:"Rt not found"})
+    }
     const tempBlocks = rt.temporaryBlock;
     const blockStudents = await Student.find({
       blockNo: { $in: [...tempBlocks,req.body.USER_permanentBlock] },
@@ -81,16 +85,39 @@ router.get("/getPass", async (req, res) => {
 //   }
 // });
 
-router.get("/approvePass", async (req, res) => {
+router.post("/approvePass/:passId", async (req, res) => {
   try {
+    const passId = req.params.passId;
+    const pass = await Pass.findOneAndUpdate(
+      { passId: passId },
+      { status: "Approved" },
+      { new: true }
+    );
+    if (!pass) {
+      return res.status(404).json({ message: "Pass not found" });
+    }
+    res.json(pass);
   } catch (error) {
+    console.error("Error approving pass:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
-router.get("/rejectPass", async (req, res) => {
+
+router.post("/rejectPass/:passId", async (req, res) => {
   try {
+    const passId = req.params.passId;
+    const pass = await Pass.findOneAndUpdate(
+      { passId: passId },
+      { status: "Rejected" , isActive:false},
+      { new: true }
+    );
+    if (!pass) {
+      return res.status(404).json({ message: "Pass not found" });
+    }
+    res.json(pass);
   } catch (error) {
+    console.error("Error rejecting pass:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 });

@@ -69,6 +69,106 @@ class RtPassRequestsNotifier extends StateNotifier<List<PassRequest>> {
       throw "Something went wrong";
     }
   }
+
+  Future<void> approvePassRequest(String passId) async {
+    if (prefs?.getString == null) {
+      return;
+    }
+    try {
+      var response = await http.post(
+        Uri.parse(
+            "${dotenv.env["BACKEND_BASE_API"]}/${prefs!.getString("role")}/pass/approvePass/$passId"),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": prefs!.getString("jwtToken")!,
+        },
+      );
+      var reponseData = jsonDecode(response.body);
+      if (response.statusCode > 399) {
+        return reponseData["message"];
+      }
+      int passIndex = state.indexWhere((pass) => pass.passId == passId);
+      if (passIndex != -1) {
+        PassRequest updatedPass = PassRequest(
+          passId: state[passIndex].passId,
+          qrId: state[passIndex].qrId,
+          studentId: state[passIndex].studentId,
+          status: 'Approved',
+          destination: state[passIndex].destination,
+          type: state[passIndex].type,
+          isActive: state[passIndex].isActive,
+          reason: state[passIndex].reason,
+          expectedInDate: state[passIndex].expectedInDate,
+          expectedInTime: state[passIndex].expectedInTime,
+          expectedOutDate: state[passIndex].expectedOutDate,
+          expectedOutTime: state[passIndex].expectedOutTime,
+          isSpecialPass: state[passIndex].isSpecialPass,
+          studentName: state[passIndex].studentName,
+          dept: state[passIndex].dept,
+          fatherPhNo: state[passIndex].fatherPhNo,
+          motherPhNo: state[passIndex].motherPhNo,
+          phNo: state[passIndex].phNo,
+          roomNo: state[passIndex].roomNo,
+          blockNo: state[passIndex].blockNo,
+          year: state[passIndex].year,
+        );
+        state[passIndex] = updatedPass;
+      }
+      state = [...state];
+    } catch (err) {
+      throw "Something went wrong";
+    }
+  }
+
+  Future<void> rejectPassRequest(String passId) async {
+    if (prefs?.getString == null) {
+      return;
+    }
+    try {
+      var response = await http.post(
+        Uri.parse(
+            "${dotenv.env["BACKEND_BASE_API"]}/${prefs!.getString("role")}/pass/rejectPass/$passId"),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": prefs!.getString("jwtToken")!,
+        },
+      );
+      var reponseData = jsonDecode(response.body);
+      if (response.statusCode > 399) {
+        return reponseData["message"];
+      }
+      int passIndex = state.indexWhere((pass) => pass.passId == passId);
+      if (passIndex != -1) {
+        PassRequest updatedPass = PassRequest(
+          passId: state[passIndex].passId,
+          qrId: state[passIndex].qrId,
+          studentId: state[passIndex].studentId,
+          status: 'Rejected',
+          destination: state[passIndex].destination,
+          type: state[passIndex].type,
+          isActive: false,
+          reason: state[passIndex].reason,
+          expectedInDate: state[passIndex].expectedInDate,
+          expectedInTime: state[passIndex].expectedInTime,
+          expectedOutDate: state[passIndex].expectedOutDate,
+          expectedOutTime: state[passIndex].expectedOutTime,
+          isSpecialPass: state[passIndex].isSpecialPass,
+          studentName: state[passIndex].studentName,
+          dept: state[passIndex].dept,
+          fatherPhNo: state[passIndex].fatherPhNo,
+          motherPhNo: state[passIndex].motherPhNo,
+          phNo: state[passIndex].phNo,
+          roomNo: state[passIndex].roomNo,
+          blockNo: state[passIndex].blockNo,
+          year: state[passIndex].year,
+        );
+        state[passIndex] = updatedPass;
+      }
+      state = [...state];
+    } catch (err) {
+      throw "Something went wrong";
+    }
+  }
 }
 
 final rtPassProvider =
