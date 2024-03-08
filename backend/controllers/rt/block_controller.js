@@ -37,7 +37,13 @@ router.post('/postAnnouncement',async (req,res) => {
   try{
     const {title,message,blockNo,rtId} = req.body;
     const announcement = await new Announcement({title:title,message:message,blockNo:blockNo,rtId:rtId}).save();
-    res.json({rtId:rtId,title:title,blockNo:blockNo,message:message});
+    res.json({
+      _id: announcement._id,
+      rtId: announcement.rtId,
+      title: announcement.title,
+      blockNo: announcement.blockNo,
+      message: announcement.message,
+    });
   }catch(err){
     console.log(err);
     res.status(500).json({message:"Internal server error"});
@@ -47,6 +53,17 @@ router.get('/getAnnouncement/:blockNo',async (req,res) => {
   try{
     const blockNo = req.params.blockNo;
     const announcement = await Announcement.find({blockNo:blockNo});
+    console.log(announcement);
+    res.json(announcement);
+  }catch(err){
+    console.log(err);
+    res.status(500).json({message:"Internal server error"});
+  }
+});
+router.delete('/deleteAnnouncement/:announcementId',async (req,res) => {
+  try{
+    const annoucementId = req.params.announcementId;
+    const announcement = await Announcement.findOneAndDelete({_id:annoucementId});
     res.json(announcement);
   }catch(err){
     console.log(err);

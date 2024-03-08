@@ -4,7 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/models/pass_model.dart';
 import 'package:hostel_pass_management/models/pass_request_model.dart';
 import 'package:hostel_pass_management/providers/rt_pass_provider.dart';
+import 'package:hostel_pass_management/providers/warden_pass_provider.dart';
+import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:hostel_pass_management/widgets/rt/rt_drawer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PassRequestPage extends ConsumerStatefulWidget {
   const PassRequestPage(
@@ -23,6 +26,14 @@ class _PassRequestPageState extends ConsumerState<PassRequestPage> {
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
+    SharedPreferences? prefs = SharedPreferencesManager.preferences;
+    bool warden = false;
+    if (prefs!.getString("role") == "warden") {
+      warden = true;
+    }
+    if (prefs.getString("role") == "rt") {
+      warden = false;
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text("Pass Request"),
@@ -89,12 +100,19 @@ class _PassRequestPageState extends ConsumerState<PassRequestPage> {
                           backgroundColor:
                               const Color.fromARGB(255, 255, 198, 198),
                         ),
-                        onPressed: () async {
-                          ref
-                              .read(rtPassProvider.notifier)
-                              .rejectPassRequest(widget.pass.passId);
-                          Navigator.of(context).pop();
-                        },
+                        onPressed: warden
+                            ? () async {
+                                ref
+                                    .read(specialPassProvider.notifier)
+                                    .rejectPassRequest(widget.pass.passId);
+                                Navigator.of(context).pop();
+                              }
+                            : () async {
+                                ref
+                                    .read(rtPassProvider.notifier)
+                                    .rejectPassRequest(widget.pass.passId);
+                                Navigator.of(context).pop();
+                              },
                         child: const Text(
                           "Deny",
                           style: TextStyle(
@@ -110,12 +128,19 @@ class _PassRequestPageState extends ConsumerState<PassRequestPage> {
                           backgroundColor:
                               const Color.fromARGB(255, 179, 255, 181),
                         ),
-                        onPressed: () async {
-                          ref
-                              .read(rtPassProvider.notifier)
-                              .approvePassRequest(widget.pass.passId);
-                          Navigator.of(context).pop();
-                        },
+                        onPressed: warden
+                            ? () async {
+                                ref
+                                    .read(specialPassProvider.notifier)
+                                    .approvePassRequest(widget.pass.passId);
+                                Navigator.of(context).pop();
+                              }
+                            : () async {
+                                ref
+                                    .read(rtPassProvider.notifier)
+                                    .approvePassRequest(widget.pass.passId);
+                                Navigator.of(context).pop();
+                              },
                         child: const Text(
                           "Approve",
                           style: TextStyle(

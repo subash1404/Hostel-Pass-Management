@@ -31,6 +31,7 @@ class RtAnnoucementNotifier extends StateNotifier<List<Announcement>> {
       List<Announcement> announcements = [];
       for (var annoucement in responseData) {
         announcements.add(Announcement(
+            announcementId: annoucement["_id"],
             rtId: annoucement["rtId"],
             title: annoucement["title"],
             message: annoucement["message"],
@@ -64,15 +65,39 @@ class RtAnnoucementNotifier extends StateNotifier<List<Announcement>> {
         ),
       );
       var responseData = jsonDecode(response.body);
+      print(responseData);
       state = [
         ...state,
         Announcement(
+          announcementId: responseData["_id"],
           title: responseData["title"],
           message: responseData["message"],
           blockNo: responseData["blockNo"],
           rtId: responseData["rtId"],
         )
       ];
+    } catch (e) {
+      throw "posting error";
+    }
+  }
+
+  Future<void> deleteAnnouncement({
+    required String announcementId,
+  }) async {
+    try {
+      var response = await http.delete(
+        Uri.parse(
+            "${dotenv.env["BACKEND_BASE_API"]}/${prefs!.getString("role")}/block/deleteAnnouncement/$announcementId"),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": prefs!.getString("jwtToken")!,
+        },
+      );
+      var responseData = jsonDecode(response.body);
+      state = state
+          .where(
+              (announcement) => announcement.announcementId != announcementId)
+          .toList();
     } catch (e) {
       throw "Something went wrong";
     }

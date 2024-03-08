@@ -34,4 +34,41 @@ router.get("/getPass", async (req, res) => {
   }
 });
 
+
+router.post("/approvePass/:passId", async (req, res) => {
+  try {
+    const passId = req.params.passId;
+    const pass = await Pass.findOneAndUpdate(
+      { passId: passId },
+      { status: "Approved" },
+      { new: true }
+    );
+    if (!pass) {
+      return res.status(404).json({ message: "Pass not found" });
+    }
+    res.json(pass);
+  } catch (error) {
+    console.error("Error approving pass:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+router.post("/rejectPass/:passId", async (req, res) => {
+  try {
+    const passId = req.params.passId;
+    const pass = await Pass.findOneAndUpdate(
+      { passId: passId },
+      { status: "Rejected", isActive: false },
+      { new: true }
+    );
+    if (!pass) {
+      return res.status(404).json({ message: "Pass not found" });
+    }
+    res.json(pass);
+  } catch (error) {
+    console.error("Error rejecting pass:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 module.exports = router;

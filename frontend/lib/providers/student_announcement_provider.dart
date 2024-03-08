@@ -31,6 +31,7 @@ class StudentAnnouncementNotifier extends StateNotifier<List<Announcement>> {
       List<Announcement> announcements = [];
       for (var annoucement in responseData) {
         announcements.add(Announcement(
+            announcementId: responseData["_id"],
             rtId: annoucement["rtId"],
             title: annoucement["title"],
             message: annoucement["message"],

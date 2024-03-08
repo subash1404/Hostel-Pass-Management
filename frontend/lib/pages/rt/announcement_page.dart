@@ -94,29 +94,38 @@ class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
                         fontSize: 18,
                       ),
                     ),
-                    ...announcements.map((announcement) => ExpansionTile(
-                          childrenPadding:
-                              const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                          title: Text(announcement.title),
-                          leading: Container(
-                            width: 50,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: colorScheme.primaryContainer,
-                            ),
-                            child: Icon(
-                              Icons.announcement,
-                              color: colorScheme.onPrimaryContainer,
-                            ),
+                    ...announcements.map(
+                      (announcement) => ExpansionTile(
+                        childrenPadding:
+                            const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                        title: Text(announcement.title),
+                        leading: Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: colorScheme.primaryContainer,
                           ),
-                          subtitle: Text(announcement.message),
-                          children: [
-                            Text(
-                              announcement.message,
-                            ),
-                          ],
-                        )),
+                          child: Icon(
+                            Icons.announcement,
+                            color: colorScheme.onPrimaryContainer,
+                          ),
+                        ),
+                        subtitle: Text(announcement.message),
+                        children: [
+                          ListTile(
+                            title: Text('Delete'),
+                            onTap: () async {
+                              await ref
+                                  .read(rtAnnouncementNotifier.notifier)
+                                  .deleteAnnouncement(
+                                      announcementId:
+                                          announcement.announcementId);
+                            },
+                          ),
+                        ],
+                      ),
+                    )
                   ],
                 ),
               ),
