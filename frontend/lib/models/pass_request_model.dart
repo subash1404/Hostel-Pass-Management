@@ -1,32 +1,34 @@
 import 'package:hostel_pass_management/models/pass_model.dart';
 
 class PassRequest extends Pass {
-  PassRequest({
-    // Parent Class Constructor parameters
-    required super.passId,
-    required super.studentId,
-    required super.qrId,
-    required super.status,
-    required super.destination,
-    required super.type,
-    required super.isActive,
-    required super.reason,
-    required super.expectedInTime,
-    required super.expectedInDate,
-    required super.expectedOutTime,
-    required super.expectedOutDate,
-    required super.isSpecialPass,
+  PassRequest(
+      {
+      // Parent Class Constructor parameters
+      required super.passId,
+      required super.studentId,
+      required super.qrId,
+      required super.status,
+      required super.destination,
+      required super.type,
+      required super.isActive,
+      required super.reason,
+      required super.expectedInTime,
+      required super.expectedInDate,
+      required super.expectedOutTime,
+      required super.expectedOutDate,
+      required super.isSpecialPass,
 
-    // This Class Constructor parameters
-    required this.dept,
-    required this.fatherPhNo,
-    required this.motherPhNo,
-    required this.blockNo,
-    required this.phNo,
-    required this.roomNo,
-    required this.studentName,
-    required this.year,
-  });
+      // This Class Constructor parameters
+      required this.dept,
+      required this.fatherPhNo,
+      required this.motherPhNo,
+      required this.blockNo,
+      required this.phNo,
+      required this.roomNo,
+      required this.studentName,
+      required this.year,
+      required this.approvedBy,
+      required this.confirmedWith});
 
   final String studentName;
   final int year;
@@ -36,4 +38,6 @@ class PassRequest extends Pass {
   final String fatherPhNo;
   final String motherPhNo;
   final int blockNo;
+  final String approvedBy;
+  final String confirmedWith;
 }

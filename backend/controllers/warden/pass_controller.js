@@ -35,12 +35,12 @@ router.get("/getPass", async (req, res) => {
 });
 
 
-router.post("/approvePass/:passId", async (req, res) => {
+router.post("/approvePass", async (req, res) => {
   try {
-    const passId = req.params.passId;
+    const { passId, wardenName, confirmedWith } = req.body;
     const pass = await Pass.findOneAndUpdate(
       { passId: passId },
-      { status: "Approved" },
+      { status: "Approved", approvedBy: wardenName, confirmedWith: confirmedWith },
       { new: true }
     );
     if (!pass) {
@@ -53,12 +53,12 @@ router.post("/approvePass/:passId", async (req, res) => {
   }
 });
 
-router.post("/rejectPass/:passId", async (req, res) => {
+router.post("/rejectPass", async (req, res) => {
   try {
-    const passId = req.params.passId;
+    const { passId, wardenName } = req.body;
     const pass = await Pass.findOneAndUpdate(
       { passId: passId },
-      { status: "Rejected", isActive: false },
+      { status: "Rejected", isActive: false ,approvedBy:wardenName,confirmedWith:"None"},
       { new: true }
     );
     if (!pass) {
