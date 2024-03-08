@@ -18,7 +18,7 @@ class StudentAnnouncementNotifier extends StateNotifier<List<Announcement>> {
     try {
       var response = await http.get(
         Uri.parse(
-            "${dotenv.env["BACKEND_BASE_API"]}/${prefs!.getString("role")}/block/getAnnouncement/${prefs!.getInt('blockNo')}"),
+            "${dotenv.env["BACKEND_BASE_API"]}/student/block/getAnnouncement/${prefs!.getInt('blockNo')}"),
         headers: {
           "Content-Type": "application/json",
           "Authorization": prefs!.getString("jwtToken")!,
@@ -29,13 +29,13 @@ class StudentAnnouncementNotifier extends StateNotifier<List<Announcement>> {
         throw responseData["message"];
       }
       List<Announcement> announcements = [];
-      for (var annoucement in responseData) {
+      for (var announcement in responseData) {
         announcements.add(Announcement(
-            announcementId: responseData["_id"],
-            rtId: annoucement["rtId"],
-            title: annoucement["title"],
-            message: annoucement["message"],
-            blockNo: annoucement["blockNo"]));
+            announcementId: announcement["_id"],
+            rtId: announcement["rtId"],
+            title: announcement["title"],
+            message: announcement["message"],
+            blockNo: announcement["blockNo"]));
       }
       state = announcements;
     } catch (err) {
