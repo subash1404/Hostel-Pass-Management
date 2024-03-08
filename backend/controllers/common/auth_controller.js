@@ -59,16 +59,6 @@ router.post("/login", async (req, res) => {
       process.env.JWT_KEY
     );
 
-    const photoFilePath = path.join(
-      __dirname +
-        "../../../images/profiles/students/" +
-        student.studentId +
-        ".jpg"
-    );
-
-    const photoBuffer = fs.readFileSync(photoFilePath);
-    const profileBuffer = photoBuffer.toString("base64");
-
     res.json({
       jwtToken,
       uid: user.uid,
@@ -87,7 +77,6 @@ router.post("/login", async (req, res) => {
       year: student.year,
       section: student.section,
       roomNo: student.roomNo,
-      profileBuffer,
     });
   } else if (user.role == "rt") {
     const rt = await Rt.findOne({ uid: user.uid });

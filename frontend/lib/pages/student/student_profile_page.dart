@@ -7,12 +7,27 @@ import 'package:hostel_pass_management/widgets/common/profile_item.dart';
 import 'package:hostel_pass_management/widgets/student/student_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+class StudentProfilePage extends StatefulWidget {
+  const StudentProfilePage({super.key});
+
+  @override
+  State<StudentProfilePage> createState() => _StudentProfilePageState();
+}
+
+class _StudentProfilePageState extends State<StudentProfilePage> {
+  final String? profileBuffer = null;
+  SharedPreferences? prefs = SharedPreferencesManager.preferences;
+
+  void fetchProfilePic() {}
+
+  @override
+  void initState() {
+    fetchProfilePic();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    SharedPreferences? prefs = SharedPreferencesManager.preferences;
     // ignore: unused_local_variable
     TextTheme textTheme = Theme.of(context).textTheme;
     // ignore: unused_local_variable
@@ -59,7 +74,7 @@ class ProfilePage extends StatelessWidget {
                       clipBehavior: Clip.antiAlias,
                       decoration: const BoxDecoration(shape: BoxShape.circle),
                       child: Image.memory(
-                        base64Decode(prefs.getString("profileBuffer")!),
+                        base64Decode(prefs!.getString("profileBuffer")!),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -91,22 +106,22 @@ class ProfilePage extends StatelessWidget {
                     ProfileItem(
                       path: "assets/images/svce.png",
                       attribute: "Year",
-                      value: "${prefs.getInt("year")}",
+                      value: "${prefs!.getInt("year")}",
                     ),
                     ProfileItem(
                       path: "assets/images/svce.png",
                       attribute: "Department",
-                      value: prefs.getString("dept")!,
+                      value: prefs!.getString("dept")!,
                     ),
                     ProfileItem(
                       path: "assets/images/svce.png",
                       attribute: "Section",
-                      value: prefs.getString("section")!,
+                      value: prefs!.getString("section")!,
                     ),
                     ProfileItem(
                       path: "assets/images/svce.png",
                       attribute: "Admission Number",
-                      value: prefs.getString("studentId")!,
+                      value: prefs!.getString("studentId")!,
                     ),
                     // ProfileItem(
                     //   path: "assets/images/svce.png",
@@ -128,28 +143,28 @@ class ProfilePage extends StatelessWidget {
                     ProfileItem(
                       path: "assets/images/svce.png",
                       attribute: "Email",
-                      value: prefs.getString("dept")!,
+                      value: prefs!.getString("dept")!,
                     ),
                     ProfileItem(
                       path: "assets/images/svce.png",
                       attribute: "Phone No",
-                      value: prefs.getString("phNo")!,
+                      value: prefs!.getString("phNo")!,
                     ),
                     ProfileItem(
                       path: "assets/images/svce.png",
                       attribute: "Father's Name",
-                      value: prefs.getString("fatherName")!,
+                      value: prefs!.getString("fatherName")!,
                     ),
                     ProfileItem(
                       path: "assets/images/svce.png",
                       attribute: "Mother's Name",
-                      value: prefs.getString("motherName")!,
+                      value: prefs!.getString("motherName")!,
                     ),
                     ProfileItem(
                       path: "assets/images/svce.png",
                       attribute: "Parent's Phone Number",
                       value:
-                          "${prefs.getString("fatherPhNo")!}  /  ${prefs.getString("motherPhNo")!}",
+                          "${prefs!.getString("fatherPhNo")!}  /  ${prefs!.getString("motherPhNo")!}",
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -166,12 +181,12 @@ class ProfilePage extends StatelessWidget {
                     ProfileItem(
                       path: "assets/images/svce.png",
                       attribute: "Block No",
-                      value: prefs.getInt("blockNo").toString(),
+                      value: prefs!.getInt("blockNo").toString(),
                     ),
                     ProfileItem(
                       path: "assets/images/svce.png",
                       attribute: "Room No",
-                      value: prefs.getInt("roomNo").toString(),
+                      value: prefs!.getInt("roomNo").toString(),
                     ),
                   ],
                 ),

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:hostel_pass_management/pages/common/developer_page.dart';
 import 'package:hostel_pass_management/pages/common/bug_report_page.dart';
 import 'package:hostel_pass_management/pages/common/login_page.dart';
-import 'package:hostel_pass_management/pages/common/profile_page.dart';
 import 'package:hostel_pass_management/pages/student/announcements_page.dart';
 import 'package:hostel_pass_management/pages/student/student_page.dart';
 import 'package:hostel_pass_management/pages/student/rules_page.dart';
+import 'package:hostel_pass_management/pages/student/student_profile_page.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:hostel_pass_management/widgets/rt/rt_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -53,7 +53,7 @@ class StudentDrawer extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ProfilePage(),
+                  builder: (context) => StudentProfilePage(),
                 ),
               );
             },
@@ -87,7 +87,7 @@ class StudentDrawer extends StatelessWidget {
           Spacer(),
           ListTile(
             onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) => BugReportPage(),
@@ -99,7 +99,7 @@ class StudentDrawer extends StatelessWidget {
           ),
           ListTile(
             onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) => DeveloperPage(),

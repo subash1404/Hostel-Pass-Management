@@ -15,12 +15,13 @@ router.get("/getPass", async (req, res) => {
       blockNo: req.body.USER_permanentBlock,
     });
 
+    console.log(req.body.USER_permanentBlock);
+
     var passes = [];
     for (let student of blockStudents) {
       var tempPass = [];
       var studentPasses = await Pass.find({
         studentId: student.studentId,
-        isSpecialPass: false,
       });
       for (const pass of studentPasses) {
         tempPass.push({

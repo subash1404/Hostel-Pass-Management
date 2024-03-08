@@ -114,7 +114,7 @@ class _ActivePassesState extends ConsumerState<ActivePasses> {
                     },
                     icon: Icon(
                       Icons.delete,
-                      color: colorScheme.error,
+                      color: colorScheme.onErrorContainer,
                     ))
               ],
             ),

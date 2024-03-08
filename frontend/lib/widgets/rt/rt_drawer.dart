@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hostel_pass_management/pages/common/developer_page.dart';
 import 'package:hostel_pass_management/pages/common/bug_report_page.dart';
 import 'package:hostel_pass_management/pages/common/login_page.dart';
-import 'package:hostel_pass_management/pages/common/profile_page.dart';
+import 'package:hostel_pass_management/pages/student/student_profile_page.dart';
 import 'package:hostel_pass_management/pages/rt/block_students_page.dart';
 import 'package:hostel_pass_management/pages/rt/pass_logs_page.dart';
 import 'package:hostel_pass_management/pages/rt/rt_page.dart';
@@ -10,6 +10,7 @@ import 'package:hostel_pass_management/pages/student/announcements_page.dart';
 import 'package:hostel_pass_management/pages/student/student_page.dart';
 import 'package:hostel_pass_management/pages/student/rules_page.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
+import 'package:hostel_pass_management/widgets/rt/rt_profile_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RtDrawer extends StatelessWidget {
@@ -79,7 +80,7 @@ class RtDrawer extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const ProfilePage(),
+                  builder: (context) => const RtProfilePage(),
                 ),
               );
             },
@@ -113,7 +114,7 @@ class RtDrawer extends StatelessWidget {
           const Spacer(),
           ListTile(
             onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const BugReportPage(),
@@ -125,7 +126,7 @@ class RtDrawer extends StatelessWidget {
           ),
           ListTile(
             onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const DeveloperPage(),

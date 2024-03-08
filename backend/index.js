@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const authController = require("./controllers/common/auth_controller");
 const bugReportController = require("./controllers/common/bug_report_controller");
+const profilePicController = require("./controllers/common/profile_pic_controller");
 const studentRoute = require("./routes/student_route");
 const rtRoute = require("./routes/rt_route");
 const wardenRoute = require("./routes/warden_route");
@@ -45,7 +46,9 @@ mongoose
   });
 
 app.use("/bugReport", checkAuth, bugReportController);
-app.use("/auth", authController);
+app.use("/auth", authController); 
+app.use("/profile", profilePicController); 
+app.use("/student", checkAuth, studentRoute);
 app.use("/student", checkAuth, studentRoute);
 app.use("/warden", checkAuth, wardenRoute);
 app.use("/rt", checkAuth, rtRoute);

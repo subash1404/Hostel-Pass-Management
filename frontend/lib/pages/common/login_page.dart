@@ -67,7 +67,6 @@ class LoginPageState extends ConsumerState<LoginPage> {
         await prefs?.setInt('year', responseData['year']);
         await prefs?.setString('section', responseData['section']);
         await prefs?.setInt('roomNo', responseData['roomNo']);
-        await prefs?.setString('profileBuffer', responseData['profileBuffer']);
 
         await ref.read(studentPassProvider.notifier).loadPassFromDB();
 
