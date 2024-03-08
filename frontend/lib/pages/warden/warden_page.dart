@@ -19,7 +19,6 @@ class _WardenPageState extends ConsumerState<WardenPage> {
   @override
   Widget build(BuildContext context) {
     final cumulativePasses = ref.watch(specialPassProvider);
-    print(cumulativePasses.length);
     List<PassRequest> inUsePasses =
         cumulativePasses.where((pass) => pass.status == 'In use').toList();
     List<PassRequest> usedPasses =

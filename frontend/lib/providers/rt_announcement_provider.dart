@@ -65,7 +65,6 @@ class RtAnnoucementNotifier extends StateNotifier<List<Announcement>> {
         ),
       );
       var responseData = jsonDecode(response.body);
-      print(responseData);
       state = [
         ...state,
         Announcement(

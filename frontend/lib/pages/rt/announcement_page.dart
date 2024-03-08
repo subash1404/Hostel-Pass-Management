@@ -138,13 +138,9 @@ class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
 
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
-      // Form is valid, perform desired actions here
       final String title = _titleController.text;
       final String message = _messageController.text;
 
-      // Print or use the title and message
-      print("Title: $title");
-      print("Message: $message");
       try {
         await ref
             .read(rtAnnouncementNotifier.notifier)

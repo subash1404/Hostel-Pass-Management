@@ -29,7 +29,6 @@ class _StudentPageState extends ConsumerState<StudentPage> {
     final activePass = ref.read(studentPassProvider.notifier).getActivePass();
     final List<Announcement>? announcement =
         ref.read(studentAnnouncementNotifier);
-    print(announcement?.length);
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(

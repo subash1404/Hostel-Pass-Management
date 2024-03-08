@@ -23,7 +23,6 @@ router.get("/getPass", async (req, res) => {
     const blockStudents = await Student.find({
       blockNo: { $in: [...tempBlocks,req.body.USER_permanentBlock] },
     });
-    console.log(blockStudents);
     var passes = [];
     for (let student of blockStudents) {
       var tempPass = [];

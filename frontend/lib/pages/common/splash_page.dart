@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/pages/common/login_page.dart';
 import 'package:hostel_pass_management/pages/rt/rt_page.dart';
 import 'package:hostel_pass_management/pages/student/student_page.dart';
+import 'package:hostel_pass_management/pages/warden/hostel_stats.dart';
 import 'package:hostel_pass_management/pages/warden/warden_page.dart';
 import 'package:hostel_pass_management/providers/rt_announcement_provider.dart';
 import 'package:hostel_pass_management/providers/block_students_provider.dart';
@@ -61,7 +62,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
           await ref.read(specialPassProvider.notifier).getSpecailPassesFromDB();
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-              // builder: (context) => RtPage(),
+              // builder: (context) => StatsPage(),
               builder: (context) => WardenPage(),
             ),
           );

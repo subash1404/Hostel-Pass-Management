@@ -11,6 +11,7 @@ import 'package:hostel_pass_management/pages/student/announcements_page.dart';
 import 'package:hostel_pass_management/pages/student/student_page.dart';
 import 'package:hostel_pass_management/pages/student/rules_page.dart';
 import 'package:hostel_pass_management/pages/warden/block_details_page.dart';
+import 'package:hostel_pass_management/pages/warden/hostel_stats.dart';
 import 'package:hostel_pass_management/pages/warden/warden_page.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -52,6 +53,18 @@ class WardenDrawer extends StatelessWidget {
             },
             leading: const Icon(Icons.home_filled),
             title: const Text("Home"),
+          ),
+          ListTile(
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => StatsPage(),
+                ),
+              );
+            },
+            leading: const Icon(Icons.info),
+            title: const Text("Hostel Stats"),
           ),
           ListTile(
             onTap: () {
