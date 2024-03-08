@@ -22,6 +22,7 @@ router.get("/getPass", async (req, res) => {
           fatherPhNo: student.fatherPhNo,
           motherPhNo: student.motherPhNo,
           phNo: student.phNo,
+          blockNo:student.blockNo,
           roomNo: student.roomNo,
           year: student.year,
         });
@@ -29,6 +30,43 @@ router.get("/getPass", async (req, res) => {
     }
     res.json(passes);
   } catch (error) {
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+
+router.post("/approvePass/:passId", async (req, res) => {
+  try {
+    const passId = req.params.passId;
+    const pass = await Pass.findOneAndUpdate(
+      { passId: passId },
+      { status: "Approved" },
+      { new: true }
+    );
+    if (!pass) {
+      return res.status(404).json({ message: "Pass not found" });
+    }
+    res.json(pass);
+  } catch (error) {
+    console.error("Error approving pass:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+router.post("/rejectPass/:passId", async (req, res) => {
+  try {
+    const passId = req.params.passId;
+    const pass = await Pass.findOneAndUpdate(
+      { passId: passId },
+      { status: "Rejected", isActive: false },
+      { new: true }
+    );
+    if (!pass) {
+      return res.status(404).json({ message: "Pass not found" });
+    }
+    res.json(pass);
+  } catch (error) {
+    console.error("Error rejecting pass:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 });

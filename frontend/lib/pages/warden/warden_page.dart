@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hostel_pass_management/models/pass_request_model.dart';
 import 'package:hostel_pass_management/pages/rt/block_students_page.dart';
+import 'package:hostel_pass_management/pages/warden/block_details_page.dart';
 import 'package:hostel_pass_management/providers/hostel_students_provider.dart';
 import 'package:hostel_pass_management/providers/rt_pass_provider.dart';
 import 'package:hostel_pass_management/providers/warden_pass_provider.dart';
@@ -18,6 +20,11 @@ class WardenPage extends ConsumerStatefulWidget {
 class _WardenPageState extends ConsumerState<WardenPage> {
   @override
   Widget build(BuildContext context) {
+    final cumulativePasses = ref.watch(specialPassProvider);
+    List<PassRequest> inUsePasses =
+        cumulativePasses.where((pass) => pass.status == 'In use').toList();
+    List<PassRequest> usedPasses =
+        cumulativePasses.where((pass) => pass.status == 'Used').toList();
     final hostelStudents = ref.watch(hostelStudentProvider);
     final blocks =
         List.generate(6, (index) => index + 1); // Generating 6 blocks
@@ -43,13 +50,14 @@ class _WardenPageState extends ConsumerState<WardenPage> {
                     final filteredStudents = hostelStudents
                         .where((student) => student.blockNo == index + 1)
                         .toList();
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => BlockStudentsPage(
-                          students: filteredStudents,
-                        ),
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => BlockDetailPage(
+                        students: filteredStudents,
+                        inUsePasses: inUsePasses,
+                        usedPasses: usedPasses,
+                        blockNo: index + 1,
                       ),
-                    );
+                    ));
                   },
                 );
               },

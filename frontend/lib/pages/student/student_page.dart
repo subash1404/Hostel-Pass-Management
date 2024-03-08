@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hostel_pass_management/models/announcement_model.dart';
 import 'package:hostel_pass_management/models/pass_model.dart';
 import 'package:hostel_pass_management/pages/student/new_pass_page.dart';
+import 'package:hostel_pass_management/providers/rt_announcement_provider.dart';
+import 'package:hostel_pass_management/providers/student_announcement_provider.dart';
 import 'package:hostel_pass_management/providers/student_pass_provider.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:hostel_pass_management/widgets/student/active_passes.dart';
@@ -24,13 +27,62 @@ class _StudentPageState extends ConsumerState<StudentPage> {
   Widget build(BuildContext context) {
     final List<Pass> passes = ref.watch(studentPassProvider);
     final activePass = ref.read(studentPassProvider.notifier).getActivePass();
-
+    final List<Announcement>? announcement =
+        ref.read(studentAnnouncementNotifier);
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
         title: const Text('SVCE Hostel'),
         scrolledUnderElevation: 0,
         centerTitle: true,
+        actions: [
+          IconButton(
+              onPressed: () {
+                showModalBottomSheet(
+                  scrollControlDisabledMaxHeightRatio: 0.7,
+                  context: context,
+                  builder: (context) {
+                    return announcement!.isNotEmpty
+                        ? Container(
+                            height: MediaQuery.of(context).size.height * 0.3,
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Padding(
+                                padding: const EdgeInsets.all(20),
+                                child: BottomSheet(
+                                  onClosing: () {},
+                                  builder: (BuildContext context) {
+                                    return SingleChildScrollView(
+                                      child: ListTile(
+                                        title: Text(
+                                          announcement[0].title,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 28,
+                                          ),
+                                        ),
+                                        subtitle: Text(announcement[0].message),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          )
+                        : Container(
+                            height: MediaQuery.of(context).size.height * 0.3,
+                            child: const Align(
+                              alignment: Alignment.topLeft,
+                              child: Center(
+                                child: Text("No announcements"),
+                              ),
+                            ),
+                          ); // Return empty SizedBox if there's no announcement
+                  },
+                );
+              },
+              icon: const Icon(Icons.notifications_none))
+        ],
       ),
       floatingActionButton: Hero(
         tag: "newpass",

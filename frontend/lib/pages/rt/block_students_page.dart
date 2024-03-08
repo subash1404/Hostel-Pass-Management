@@ -11,8 +11,9 @@ import 'package:hostel_pass_management/widgets/rt/rt_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BlockStudentsPage extends ConsumerStatefulWidget {
-  const BlockStudentsPage({Key? key, this.students});
+  const BlockStudentsPage({Key? key, this.students, this.blockNo});
   final List<BlockStudent>? students;
+  final int? blockNo;
 
   @override
   ConsumerState<BlockStudentsPage> createState() => _BlockStudentsPageState();
@@ -24,22 +25,28 @@ class _BlockStudentsPageState extends ConsumerState<BlockStudentsPage> {
   @override
   Widget build(BuildContext context) {
     final blockStudents;
+    var drawer;
+    var appbar;
 
     if (widget.students == null) {
       blockStudents = ref.watch(blockStudentProvider);
+      drawer = RtDrawer();
+      appbar = AppBar(
+        title: const Text('Block Students'),
+        centerTitle: true,
+      );
     } else {
       blockStudents = widget.students;
+      drawer = null;
+      appbar = null;
     }
 
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      drawer: const RtDrawer(),
-      appBar: AppBar(
-        title: const Text('Block Students'),
-        centerTitle: true,
-      ),
+      drawer: drawer,
+      appBar: appbar,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

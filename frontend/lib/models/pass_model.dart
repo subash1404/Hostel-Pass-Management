@@ -10,12 +10,12 @@ class Pass {
     required this.reason,
     required this.expectedInTime,
     required this.expectedInDate,
-    required this.expectedOutTime, 
+    required this.expectedOutTime,
     required this.expectedOutDate,
-    required this.isSpecialPass,   
+    required this.isSpecialPass,
     // this.actualInTime,
     // this.actualInDate,
-    // this.actualOutTime, 
+    // this.actualOutTime,
     // this.actualOutDate,
   });
 

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hostel_pass_management/pages/rt/student_details_page.dart';
-import 'package:hostel_pass_management/pages/warden/warden_page.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:hostel_pass_management/widgets/rt/rt_drawer.dart';
 import 'package:hostel_pass_management/widgets/student/student_drawer.dart';
@@ -14,13 +12,12 @@ class DeveloperPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var drawer;
     SharedPreferences? prefs = SharedPreferencesManager.preferences;
-    if(prefs!.getString("role") == "student"){
+    if (prefs!.getString("role") == "student") {
       drawer = StudentDrawer();
-    }
-    else if(prefs.getString("role") == "rt"){
+    } else if (prefs.getString("role") == "rt") {
       drawer = RtDrawer();
     }
-    else if(prefs.getString("role") == "warden"){
+    if (prefs.getString("role") == "warden") {
       drawer = WardenDrawer();
     }
     return Scaffold(

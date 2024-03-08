@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/models/pass_request_model.dart';
+import 'package:hostel_pass_management/providers/block_students_provider.dart';
+import 'package:hostel_pass_management/providers/rt_announcement_provider.dart';
 import 'package:hostel_pass_management/providers/rt_pass_provider.dart';
 import 'package:hostel_pass_management/providers/warden_pass_provider.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
@@ -21,34 +23,44 @@ class RtPage extends ConsumerStatefulWidget {
 class _RtPageState extends ConsumerState<RtPage> {
   @override
   Widget build(BuildContext context) {
+    final passRequests;
+    var students = [];
+    int studentsCount = 0;
+    int passesCount = 0;
     var drawer;
     SharedPreferences? prefs = SharedPreferencesManager.preferences;
     if (prefs!.getString("role") == "student") {
       drawer = StudentDrawer();
     } else if (prefs.getString("role") == "rt") {
       drawer = RtDrawer();
-    } else if (prefs.getString("role") == "warden") {
+    }
+    if (prefs.getString("role") == "warden") {
       drawer = WardenDrawer();
     }
-    final passRequests;
-    List<PassRequest> pendingPasses;
     if (prefs.getString("role") == "rt") {
       passRequests = ref.watch(rtPassProvider);
-      pendingPasses = passRequests
-          .where(
-              (pass) => pass.status == 'Pending' && pass.isSpecialPass == false)
-          .toList();
+      students = ref.watch(blockStudentProvider);
+
+      students.forEach((student) {
+        studentsCount++;
+      });
+      students.forEach((student) {
+        final studentPasses = passRequests.where((pass) =>
+            pass.studentId == student.studentId && pass.status == "In use");
+        studentPasses.forEach((pass) {
+          passesCount++;
+        });
+      });
+      print("stduents $studentsCount");
+      print("pases $passesCount");
     } else {
       passRequests = ref.watch(specialPassProvider);
-      pendingPasses = passRequests
-          .where(
-              (pass) => pass.status == 'Pending' && pass.isSpecialPass == true)
-          .toList();
     }
 
+    List<PassRequest> pendingPasses =
+        passRequests.where((pass) => pass.status == 'Pending').toList();
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
-
     return Scaffold(
       drawer: drawer,
       appBar: AppBar(
@@ -60,12 +72,14 @@ class _RtPageState extends ConsumerState<RtPage> {
         mainAxisSize: MainAxisSize.max,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 10, 0, 10),
-            child: Text(
-              "Pass Requests",
-              style: textTheme.titleLarge,
-            ),
-          ),
+              padding: const EdgeInsets.fromLTRB(20, 0, 0, 10),
+              child: Visibility(
+                visible: studentsCount != 0,
+                child: Text(
+                  "Total Students: $studentsCount \n Students Outside: $passesCount",
+                  style: textTheme.titleLarge,
+                ),
+              )),
           if (pendingPasses.length == 0)
             const Expanded(
               child: Center(

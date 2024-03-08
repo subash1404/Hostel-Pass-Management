@@ -21,6 +21,7 @@ class PassRequest extends Pass {
     required this.dept,
     required this.fatherPhNo,
     required this.motherPhNo,
+    required this.blockNo,
     required this.phNo,
     required this.roomNo,
     required this.studentName,
@@ -34,4 +35,5 @@ class PassRequest extends Pass {
   final String phNo;
   final String fatherPhNo;
   final String motherPhNo;
+  final int blockNo;
 }

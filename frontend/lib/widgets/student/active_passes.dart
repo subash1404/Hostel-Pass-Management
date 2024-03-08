@@ -109,9 +109,11 @@ class _ActivePassesState extends ConsumerState<ActivePasses> {
                   style: textTheme.titleLarge,
                 ),
                 IconButton(
-                    onPressed: () {
-                      deletePassConfirmation(context);
-                    },
+                    onPressed: widget.pass == null
+                        ? null
+                        : () {
+                            deletePassConfirmation(context);
+                          },
                     icon: Icon(
                       Icons.delete,
                       color: colorScheme.onErrorContainer,

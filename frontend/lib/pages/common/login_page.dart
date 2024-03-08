@@ -4,10 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/pages/common/forget_password.dart';
 import 'package:hostel_pass_management/pages/rt/rt_page.dart';
 import 'package:hostel_pass_management/pages/student/student_page.dart';
+import 'package:hostel_pass_management/pages/warden/hostel_stats.dart';
 import 'package:hostel_pass_management/pages/warden/warden_page.dart';
+import 'package:hostel_pass_management/providers/rt_announcement_provider.dart';
 import 'package:hostel_pass_management/providers/block_students_provider.dart';
 import 'package:hostel_pass_management/providers/hostel_students_provider.dart';
 import 'package:hostel_pass_management/providers/rt_pass_provider.dart';
+import 'package:hostel_pass_management/providers/student_announcement_provider.dart';
 import 'package:hostel_pass_management/providers/student_pass_provider.dart';
 import 'package:hostel_pass_management/providers/warden_pass_provider.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
@@ -69,6 +72,9 @@ class LoginPageState extends ConsumerState<LoginPage> {
         await prefs?.setInt('roomNo', responseData['roomNo']);
 
         await ref.read(studentPassProvider.notifier).loadPassFromDB();
+        await ref
+            .read(studentAnnouncementNotifier.notifier)
+            .loadAnnouncementsFromDB();
 
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
@@ -98,6 +104,9 @@ class LoginPageState extends ConsumerState<LoginPage> {
         await ref.read(blockStudentProvider.notifier).loadBlockStudentsFromDB();
 
         await ref.read(rtPassProvider.notifier).loadPassRequestsFromDB();
+        await ref
+            .read(rtAnnouncementNotifier.notifier)
+            .loadAnnouncementsFromDB();
 
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
@@ -117,10 +126,10 @@ class LoginPageState extends ConsumerState<LoginPage> {
             .read(hostelStudentProvider.notifier)
             .loadHostelStudentsFromDB();
         await ref.read(specialPassProvider.notifier).getSpecailPassesFromDB();
-        await ref.read(rtPassProvider.notifier).loadPassRequestsFromDB();
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => const WardenPage(),
+            // builder: (context) => StatsPage(),
           ),
         );
       } else if (responseData["role"] == "security") {}

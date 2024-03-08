@@ -10,6 +10,8 @@ import 'package:hostel_pass_management/pages/rt/rt_page.dart';
 import 'package:hostel_pass_management/pages/student/announcements_page.dart';
 import 'package:hostel_pass_management/pages/student/student_page.dart';
 import 'package:hostel_pass_management/pages/student/rules_page.dart';
+import 'package:hostel_pass_management/pages/warden/block_details_page.dart';
+import 'package:hostel_pass_management/pages/warden/hostel_stats.dart';
 import 'package:hostel_pass_management/pages/warden/warden_page.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:hostel_pass_management/widgets/warden/warden_profile_page.dart';
@@ -58,6 +60,18 @@ class WardenDrawer extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
+                  builder: (context) => StatsPage(),
+                ),
+              );
+            },
+            leading: const Icon(Icons.info),
+            title: const Text("Hostel Stats"),
+          ),
+          ListTile(
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
                   builder: (context) => const RtPage(
                     warden: true,
                   ),
@@ -67,18 +81,18 @@ class WardenDrawer extends StatelessWidget {
             leading: const Icon(Icons.apartment_rounded),
             title: const Text("Pass Requests"),
           ),
-          ListTile(
-            onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const PassLogsPage(),
-                ),
-              );
-            },
-            leading: const Icon(Icons.receipt_long_rounded),
-            title: const Text("Pass Logs"),
-          ),
+          // ListTile(
+          //   onTap: () {
+          //     Navigator.pushReplacement(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder: (context) => PassLogsPage(),
+          //       ),
+          //     );
+          //   },
+          //   leading: const Icon(Icons.receipt_long_rounded),
+          //   title: const Text("Pass Logs"),
+          // ),
           ListTile(
             onTap: () {
               Navigator.pushReplacement(

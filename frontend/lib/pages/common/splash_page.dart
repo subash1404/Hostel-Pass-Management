@@ -5,10 +5,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/pages/common/login_page.dart';
 import 'package:hostel_pass_management/pages/rt/rt_page.dart';
 import 'package:hostel_pass_management/pages/student/student_page.dart';
+import 'package:hostel_pass_management/pages/warden/hostel_stats.dart';
 import 'package:hostel_pass_management/pages/warden/warden_page.dart';
+import 'package:hostel_pass_management/providers/rt_announcement_provider.dart';
 import 'package:hostel_pass_management/providers/block_students_provider.dart';
 import 'package:hostel_pass_management/providers/hostel_students_provider.dart';
 import 'package:hostel_pass_management/providers/rt_pass_provider.dart';
+import 'package:hostel_pass_management/providers/student_announcement_provider.dart';
 import 'package:hostel_pass_management/providers/student_pass_provider.dart';
 import 'package:hostel_pass_management/providers/warden_pass_provider.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
@@ -30,6 +33,9 @@ class _SplashPageState extends ConsumerState<SplashPage> {
       if (prefs!.getString("jwtToken") != null) {
         if (prefs!.getString("role") == "student") {
           await ref.read(studentPassProvider.notifier).loadPassFromDB();
+          await ref
+              .read(studentAnnouncementNotifier.notifier)
+              .loadAnnouncementsFromDB();
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (context) => StudentPage(),
@@ -39,9 +45,10 @@ class _SplashPageState extends ConsumerState<SplashPage> {
           await ref
               .read(blockStudentProvider.notifier)
               .loadBlockStudentsFromDB();
-
+          await ref
+              .read(rtAnnouncementNotifier.notifier)
+              .loadAnnouncementsFromDB();
           await ref.read(rtPassProvider.notifier).loadPassRequestsFromDB();
-
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               // builder: (context) => RtPage(),
@@ -55,7 +62,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
           await ref.read(specialPassProvider.notifier).getSpecailPassesFromDB();
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-              // builder: (context) => RtPage(),
+              // builder: (context) => StatsPage(),
               builder: (context) => WardenPage(),
             ),
           );

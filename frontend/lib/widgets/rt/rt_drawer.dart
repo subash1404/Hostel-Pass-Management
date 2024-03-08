@@ -3,6 +3,7 @@ import 'package:hostel_pass_management/pages/common/developer_page.dart';
 import 'package:hostel_pass_management/pages/common/bug_report_page.dart';
 import 'package:hostel_pass_management/pages/common/login_page.dart';
 import 'package:hostel_pass_management/pages/student/student_profile_page.dart';
+import 'package:hostel_pass_management/pages/rt/announcement_page.dart';
 import 'package:hostel_pass_management/pages/rt/block_students_page.dart';
 import 'package:hostel_pass_management/pages/rt/pass_logs_page.dart';
 import 'package:hostel_pass_management/pages/rt/rt_page.dart';
@@ -68,12 +69,24 @@ class RtDrawer extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const PassLogsPage(),
+                  builder: (context) => PassLogsPage(),
                 ),
               );
             },
             leading: const Icon(Icons.receipt_long_rounded),
             title: const Text("Pass Logs"),
+          ),
+          ListTile(
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AnnouncementPage(),
+                ),
+              );
+            },
+            leading: const Icon(Icons.receipt_long_rounded),
+            title: const Text("Make Announcement"),
           ),
           ListTile(
             onTap: () {
