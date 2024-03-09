@@ -71,6 +71,23 @@ class _RtPageState extends ConsumerState<RtPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
         children: [
+          DropdownButton<int>(
+            value: 0,
+            onChanged: (int? value) {
+              setState(() {
+                // _selectedValue = value!;
+              });
+            },
+            items: List<DropdownMenuItem<int>>.generate(5, (int index) {
+              if (index == 1) {
+                index++;
+              }
+              return DropdownMenuItem<int>(
+                value: index,
+                child: Text(index == 0 ? "None" : 'Block ${index}'),
+              );
+            }),
+          ),
           Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 0, 10),
               child: Visibility(

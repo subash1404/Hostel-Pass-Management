@@ -29,17 +29,17 @@ class StudentAnnouncementNotifier extends StateNotifier<List<Announcement>> {
         throw responseData["message"];
       }
       List<Announcement> announcements = [];
-      for (var annoucement in responseData) {
+      for (var announcement in responseData) {
         announcements.add(Announcement(
-            announcementId: responseData["_id"],
-            rtId: annoucement["rtId"],
-            title: annoucement["title"],
-            message: annoucement["message"],
-            blockNo: annoucement["blockNo"]));
+            announcementId: announcement["_id"],
+            rtId: announcement["rtId"],
+            title: announcement["title"],
+            message: announcement["message"],
+            blockNo: announcement["blockNo"]));
       }
       state = announcements;
     } catch (err) {
-      throw "annoucement error";
+      throw "announcement error";
     }
   }
 }
