@@ -52,27 +52,85 @@ class PassLog extends StatelessWidget {
           else
             Expanded(
               child: SingleChildScrollView(
-                child: DataTable(
-                  columnSpacing: 20,
-                  dataRowMaxHeight: 60,
-                  columns: const [
-                    DataColumn(label: Text('From')),
-                    DataColumn(label: Text('To')),
-                    DataColumn(label: Text('Type')),
-                  ],
-                  rows: passlog
-                      .map(
-                        (pass) => DataRow(
-                          cells: [
-                            DataCell(Text(
-                                "${pass.expectedInDate} ${pass.expectedInTime}")),
-                            DataCell(Text(
-                                "${pass.expectedOutDate} ${pass.expectedOutTime}")),
-                            DataCell(Text(pass.type)),
+                child: Column(
+                  children: passlog.map((pass) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        border: Border(bottom: BorderSide(color: Colors.grey)),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 12.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.place,
+                                      ),
+                                      SizedBox(width: 12),
+                                      Text(
+                                        '${pass.destination}',
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 8),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.calendar_today),
+                                      SizedBox(width: 12),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '${pass.expectedInDate} - ${pass.expectedOutDate}',
+                                            style: TextStyle(fontSize: 14),
+                                          ),
+                                          Text(
+                                            '${pass.expectedInTime} - ${pass.expectedOutTime}',
+                                            style: TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Spacer(),
+                            Container(
+                              padding: EdgeInsets.only(right: 8),
+                              alignment: Alignment.center,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                padding: EdgeInsets.all(4),
+                                child: Text(
+                                  pass.type,
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
-                      )
-                      .toList(),
+                      ),
+                    );
+                  }).toList(),
                 ),
               ),
             ),

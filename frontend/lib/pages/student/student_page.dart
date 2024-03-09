@@ -193,9 +193,9 @@ class _QrBottomSheetState extends ConsumerState<QrBottomSheet> {
                     borderRadius: BorderRadius.circular(20),
                     color: colorScheme.primaryContainer,
                   ),
-                  child: activePass.status == "approved"
+                  child: activePass.status == "Approved"
                       ? QrImageView(
-                          data: activePass.qrId!,
+                          data: activePass.qrId,
                           semanticsLabel: "skuf",
                         )
                       : const Center(
