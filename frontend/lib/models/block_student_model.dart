@@ -3,8 +3,8 @@ class BlockStudent {
     required this.studentId,
     required this.uid,
     required this.username,
+    required this.email,
     required this.regNo,
-    required this.profileBuffer,
     required this.phNo,
     required this.fatherName,
     required this.fatherPhNo,
@@ -20,8 +20,8 @@ class BlockStudent {
   final String uid;
   final String studentId;
   final String username;
+  final String email;
   final String regNo;
-  final String profileBuffer;
   final String phNo;
   final String fatherName;
   final String motherName;

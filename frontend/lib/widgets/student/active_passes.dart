@@ -36,9 +36,11 @@ class _ActivePassesState extends ConsumerState<ActivePasses> {
           content: TextField(
             controller: confirmController,
             decoration: InputDecoration(
-                contentPadding: EdgeInsets.all(8),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
+              contentPadding: EdgeInsets.all(8),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
           ),
           actions: <Widget>[
             TextButton(
@@ -109,15 +111,16 @@ class _ActivePassesState extends ConsumerState<ActivePasses> {
                   style: textTheme.titleLarge,
                 ),
                 IconButton(
-                    onPressed: widget.pass == null
-                        ? null
-                        : () {
-                            deletePassConfirmation(context);
-                          },
-                    icon: Icon(
-                      Icons.delete,
-                      color: colorScheme.onErrorContainer,
-                    ))
+                  onPressed: widget.pass == null
+                      ? null
+                      : () {
+                          deletePassConfirmation(context);
+                        },
+                  icon: Icon(
+                    Icons.delete,
+                    color: colorScheme.onErrorContainer,
+                  ),
+                )
               ],
             ),
           ),

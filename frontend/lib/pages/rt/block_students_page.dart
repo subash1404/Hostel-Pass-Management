@@ -58,7 +58,10 @@ class _BlockStudentsPageState extends ConsumerState<BlockStudentsPage> {
                 return GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => StudentProfilePage()));
+                      MaterialPageRoute(
+                        builder: (context) => StudentProfilePage(studentData: student),
+                      ),
+                    );
                   },
                   child: Padding(
                     padding: const EdgeInsets.only(
@@ -77,25 +80,14 @@ class _BlockStudentsPageState extends ConsumerState<BlockStudentsPage> {
                                 color: colorScheme.primaryContainer,
                               ),
                               child: Align(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    student.username[0],
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  )),
-
-                              // child: Image.memory(
-                              //   base64Decode(student.profileBuffer),
-                              //   fit: BoxFit.cover,
-                              // ),
-                              // child: Text(
-                              //   student.username[0],
-                              //   style: textTheme.titleLarge!.copyWith(
-                              //     fontWeight: FontWeight.w500,
-                              //     color: colorScheme.onPrimaryContainer,
-                              //   ),
-                              // ),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  student.username[0],
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
                             ),
                             const SizedBox(width: 15),
                             Expanded(
@@ -125,8 +117,7 @@ class _BlockStudentsPageState extends ConsumerState<BlockStudentsPage> {
                         Divider(
                           height: 1, // Adjust the height as needed
                           thickness: 1, // Adjust the thickness as needed
-                          color: Color.fromARGB(
-                              255, 219, 219, 219), // Adjust the color as needed
+                          color: Color.fromARGB(255, 219, 219, 219),
                         ),
                       ],
                     ),

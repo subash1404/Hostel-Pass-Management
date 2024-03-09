@@ -1,24 +1,68 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hostel_pass_management/models/block_student_model.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:hostel_pass_management/widgets/common/profile_item.dart';
 import 'package:hostel_pass_management/widgets/student/student_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class StudentProfilePage extends StatefulWidget {
-  const StudentProfilePage({super.key});
+  const StudentProfilePage({super.key, this.studentData});
+  final BlockStudent? studentData;
 
   @override
   State<StudentProfilePage> createState() => _StudentProfilePageState();
 }
 
 class _StudentProfilePageState extends State<StudentProfilePage> {
-  final String? profileBuffer = null;
+  String? profileBuffer;
   SharedPreferences? prefs = SharedPreferencesManager.preferences;
+  late BlockStudent student;
 
-  void fetchProfilePic() {}
+  void fetchProfilePic() async {
+    try {
+      var response;
+      if (widget.studentData == null) {
+        response = await http.get(
+          Uri.parse("${dotenv.env["BACKEND_BASE_API"]}/profile/fetch"),
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": prefs!.getString("jwtToken")!,
+          },
+        );
+      } else {
+        response = await http.get(
+          Uri.parse(
+              "${dotenv.env["BACKEND_BASE_API"]}/profile/studentProfile/${widget.studentData!.uid}"),
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": prefs!.getString("jwtToken")!,
+          },
+        );
+      }
+
+      var responseData = jsonDecode(response.body);
+
+      if (response.statusCode > 399) {
+        throw responseData["message"];
+      }
+
+      setState(() {
+        profileBuffer = responseData["profileBuffer"];
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Something went wrong"),
+        ),
+      );
+    }
+  }
 
   @override
   void initState() {
@@ -28,15 +72,51 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.studentData == null) {
+      student = BlockStudent(
+          studentId: prefs!.getString("studentId")!,
+          uid: prefs!.getString("uid")!,
+          username: prefs!.getString("username")!,
+          email: prefs!.getString("email")!,
+          regNo: prefs!.getString("regNo")!,
+          phNo: prefs!.getString("phNo")!,
+          fatherName: prefs!.getString("fatherName")!,
+          fatherPhNo: prefs!.getString("fatherPhNo")!,
+          motherName: prefs!.getString("motherName")!,
+          motherPhNo: prefs!.getString("motherPhNo")!,
+          dept: prefs!.getString("dept")!,
+          year: prefs!.getInt("year")!,
+          blockNo: prefs!.getInt("blockNo")!,
+          roomNo: prefs!.getInt("roomNo")!,
+          section: prefs!.getString("section")!);
+    } else {
+      student = BlockStudent(
+          studentId: widget.studentData!.studentId,
+          uid: widget.studentData!.uid,
+          username: widget.studentData!.username,
+          email: widget.studentData!.email,
+          regNo: widget.studentData!.regNo,
+          phNo: widget.studentData!.phNo,
+          fatherName: widget.studentData!.fatherName,
+          fatherPhNo: widget.studentData!.fatherPhNo,
+          motherName: widget.studentData!.motherName,
+          motherPhNo: widget.studentData!.motherPhNo,
+          dept: widget.studentData!.dept,
+          year: widget.studentData!.year,
+          blockNo: widget.studentData!.blockNo,
+          roomNo: widget.studentData!.roomNo,
+          section: widget.studentData!.section);
+    }
+
     // ignore: unused_local_variable
     TextTheme textTheme = Theme.of(context).textTheme;
     // ignore: unused_local_variable
     ColorScheme colorScheme = Theme.of(context).colorScheme;
-    TextStyle customFont = GoogleFonts.lato();
     // print(prefs!.getString("profileBuffer"));
 
     return Scaffold(
       body: Scaffold(
+        backgroundColor: const Color(0xf5f4fa),
         appBar: AppBar(
           // backgroundColor: const Color.fromARGB(255, 153, 0, 255),
           // foregroundColor: Colors.white,
@@ -45,148 +125,263 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
           ),
           // centerTitle: true,
         ),
-        drawer: const StudentDrawer(),
+        drawer: widget.studentData == null ? StudentDrawer() : null,
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                width: double.infinity,
-                // padding: EdgeInsets.all(30),
-                color: const Color.fromARGB(255, 242, 242, 242),
+                margin: const EdgeInsets.fromLTRB(24, 20, 24, 10),
+                clipBehavior: Clip.hardEdge,
+                padding: EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      spreadRadius: 1,
+                      blurRadius: 1,
+                      offset: const Offset(0, 1),
+                    ),
+                  ],
+                  borderRadius: BorderRadius.circular(20),
+                  color: colorScheme.primaryContainer,
+                ),
                 child: Column(
                   children: [
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    Text(
-                      prefs!.getString("username")!,
-                      textAlign: TextAlign.center,
-                      style: customFont.copyWith(
-                          fontWeight: FontWeight.bold, fontSize: 30),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    Container(
-                      height: 150,
-                      width: 150,
-                      clipBehavior: Clip.antiAlias,
-                      decoration: const BoxDecoration(shape: BoxShape.circle),
-                      child: Image.memory(
-                        base64Decode(prefs!.getString("profileBuffer")!),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 16,
+                    Row(
+                      children: [
+                        Container(
+                          height: 70,
+                          width: 70,
+                          clipBehavior: Clip.antiAlias,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                          ),
+                          child: profileBuffer == null
+                              ? const Icon(
+                                  Icons.person_rounded,
+                                  size: 30,
+                                )
+                              : Image.memory(
+                                  base64Decode(profileBuffer!),
+                                  fit: BoxFit.cover,
+                                ),
+                        ),
+                        SizedBox(width: 25),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              // prefs!.getString("username")!,
+                              // "Naveen Naveen Naveen Naveen Naveen",
+                              student.username,
+                              overflow: TextOverflow.fade,
+                              softWrap: true,
+                              style: textTheme.titleLarge!.copyWith(
+                                color: Color.fromARGB(255, 25, 32, 42),
+                                // color: Color.fromARGB(255, 112, 106, 106),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 12),
+                            Text(
+                              student.regNo,
+                              style: textTheme.titleMedium!.copyWith(
+                                color: Color.fromARGB(255, 96, 102, 110),
+                                // fontSize: 17,
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
                     ),
                   ],
                 ),
               ),
+              // Container(
+              //   width: double.infinity,
+              //   // padding: EdgeInsets.all(30),
+              //   // color: const Color.fromARGB(255, 242, 242, 242),
+              //   child: Column(
+              //     children: [
+              //       const SizedBox(
+              //         height: 16,
+              //       ),
+              //       Text(
+              //         prefs!.getString("username")!,
+              //         textAlign: TextAlign.center,
+              //         style: textTheme.bodyLarge!.copyWith(
+              //           fontWeight: FontWeight.bold,
+              //           fontSize: 30,
+              //         ),
+              //       ),
+              //       const SizedBox(
+              //         height: 8,
+              //       ),
+              //       Container(
+              //         height: 150,
+              //         width: 150,
+              //         clipBehavior: Clip.antiAlias,
+              //         decoration: BoxDecoration(
+              //           shape: BoxShape.circle,
+              //           color: colorScheme.primaryContainer,
+              //         ),
+              //         child: profileBuffer == null
+              //             ? const Icon(
+              //                 Icons.person_rounded,
+              //                 size: 80,
+              //               )
+              //             : Image.memory(
+              //                 base64Decode(profileBuffer!),
+              //                 fit: BoxFit.cover,
+              //               ),
+              //       ),
+              //       const SizedBox(
+              //         height: 16,
+              //       ),
+              //     ],
+              //   ),
+              // ),
               const SizedBox(height: 20),
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 0, vertical: 12),
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: Text(
-                        'Academic Information',
-                        style: customFont.copyWith(
-                          color: const Color.fromARGB(255, 86, 86, 86),
-                        ),
+                    Text(
+                      'ACADEMIC INFORMATION',
+                      style: textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        // color: colorScheme.primary,
+                        color: const Color.fromARGB(255, 30, 75, 130),
                       ),
                     ),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    ProfileItem(
-                      path: "assets/images/svce.png",
-                      attribute: "Year",
-                      value: "${prefs!.getInt("year")}",
-                    ),
-                    ProfileItem(
-                      path: "assets/images/svce.png",
-                      attribute: "Department",
-                      value: prefs!.getString("dept")!,
-                    ),
-                    ProfileItem(
-                      path: "assets/images/svce.png",
-                      attribute: "Section",
-                      value: prefs!.getString("section")!,
-                    ),
-                    ProfileItem(
-                      path: "assets/images/svce.png",
-                      attribute: "Admission Number",
-                      value: prefs!.getString("studentId")!,
-                    ),
-                    // ProfileItem(
-                    //   path: "assets/images/svce.png",
-                    //   attribute: "Branch",
-                    //   value: "Information Technology",
-                    // ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: Text(
-                        'Personal Information',
-                        style: customFont.copyWith(
-                          color: const Color.fromARGB(255, 86, 86, 86),
-                        ),
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(0, 20, 0, 10),
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            spreadRadius: 1,
+                            blurRadius: 1,
+                            offset: const Offset(0, 1),
+                          ),
+                        ],
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.white,
+                      ),
+                      child: Column(
+                        children: [
+                          ProfileItem(
+                            attribute: "Year",
+                            value: student.year.toString(),
+                          ),
+                          const Divider(height: 0),
+                          ProfileItem(
+                            attribute: "Department",
+                            value: student.dept,
+                          ),
+                          const Divider(height: 0),
+                          ProfileItem(
+                            attribute: "Section",
+                            value: student.section,
+                          ),
+                          const Divider(height: 0),
+                          ProfileItem(
+                            attribute: "Admission Number",
+                            value: student.studentId,
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    ProfileItem(
-                      path: "assets/images/svce.png",
-                      attribute: "Email",
-                      value: prefs!.getString("dept")!,
-                    ),
-                    ProfileItem(
-                      path: "assets/images/svce.png",
-                      attribute: "Phone No",
-                      value: prefs!.getString("phNo")!,
-                    ),
-                    ProfileItem(
-                      path: "assets/images/svce.png",
-                      attribute: "Father's Name",
-                      value: prefs!.getString("fatherName")!,
-                    ),
-                    ProfileItem(
-                      path: "assets/images/svce.png",
-                      attribute: "Mother's Name",
-                      value: prefs!.getString("motherName")!,
-                    ),
-                    ProfileItem(
-                      path: "assets/images/svce.png",
-                      attribute: "Parent's Phone Number",
-                      value:
-                          "${prefs!.getString("fatherPhNo")!}  /  ${prefs!.getString("motherPhNo")!}",
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: Text(
-                        'Hostel Information',
-                        style: customFont.copyWith(
-                          color: const Color.fromARGB(255, 86, 86, 86),
-                        ),
+                    const SizedBox(height: 30),
+                    Text(
+                      'PERSONAL INFORMATION',
+                      style: textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: const Color.fromARGB(255, 30, 75, 130),
                       ),
                     ),
-                    const SizedBox(
-                      height: 12,
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(0, 20, 0, 10),
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            spreadRadius: 1,
+                            blurRadius: 1,
+                            offset: const Offset(0, 1),
+                          ),
+                        ],
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.white,
+                      ),
+                      child: Column(
+                        children: [
+                          ProfileItem(
+                            attribute: "Email",
+                            value: student.email,
+                          ),
+                          const Divider(height: 0),
+                          ProfileItem(
+                            attribute: "Phone No",
+                            value: student.phNo,
+                          ),
+                          const Divider(height: 0),
+                          ProfileItem(
+                            attribute: "Father's Name",
+                            value: student.fatherName,
+                          ),
+                          const Divider(height: 0),
+                          ProfileItem(
+                            attribute: "Mother's Name",
+                            value: student.motherName,
+                          ),
+                          const Divider(height: 0),
+                          ProfileItem(
+                            attribute: "Parent's Phone Number",
+                            value:
+                                "${student.fatherPhNo}  /  ${student.motherPhNo}",
+                          ),
+                        ],
+                      ),
                     ),
-                    ProfileItem(
-                      path: "assets/images/svce.png",
-                      attribute: "Block No",
-                      value: prefs!.getInt("blockNo").toString(),
+                    const SizedBox(height: 30),
+                    Text(
+                      'HOSTEL INFORMATION',
+                      style: textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: const Color.fromARGB(255, 30, 75, 130),
+                      ),
                     ),
-                    ProfileItem(
-                      path: "assets/images/svce.png",
-                      attribute: "Room No",
-                      value: prefs!.getInt("roomNo").toString(),
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(0, 20, 0, 10),
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            spreadRadius: 1,
+                            blurRadius: 1,
+                            offset: const Offset(0, 1),
+                          ),
+                        ],
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.white,
+                      ),
+                      child: Column(
+                        children: [
+                          ProfileItem(
+                            attribute: "Block No",
+                            value: student.blockNo.toString(),
+                          ),
+                          const Divider(height: 0),
+                          ProfileItem(
+                            attribute: "Room No",
+                            value: student.roomNo.toString(),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

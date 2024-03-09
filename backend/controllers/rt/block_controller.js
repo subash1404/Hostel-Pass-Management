@@ -15,15 +15,11 @@ router.get("/getStudents", async (req, res, next) => {
     let blockStudents = [];
 
     for (const student of filteredStudents) {
-      const photoFilePath = path.join(
-        __dirname + "../../../images/profiles/students/" + "2021it0668" + ".jpg"
-      );
-
-      const photoBuffer = fs.readFileSync(photoFilePath);
-      const profileBuffer = photoBuffer.toString("base64");
-      blockStudents.push({ ...student._doc, profileBuffer });
+      blockStudents.push({
+        ...student._doc,
+        email: student._doc.studentId + "@svce.ac.in",
+      });
     }
-
 
     console.log(blockStudents);
     res.json(blockStudents);
@@ -33,10 +29,15 @@ router.get("/getStudents", async (req, res, next) => {
   }
 });
 
-router.post('/postAnnouncement',async (req,res) => {
-  try{
-    const {title,message,blockNo,rtId} = req.body;
-    const announcement = await new Announcement({title:title,message:message,blockNo:blockNo,rtId:rtId}).save();
+router.post("/postAnnouncement", async (req, res) => {
+  try {
+    const { title, message, blockNo, rtId } = req.body;
+    const announcement = await new Announcement({
+      title: title,
+      message: message,
+      blockNo: blockNo,
+      rtId: rtId,
+    }).save();
     res.json({
       _id: announcement._id,
       rtId: announcement.rtId,
@@ -44,30 +45,32 @@ router.post('/postAnnouncement',async (req,res) => {
       blockNo: announcement.blockNo,
       message: announcement.message,
     });
-  }catch(err){
+  } catch (err) {
     console.log(err);
-    res.status(500).json({message:"Internal server error"});
+    res.status(500).json({ message: "Internal server error" });
   }
 });
-router.get('/getAnnouncement/:blockNo',async (req,res) => {
-  try{
+router.get("/getAnnouncement/:blockNo", async (req, res) => {
+  try {
     const blockNo = req.params.blockNo;
-    const announcement = await Announcement.find({blockNo:blockNo});
+    const announcement = await Announcement.find({ blockNo: blockNo });
     console.log(announcement);
     res.json(announcement);
-  }catch(err){
+  } catch (err) {
     console.log(err);
-    res.status(500).json({message:"Internal server error"});
+    res.status(500).json({ message: "Internal server error" });
   }
 });
-router.delete('/deleteAnnouncement/:announcementId',async (req,res) => {
-  try{
+router.delete("/deleteAnnouncement/:announcementId", async (req, res) => {
+  try {
     const annoucementId = req.params.announcementId;
-    const announcement = await Announcement.findOneAndDelete({_id:annoucementId});
+    const announcement = await Announcement.findOneAndDelete({
+      _id: annoucementId,
+    });
     res.json(announcement);
-  }catch(err){
+  } catch (err) {
     console.log(err);
-    res.status(500).json({message:"Internal server error"});
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 module.exports = router;

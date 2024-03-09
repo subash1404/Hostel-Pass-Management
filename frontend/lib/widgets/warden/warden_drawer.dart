@@ -14,7 +14,7 @@ import 'package:hostel_pass_management/pages/warden/block_details_page.dart';
 import 'package:hostel_pass_management/pages/warden/hostel_stats.dart';
 import 'package:hostel_pass_management/pages/warden/warden_page.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
-import 'package:hostel_pass_management/widgets/warden/warden_profile_page.dart';
+import 'package:hostel_pass_management/pages/warden/warden_profile_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class WardenDrawer extends StatelessWidget {
@@ -34,13 +34,26 @@ class WardenDrawer extends StatelessWidget {
             decoration: BoxDecoration(
               color: colorScheme.primaryContainer,
             ),
-            child: Center(
-              child: Text(
-                "SVCE Hostel Pass Management",
-                textAlign: TextAlign.center,
-                style: textTheme.headlineLarge!
-                    .copyWith(fontWeight: FontWeight.bold),
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "assets/images/logo.png",
+                      width: 200,
+                    ),
+                    Text(
+                      "Hostel Pass Management",
+                      style: textTheme.titleMedium!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 29, 79, 158),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
           ListTile(
@@ -64,7 +77,7 @@ class WardenDrawer extends StatelessWidget {
                 ),
               );
             },
-            leading: const Icon(Icons.info),
+            leading: const Icon(Icons.auto_graph_rounded),
             title: const Text("Hostel Stats"),
           ),
           ListTile(

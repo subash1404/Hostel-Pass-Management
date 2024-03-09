@@ -40,6 +40,7 @@ class BlockStudentsNotifier extends StateNotifier<List<BlockStudent>> {
               studentId: student['studentId'],
               uid: student['uid'],
               username: student['username'],
+              email: student['email'],
               blockNo: student['blockNo'],
               dept: student['dept'],
               fatherName: student['fatherName'],
@@ -47,7 +48,6 @@ class BlockStudentsNotifier extends StateNotifier<List<BlockStudent>> {
               motherName: student['motherName'],
               motherPhNo: student['motherPhNo'],
               phNo: student['phNo'],
-              profileBuffer: student['profileBuffer'],
               regNo: student['regNo'],
               section: student['section'],
               year: student['year'],
@@ -56,6 +56,7 @@ class BlockStudentsNotifier extends StateNotifier<List<BlockStudent>> {
       }
       state = blockStudents;
     } catch (e) {
+      print(e);
       throw "Something went wrong";
     }
   }

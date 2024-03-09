@@ -47,7 +47,7 @@ mongoose
 
 app.use("/bugReport", checkAuth, bugReportController);
 app.use("/auth", authController); 
-app.use("/profile", profilePicController); 
+app.use("/profile", checkAuth, profilePicController); 
 app.use("/student", checkAuth, studentRoute);
 app.use("/student", checkAuth, studentRoute);
 app.use("/warden", checkAuth, wardenRoute);

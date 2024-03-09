@@ -16,6 +16,7 @@ import 'package:hostel_pass_management/providers/student_pass_provider.dart';
 import 'package:hostel_pass_management/providers/warden_pass_provider.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:lottie/lottie.dart';
 
 class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});
@@ -97,32 +98,55 @@ class _SplashPageState extends ConsumerState<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
+    TextTheme textTheme = Theme.of(context).textTheme;
+    ColorScheme colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(30.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'assets/images/svce.png',
-                // width: 150,
-                // height: 150,
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                "SVCE Hostels",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  fontStyle: FontStyle.italic,
-                  color: Color.fromARGB(255, 0, 69, 187),
+      backgroundColor: colorScheme.background,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/images/logo.png',
+                      width: 200,
+                      fit: BoxFit.cover,
+                    ),
+                    const SizedBox(height: 10),
+                    LottieBuilder.asset(
+                      'assets/animations/splash_loading.json',
+                      width: 50,
+                      fit: BoxFit.cover,
+                    ),
+                  ],
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              child: Column(
+                children: [
+                  Text(
+                    'App Version 1.0.0',
+                    style: textTheme.labelMedium!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: const Color.fromARGB(255, 135, 135, 135)),
+                  ),
+                  SizedBox(height: 10),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

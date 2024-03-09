@@ -33,6 +33,7 @@ class LoginPageState extends ConsumerState<LoginPage> {
   final TextEditingController _passController = TextEditingController();
   SharedPreferences? prefs = SharedPreferencesManager.preferences;
   bool isForgotPassLoading = false;
+
   void login() async {
     if (!_loginFormKey.currentState!.validate()) {
       return;
@@ -242,34 +243,32 @@ class LoginPageState extends ConsumerState<LoginPage> {
                 const SizedBox(height: 12),
                 Text(
                   "Login your account",
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(229, 0, 0, 0),
-                      fontSize: 20),
+                  style: textTheme.titleLarge!.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(229, 0, 0, 0),
+                    fontSize: 20,
+                  ),
                 ),
                 const SizedBox(height: 40),
                 Form(
                   key: _loginFormKey,
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TextFormField(
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                           focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(15),
+                            // borderRadius: BorderRadius.circular(8),
                             borderSide: const BorderSide(
-                              color: Color.fromARGB(255, 5, 44,
-                                  76), // Set your desired color here
-                              width: 2.0, // Set the width of the border
+                              color: Color.fromARGB(255, 5, 44, 76),
+                              width: 2.0,
                             ),
                           ),
                           labelText: "Admission No",
                           floatingLabelBehavior: FloatingLabelBehavior.always,
-                          labelStyle: Theme.of(context)
-                              .textTheme
-                              .displayLarge!
+                          labelStyle: textTheme.displayLarge!
                               .copyWith(color: Colors.black, fontSize: 20),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
@@ -282,21 +281,18 @@ class LoginPageState extends ConsumerState<LoginPage> {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 12),
-                      const SizedBox(
-                        height: 12,
-                      ),
+                      const SizedBox(height: 24),
                       TextFormField(
                         controller: _passController,
                         keyboardType: TextInputType.emailAddress,
                         obscureText: _obscureText,
                         decoration: InputDecoration(
                           focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(15),
+                            // borderRadius: BorderRadius.circular(8),
                             borderSide: const BorderSide(
-                              color: Color.fromARGB(255, 5, 44,
-                                  76), // Set your desired color here
-                              width: 2.0, // Set the width of the border
+                              color: Color.fromARGB(255, 5, 44, 76),
+                              width: 2.0,
                             ),
                           ),
                           border: OutlineInputBorder(
@@ -315,14 +311,10 @@ class LoginPageState extends ConsumerState<LoginPage> {
                               });
                             },
                           ),
-
                           labelText: "Password",
-                          labelStyle: Theme.of(context)
-                              .textTheme
-                              .displayLarge!
-                              .copyWith(color: Colors.black, fontSize: 20),
                           floatingLabelBehavior: FloatingLabelBehavior.always,
-                          // prefixIcon: const Icon(Icons.lock_outline),
+                          labelStyle: textTheme.displayLarge!
+                              .copyWith(color: Colors.black, fontSize: 20),
                         ),
                         validator: (pass) {
                           if (pass == null || pass.isEmpty) {
@@ -332,31 +324,25 @@ class LoginPageState extends ConsumerState<LoginPage> {
                         },
                       ),
                       const SizedBox(height: 32),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Container(
+                      InkWell(
+                        onTap: login,
+                        child: Ink(
                           width: double.infinity,
-                          // padding: const EdgeInsets.all(8),
                           padding: const EdgeInsets.symmetric(
-                              vertical: 6, horizontal: 20),
+                            vertical: 18,
+                            horizontal: 20,
+                          ),
                           decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 1, 46, 76),
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                  color: const Color.fromARGB(255, 3, 2, 39))),
-                          child: IconButton(
-                            onPressed: login,
-                            style: ElevatedButton.styleFrom(
-                                // backgroundColor: colorScheme.primaryContainer,
-                                ),
-                            icon: const Text(
-                              "Login",
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
+                            color: Color.fromARGB(255, 1, 46, 76),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            "Login",
+                            textAlign: TextAlign.center,
+                            style: textTheme.bodyLarge!.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
-                            // icon: const Icon(Icons.arrow_forward, size: 24),
                           ),
                         ),
                       ),
@@ -370,13 +356,10 @@ class LoginPageState extends ConsumerState<LoginPage> {
                   onPressed: isForgotPassLoading ? null : forgotPass,
                   child: isForgotPassLoading
                       ? const CircularProgressIndicator()
-                      : const Text(
+                      : Text(
                           "Forgot Password?",
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Color.fromARGB(255, 15, 60, 91)
-                              // color: colorScheme.primary,
-                              ),
+                          style: textTheme.bodyMedium!
+                              .copyWith(color: Color.fromARGB(255, 15, 60, 91)),
                         ),
                 ),
               ],
@@ -384,10 +367,6 @@ class LoginPageState extends ConsumerState<LoginPage> {
           ),
         ),
       ),
-      // bottomNavigationBar: Padding(
-      //   padding: const EdgeInsets.only(bottom: 12),
-      //   child:
-      // ),
     );
   }
 }

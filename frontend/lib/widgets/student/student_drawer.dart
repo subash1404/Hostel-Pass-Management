@@ -27,13 +27,26 @@ class StudentDrawer extends StatelessWidget {
             decoration: BoxDecoration(
               color: colorScheme.primaryContainer,
             ),
-            child: Center(
-              child: Text(
-                "SVCE Hostel Pass Management",
-                textAlign: TextAlign.center,
-                style: textTheme.headlineLarge!
-                    .copyWith(fontWeight: FontWeight.bold),
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "assets/images/logo.png",
+                      width: 200,
+                    ),
+                    Text(
+                      "Hostel Pass Management",
+                      style: textTheme.titleMedium!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 29, 79, 158),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
           ListTile(

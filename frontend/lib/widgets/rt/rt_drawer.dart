@@ -11,7 +11,7 @@ import 'package:hostel_pass_management/pages/student/announcements_page.dart';
 import 'package:hostel_pass_management/pages/student/student_page.dart';
 import 'package:hostel_pass_management/pages/student/rules_page.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
-import 'package:hostel_pass_management/widgets/rt/rt_profile_page.dart';
+import 'package:hostel_pass_management/pages/rt/rt_profile_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RtDrawer extends StatelessWidget {
@@ -31,13 +31,26 @@ class RtDrawer extends StatelessWidget {
             decoration: BoxDecoration(
               color: colorScheme.primaryContainer,
             ),
-            child: Center(
-              child: Text(
-                "SVCE Hostel Pass Management",
-                textAlign: TextAlign.center,
-                style: textTheme.headlineLarge!
-                    .copyWith(fontWeight: FontWeight.bold),
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "assets/images/logo.png",
+                      width: 200,
+                    ),
+                    Text(
+                      "Hostel Pass Management",
+                      style: textTheme.titleMedium!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 29, 79, 158),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
           ListTile(
