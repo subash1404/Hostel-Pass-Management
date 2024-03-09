@@ -23,6 +23,7 @@ class PassRequestPage extends ConsumerStatefulWidget {
 
 class _PassRequestPageState extends ConsumerState<PassRequestPage> {
   @override
+  var selectedParent = null;
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
@@ -90,6 +91,34 @@ class _PassRequestPageState extends ConsumerState<PassRequestPage> {
               const SizedBox(height: 10),
               Text("Reason: ${widget.pass.reason}"),
               const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: RadioListTile<String>(
+                      title: Text('Father'),
+                      value: 'father',
+                      groupValue: selectedParent,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedParent = value!;
+                        });
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: RadioListTile<String>(
+                      title: Text('Mother'),
+                      value: 'mother',
+                      groupValue: selectedParent,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedParent = value!;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
               Visibility(
                 visible: widget.passRequest,
                 child: Row(
@@ -130,16 +159,37 @@ class _PassRequestPageState extends ConsumerState<PassRequestPage> {
                         ),
                         onPressed: warden
                             ? () async {
-                                ref
-                                    .read(specialPassProvider.notifier)
-                                    .approvePassRequest(widget.pass.passId);
-                                Navigator.of(context).pop();
+                                if (selectedParent != null) {
+                                  ref
+                                      .read(specialPassProvider.notifier)
+                                      .approvePassRequest(
+                                          widget.pass.passId, selectedParent!);
+                                  Navigator.of(context).pop();
+                                } else {
+                                  ScaffoldMessenger.of(context)
+                                      .clearMaterialBanners();
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(
+                                    content: Text('Please select a parent.'),
+                                  ));
+                                }
                               }
                             : () async {
-                                ref
-                                    .read(rtPassProvider.notifier)
-                                    .approvePassRequest(widget.pass.passId);
-                                Navigator.of(context).pop();
+                                if (selectedParent != null) {
+                                  ref
+                                      .read(rtPassProvider.notifier)
+                                      .approvePassRequest(
+                                          widget.pass.passId, selectedParent!);
+                                  Navigator.of(context).pop();
+                                } else {
+                                  // Handle case where no parent is selected
+                                  ScaffoldMessenger.of(context)
+                                      .clearMaterialBanners();
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(
+                                    content: Text('Please select a parent.'),
+                                  ));
+                                }
                               },
                         child: const Text(
                           "Approve",

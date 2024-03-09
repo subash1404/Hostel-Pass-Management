@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hostel_pass_management/pages/common/forget_password.dart';
 import 'package:hostel_pass_management/pages/rt/rt_page.dart';
 import 'package:hostel_pass_management/pages/student/student_page.dart';
@@ -219,6 +220,7 @@ class LoginPageState extends ConsumerState<LoginPage> {
     }
   }
 
+  bool _obscureText = true;
   @override
   Widget build(BuildContext context) {
     // ignore: unused_local_variable
@@ -231,32 +233,51 @@ class LoginPageState extends ConsumerState<LoginPage> {
           padding: const EdgeInsets.all(40),
           child: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Text(
-                  "SVCE HOSTEL",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32),
-                ),
-                const SizedBox(height: 16),
                 Image.asset(
-                  'assets/images/svce.png',
-                  height: 130,
+                  'assets/images/logo.png',
                   width: 130,
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 60),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  padding: EdgeInsets.only(left: 12),
+                  child: Text(
+                    "Login",
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(229, 0, 0, 0),
+                        fontSize: 28),
+                  ),
+                ),
+                const SizedBox(height: 20),
                 Form(
                   key: _loginFormKey,
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TextFormField(
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(
+                              color: Color.fromARGB(255, 5, 44,
+                                  76), // Set your desired color here
+                              width: 2.0, // Set the width of the border
+                            ),
+                          ),
+                          labelText: "Admission No",
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                          labelStyle: Theme.of(context)
+                              .textTheme
+                              .displayLarge!
+                              .copyWith(color: Colors.black, fontSize: 20),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          labelText: "Email",
-                          prefixIcon: const Icon(Icons.email_outlined),
                         ),
                         validator: (email) {
                           if (email == null || email.isEmpty) {
@@ -265,17 +286,47 @@ class LoginPageState extends ConsumerState<LoginPage> {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 12),
+                      const SizedBox(
+                        height: 12,
+                      ),
                       TextFormField(
                         controller: _passController,
                         keyboardType: TextInputType.emailAddress,
-                        obscureText: true,
+                        obscureText: _obscureText,
                         decoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(
+                              color: Color.fromARGB(255, 5, 44,
+                                  76), // Set your desired color here
+                              width: 2.0, // Set the width of the border
+                            ),
+                          ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscureText
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: Color.fromARGB(255, 1, 46, 76),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscureText = !_obscureText;
+                              });
+                            },
+                          ),
+
                           labelText: "Password",
-                          prefixIcon: const Icon(Icons.lock_outline),
+                          labelStyle: Theme.of(context)
+                              .textTheme
+                              .displayLarge!
+                              .copyWith(color: Colors.black, fontSize: 20),
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                          // prefixIcon: const Icon(Icons.lock_outline),
                         ),
                         validator: (pass) {
                           if (pass == null || pass.isEmpty) {
@@ -284,59 +335,63 @@ class LoginPageState extends ConsumerState<LoginPage> {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 12),
-                      ElevatedButton(
-                        onPressed: login,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: colorScheme.primaryContainer,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
+                      const SizedBox(height: 32),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Container(
+                          width: double.infinity,
+                          // padding: const EdgeInsets.all(8),
                           padding: const EdgeInsets.symmetric(
-                            vertical: 12,
-                            horizontal: 50,
-                          ),
-                        ),
-                        child: const Text(
-                          "Login",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: isForgotPassLoading ? null : forgotPass,
-                        child: isForgotPassLoading
-                            ? const CircularProgressIndicator()
-                            : Text(
-                                "Forgot Password?",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: colorScheme.primary,
+                              vertical: 6, horizontal: 20),
+                          decoration: BoxDecoration(
+                              color: Color.fromARGB(255, 1, 46, 76),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                  color: const Color.fromARGB(255, 3, 2, 39))),
+                          child: IconButton(
+                            onPressed: login,
+                            style: ElevatedButton.styleFrom(
+                                // backgroundColor: colorScheme.primaryContainer,
                                 ),
-                              ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const StudentPage(),
+                            icon: const Text(
+                              "Login",
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
                             ),
-                          );
-                        },
-                        child: Text(
-                          "Test Navigate",
-                          style: TextStyle(
-                              fontSize: 12, color: colorScheme.primary),
+                            // icon: const Icon(Icons.arrow_forward, size: 24),
+                          ),
                         ),
                       ),
                     ],
                   ),
+                ),
+                SizedBox(
+                  height: 24,
+                ),
+                TextButton(
+                  onPressed: isForgotPassLoading ? null : forgotPass,
+                  child: isForgotPassLoading
+                      ? const CircularProgressIndicator()
+                      : const Text(
+                          "Forgot Password?",
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Color.fromARGB(255, 15, 60, 91)
+                              // color: colorScheme.primary,
+                              ),
+                        ),
                 ),
               ],
             ),
           ),
         ),
       ),
+      // bottomNavigationBar: Padding(
+      //   padding: const EdgeInsets.only(bottom: 12),
+      //   child:
+      // ),
     );
   }
 }

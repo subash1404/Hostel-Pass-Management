@@ -32,28 +32,29 @@ class WardenPassRequestsNotifier extends StateNotifier<List<PassRequest>> {
       List<PassRequest> specialPasses = [];
       for (var pass in responseData) {
         specialPasses.add(PassRequest(
-          passId: pass["passId"],
-          qrId: pass["qrId"],
-          studentId: pass["studentId"],
-          status: pass["status"],
-          destination: pass["destination"],
-          type: pass["type"],
-          isActive: pass["isActive"],
-          reason: pass["reason"],
-          expectedInDate: pass["expectedInDate"],
-          expectedInTime: pass["expectedInTime"],
-          expectedOutDate: pass["expectedOutDate"],
-          expectedOutTime: pass["expectedOutTime"],
-          isSpecialPass: pass["isSpecialPass"],
-          studentName: pass["studentName"],
-          dept: pass["dept"],
-          fatherPhNo: pass["fatherPhNo"],
-          motherPhNo: pass["motherPhNo"],
-          phNo: pass["phNo"],
-          roomNo: pass["roomNo"],
-          year: pass["year"],
-          blockNo: pass["blockNo"],
-        ));
+            passId: pass["passId"],
+            qrId: pass["qrId"],
+            studentId: pass["studentId"],
+            status: pass["status"],
+            destination: pass["destination"],
+            type: pass["type"],
+            isActive: pass["isActive"],
+            reason: pass["reason"],
+            expectedInDate: pass["expectedInDate"],
+            expectedInTime: pass["expectedInTime"],
+            expectedOutDate: pass["expectedOutDate"],
+            expectedOutTime: pass["expectedOutTime"],
+            isSpecialPass: pass["isSpecialPass"],
+            studentName: pass["studentName"],
+            dept: pass["dept"],
+            fatherPhNo: pass["fatherPhNo"],
+            motherPhNo: pass["motherPhNo"],
+            phNo: pass["phNo"],
+            roomNo: pass["roomNo"],
+            year: pass["year"],
+            blockNo: pass["blockNo"],
+            approvedBy: pass["approvedBy"],
+            confirmedWith: pass["confirmedWith"]));
       }
       state = specialPasses;
     } catch (err) {
@@ -61,19 +62,23 @@ class WardenPassRequestsNotifier extends StateNotifier<List<PassRequest>> {
     }
   }
 
-  Future<void> approvePassRequest(String passId) async {
+  Future<void> approvePassRequest(String passId, String confirmedWith) async {
     if (prefs?.getString == null) {
       return;
     }
     try {
       var response = await http.post(
-        Uri.parse(
-            "${dotenv.env["BACKEND_BASE_API"]}/${prefs!.getString("role")}/pass/approvePass/$passId"),
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": prefs!.getString("jwtToken")!,
-        },
-      );
+          Uri.parse(
+              "${dotenv.env["BACKEND_BASE_API"]}/${prefs!.getString("role")}/pass/approvePass"),
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": prefs!.getString("jwtToken")!,
+          },
+          body: jsonEncode({
+            "passId": passId,
+            "wardenName": prefs!.getString("username"),
+            "confirmedWith": confirmedWith
+          }));
       var reponseData = jsonDecode(response.body);
       if (response.statusCode > 399) {
         return reponseData["message"];
@@ -85,6 +90,8 @@ class WardenPassRequestsNotifier extends StateNotifier<List<PassRequest>> {
           qrId: state[passIndex].qrId,
           studentId: state[passIndex].studentId,
           status: 'Approved',
+          approvedBy: prefs!.getString("username")!,
+          confirmedWith: confirmedWith,
           destination: state[passIndex].destination,
           type: state[passIndex].type,
           isActive: state[passIndex].isActive,
@@ -117,13 +124,16 @@ class WardenPassRequestsNotifier extends StateNotifier<List<PassRequest>> {
     }
     try {
       var response = await http.post(
-        Uri.parse(
-            "${dotenv.env["BACKEND_BASE_API"]}/${prefs!.getString("role")}/pass/rejectPass/$passId"),
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": prefs!.getString("jwtToken")!,
-        },
-      );
+          Uri.parse(
+              "${dotenv.env["BACKEND_BASE_API"]}/${prefs!.getString("role")}/pass/rejectPass"),
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": prefs!.getString("jwtToken")!,
+          },
+          body: jsonEncode({
+            "passId": passId,
+            "wardenName": prefs!.getString("username"),
+          }));
       var reponseData = jsonDecode(response.body);
       if (response.statusCode > 399) {
         return reponseData["message"];
@@ -135,6 +145,8 @@ class WardenPassRequestsNotifier extends StateNotifier<List<PassRequest>> {
           qrId: state[passIndex].qrId,
           studentId: state[passIndex].studentId,
           status: 'Rejected',
+          approvedBy: prefs!.getString("username")!,
+          confirmedWith: 'None',
           destination: state[passIndex].destination,
           type: state[passIndex].type,
           isActive: false,

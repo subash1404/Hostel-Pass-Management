@@ -18,7 +18,7 @@ class StudentAnnouncementNotifier extends StateNotifier<List<Announcement>> {
     try {
       var response = await http.get(
         Uri.parse(
-            "${dotenv.env["BACKEND_BASE_API"]}/${prefs!.getString("role")}/block/getAnnouncement/${prefs!.getInt('blockNo')}"),
+            "${dotenv.env["BACKEND_BASE_API"]}/student/block/getAnnouncement/${prefs!.getInt('blockNo')}"),
         headers: {
           "Content-Type": "application/json",
           "Authorization": prefs!.getString("jwtToken")!,

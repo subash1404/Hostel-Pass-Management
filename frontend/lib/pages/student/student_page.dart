@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/models/announcement_model.dart';
 import 'package:hostel_pass_management/models/pass_model.dart';
 import 'package:hostel_pass_management/pages/student/new_pass_page.dart';
-import 'package:hostel_pass_management/providers/rt_announcement_provider.dart';
 import 'package:hostel_pass_management/providers/student_announcement_provider.dart';
 import 'package:hostel_pass_management/providers/student_pass_provider.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
@@ -39,32 +38,27 @@ class _StudentPageState extends ConsumerState<StudentPage> {
           IconButton(
               onPressed: () {
                 showModalBottomSheet(
-                  scrollControlDisabledMaxHeightRatio: 0.7,
+                  scrollControlDisabledMaxHeightRatio: 0.5,
                   context: context,
                   builder: (context) {
                     return announcement!.isNotEmpty
-                        ? Container(
-                            height: MediaQuery.of(context).size.height * 0.3,
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: Padding(
-                                padding: const EdgeInsets.all(20),
-                                child: BottomSheet(
-                                  onClosing: () {},
-                                  builder: (BuildContext context) {
-                                    return SingleChildScrollView(
-                                      child: ListTile(
-                                        title: Text(
-                                          announcement[0].title,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 28,
-                                          ),
-                                        ),
-                                        subtitle: Text(announcement[0].message),
-                                      ),
-                                    );
-                                  },
+                        ? Align(
+                            alignment: Alignment.topLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: SingleChildScrollView(
+                                child: ListTile(
+                                  title: Text(
+                                    announcement[0].title,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 28,
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    announcement[0].message,
+                                    style: TextStyle(fontSize: 16),
+                                  ),
                                 ),
                               ),
                             ),
