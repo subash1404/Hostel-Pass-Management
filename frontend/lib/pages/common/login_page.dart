@@ -239,19 +239,15 @@ class LoginPageState extends ConsumerState<LoginPage> {
                   'assets/images/logo.png',
                   width: 130,
                 ),
-                const SizedBox(height: 60),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  padding: EdgeInsets.only(left: 12),
-                  child: Text(
-                    "Login",
-                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(229, 0, 0, 0),
-                        fontSize: 28),
-                  ),
+                const SizedBox(height: 12),
+                Text(
+                  "Login your account",
+                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(229, 0, 0, 0),
+                      fontSize: 20),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 40),
                 Form(
                   key: _loginFormKey,
                   child: Column(
