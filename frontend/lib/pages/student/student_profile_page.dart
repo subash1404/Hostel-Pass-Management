@@ -131,9 +131,9 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                margin: const EdgeInsets.fromLTRB(24, 20, 24, 10),
+                margin: const EdgeInsets.fromLTRB(16, 10, 16, 10),
                 clipBehavior: Clip.hardEdge,
-                padding: EdgeInsets.all(20),
+                padding: EdgeInsets.all(15),
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
@@ -151,8 +151,8 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                     Row(
                       children: [
                         Container(
-                          height: 70,
-                          width: 70,
+                          height: 60,
+                          width: 60,
                           clipBehavior: Clip.antiAlias,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
@@ -167,7 +167,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                   fit: BoxFit.cover,
                                 ),
                         ),
-                        SizedBox(width: 25),
+                        SizedBox(width: 15),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -177,16 +177,16 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                               student.username,
                               overflow: TextOverflow.fade,
                               softWrap: true,
-                              style: textTheme.titleLarge!.copyWith(
+                              style: textTheme.bodyLarge!.copyWith(
                                 color: Color.fromARGB(255, 25, 32, 42),
                                 // color: Color.fromARGB(255, 112, 106, 106),
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(height: 12),
+                            SizedBox(height: 4),
                             Text(
                               student.regNo,
-                              style: textTheme.titleMedium!.copyWith(
+                              style: textTheme.bodyMedium!.copyWith(
                                 color: Color.fromARGB(255, 96, 102, 110),
                                 // fontSize: 17,
                               ),
@@ -198,54 +198,10 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                   ],
                 ),
               ),
-              // Container(
-              //   width: double.infinity,
-              //   // padding: EdgeInsets.all(30),
-              //   // color: const Color.fromARGB(255, 242, 242, 242),
-              //   child: Column(
-              //     children: [
-              //       const SizedBox(
-              //         height: 16,
-              //       ),
-              //       Text(
-              //         prefs!.getString("username")!,
-              //         textAlign: TextAlign.center,
-              //         style: textTheme.bodyLarge!.copyWith(
-              //           fontWeight: FontWeight.bold,
-              //           fontSize: 30,
-              //         ),
-              //       ),
-              //       const SizedBox(
-              //         height: 8,
-              //       ),
-              //       Container(
-              //         height: 150,
-              //         width: 150,
-              //         clipBehavior: Clip.antiAlias,
-              //         decoration: BoxDecoration(
-              //           shape: BoxShape.circle,
-              //           color: colorScheme.primaryContainer,
-              //         ),
-              //         child: profileBuffer == null
-              //             ? const Icon(
-              //                 Icons.person_rounded,
-              //                 size: 80,
-              //               )
-              //             : Image.memory(
-              //                 base64Decode(profileBuffer!),
-              //                 fit: BoxFit.cover,
-              //               ),
-              //       ),
-              //       const SizedBox(
-              //         height: 16,
-              //       ),
-              //     ],
-              //   ),
-              // ),
               const SizedBox(height: 20),
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -258,7 +214,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                       ),
                     ),
                     Container(
-                      margin: const EdgeInsets.fromLTRB(0, 20, 0, 10),
+                      margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
@@ -295,7 +251,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 20),
                     Text(
                       'PERSONAL INFORMATION',
                       style: textTheme.bodyLarge!.copyWith(
@@ -304,7 +260,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                       ),
                     ),
                     Container(
-                      margin: const EdgeInsets.fromLTRB(0, 20, 0, 10),
+                      margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
@@ -347,7 +303,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 20),
                     Text(
                       'HOSTEL INFORMATION',
                       style: textTheme.bodyLarge!.copyWith(
@@ -356,7 +312,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                       ),
                     ),
                     Container(
-                      margin: const EdgeInsets.fromLTRB(0, 20, 0, 10),
+                      margin: const EdgeInsets.fromLTRB(0, 10, 0, 30),
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(

@@ -20,7 +20,7 @@ class ProfileItem extends StatelessWidget {
       child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 15),
+            padding: EdgeInsets.symmetric(horizontal: 18, vertical: 15),
             child: Row(
               children: [
                 Icon(
@@ -37,7 +37,7 @@ class ProfileItem extends StatelessWidget {
                         color: Color.fromARGB(255, 25, 32, 42),
                         // color: Color.fromARGB(255, 112, 106, 106),
                         fontWeight: FontWeight.w600,
-                        fontSize: 17,
+                        fontSize: 15,
                       ),
                     ),
                     SizedBox(height: 7),
@@ -45,7 +45,7 @@ class ProfileItem extends StatelessWidget {
                       value,
                       style: customFont.copyWith(
                         color: Color.fromARGB(255, 96, 102, 110),
-                        fontSize: 17,
+                        fontSize: 15,
                       ),
                     ),
                   ],
