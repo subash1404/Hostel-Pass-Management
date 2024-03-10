@@ -3,15 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/providers/student_pass_provider.dart';
 
 class NewPassPage extends ConsumerStatefulWidget {
-  NewPassPage({super.key});
+  const NewPassPage({Key? key}) : super(key: key);
+
   @override
   _NewPassPageState createState() => _NewPassPageState();
 }
 
 class _NewPassPageState extends ConsumerState<NewPassPage> {
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController _destinationController = TextEditingController();
-  TextEditingController _reasonController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _destinationController = TextEditingController();
+  final TextEditingController _reasonController = TextEditingController();
   DateTime? inDate;
   TimeOfDay? inTime;
   DateTime? outDate;
@@ -44,14 +45,16 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text("Destination"),
+                SizedBox(
+                  height: 4,
+                ),
                 TextFormField(
                   controller: _destinationController,
                   maxLength: 20,
                   decoration: const InputDecoration(
-                    labelText: "Destination",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                    ),
+                    hintText: "Enter Destination",
+                    border: OutlineInputBorder(),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -63,34 +66,225 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                 const Text(
                   "Select Pass Type",
                 ),
+                SizedBox(
+                  height: 8,
+                ),
                 Row(
                   children: [
-                    Radio<String>(
-                      value: 'GatePass',
-                      groupValue: passType,
-                      onChanged: (value) {
-                        setState(() {
-                          passType = value;
-                          if (passType == "GatePass") {
-                            outDate = inDate;
-                          }
-                        });
-                      },
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              passType = 'GatePass';
+                              if (inDate != null) {
+                                inDate = null;
+                              }
+                              if (outDate != null) {
+                                inDate = outDate;
+                              }
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: passType == 'GatePass'
+                                ? Colors.green
+                                : Colors.grey[300],
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  4), // Set the border radius to 0 for square borders
+                            ),
+                          ),
+                          child: Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                if (passType == 'GatePass')
+                                  Container(
+                                    width: 20,
+                                    height: 20,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white,
+                                    ),
+                                    child: Icon(
+                                      Icons.check,
+                                      color: Colors.green,
+                                      size: 16,
+                                    ),
+                                  ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'GatePass',
+                                  style: TextStyle(
+                                    color: passType == 'GatePass'
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                    const Text("GatePass"),
-                    Radio<String>(
-                      value: 'StayPass',
-                      groupValue: passType,
-                      onChanged: (value) {
-                        setState(() {
-                          passType = value;
-                        });
-                      },
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              passType = 'StayPass';
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: passType == 'StayPass'
+                                  ? Colors.green
+                                  : Colors.grey[300],
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4),
+                              )),
+                          child: Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                if (passType == 'StayPass')
+                                  Container(
+                                    width: 20,
+                                    height: 20,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white,
+                                    ),
+                                    child: Icon(
+                                      Icons.check,
+                                      color: Colors.green,
+                                      size: 16,
+                                    ),
+                                  ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'StayPass',
+                                  style: TextStyle(
+                                    color: passType == 'StayPass'
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                    const Text("StayPass"),
                   ],
                 ),
                 const SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              isSpecialPass = false;
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: !isSpecialPass
+                                  ? Colors.green
+                                  : Colors.grey[300],
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4),
+                              )),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              if (!isSpecialPass)
+                                Container(
+                                  width: 20,
+                                  height: 20,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.white,
+                                  ),
+                                  child: Icon(
+                                    Icons.check,
+                                    color: Colors.green,
+                                    size: 16,
+                                  ),
+                                ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Normal Pass',
+                                style: TextStyle(
+                                  color: !isSpecialPass
+                                      ? Colors.white
+                                      : Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              isSpecialPass = true;
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: isSpecialPass
+                                  ? Colors.green
+                                  : Colors.grey[300],
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4),
+                              )),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              if (isSpecialPass)
+                                Container(
+                                  width: 20,
+                                  height: 20,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.white,
+                                  ),
+                                  child: Icon(
+                                    Icons.check,
+                                    color: Colors.green,
+                                    size: 16,
+                                  ),
+                                ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Special Pass',
+                                style: TextStyle(
+                                  color: isSpecialPass
+                                      ? Colors.white
+                                      : Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 20,
+                ),
                 Text("Leaving Time"),
                 const SizedBox(height: 8),
                 _buildDateTimePicker("Out", outDate, outTime),
@@ -99,39 +293,18 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                 const SizedBox(height: 8),
                 _buildDateTimePicker("In", inDate, inTime),
                 const SizedBox(height: 20),
-                DropdownButtonFormField(
-                  value: "Normal Pass",
-                    items: const [
-                      DropdownMenuItem(
-                        value: "Normal Pass",
-                        child: Text("Normal Pass"),
-                      ),
-                      DropdownMenuItem(
-                        value: "Special Pass",
-                        child: Text("Special Pass"),
-                      ),
-                    ],
-                    onChanged: (value) {
-                      if (value == "Normal Pass") {
-                        setState(() {
-                          isSpecialPass = false;
-                        });
-                      } else {
-                        setState(() {
-                          isSpecialPass = true;
-                        });
-                      }
-                    }),
-                const SizedBox(height: 20),
+                Text("Reason"),
+                const SizedBox(height: 4),
                 TextField(
-                    controller: _reasonController,
-                    decoration: const InputDecoration(
-                      hintText: 'Enter your Reason here...',
-                      border: OutlineInputBorder(),
-                    ),
-                    keyboardType: TextInputType.text,
-                    maxLines: null,
-                    onChanged: (text) {}),
+                  controller: _reasonController,
+                  decoration: const InputDecoration(
+                    hintText: 'Enter your Reason here...',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.text,
+                  maxLines: null,
+                  onChanged: (text) {},
+                ),
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
@@ -150,71 +323,130 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
   Widget _buildDateButton(String label, DateTime? date) {
     String buttonText = date != null ? _formatDate(date) : '$label Date';
 
-    return Expanded(
-      child: ElevatedButton.icon(
-        icon: const Icon(Icons.calendar_month_outlined),
-        onPressed: passType == "GatePass" && label == "In"
-            ? null
-            : () async {
-                final DateTime? pickedDate = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime.now(),
-                  lastDate: DateTime(2026),
-                );
-                if (pickedDate != null) {
-                  setState(() {
-                    if (label == "Out") {
-                      outDate = pickedDate;
-                      if (passType == "GatePass") {
-                        inDate = pickedDate;
-                      }
-                    } else {
-                      inDate = pickedDate;
-                      if (passType == "GatePass") {
-                        outDate = pickedDate;
-                      }
-                    }
-                  });
-                }
-              },
-        label: Text(buttonText),
+    return TextButton.icon(
+      style: TextButton.styleFrom(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
+      onPressed: label == "In" && passType == "GatePass"
+          ? null
+          : () async {
+              final DateTime? pickedDate = await showDatePicker(
+                context: context,
+                initialDate: DateTime.now(),
+                firstDate: DateTime.now(),
+                lastDate: DateTime(2026),
+              );
+              if (pickedDate != null) {
+                setState(() {
+                  if (label == "Out") {
+                    outDate = pickedDate;
+                    if (passType == "GatePass") {
+                      inDate = pickedDate;
+                    }
+                  } else {
+                    inDate = pickedDate;
+                    if (passType == "GatePass") {
+                      outDate = pickedDate;
+                    }
+                  }
+                });
+              }
+            },
+      icon: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment:
+            MainAxisAlignment.center, // Center the icon and text horizontally
+        children: [
+          Icon(
+            Icons.calendar_month_outlined,
+            color: Colors.black, // Set icon color
+          ),
+          SizedBox(width: 8), // Add spacing between text and icon
+          Text(
+            buttonText,
+            style: TextStyle(color: Colors.black), // Set text color
+          ),
+        ],
+      ),
+      label: SizedBox.shrink(), // No label text
     );
   }
 
   Widget _buildTimeButton(String label, TimeOfDay? time) {
     String buttonText = time != null ? _formatTime(time) : '$label Time';
 
-    return Expanded(
-      child: ElevatedButton.icon(
-        icon: const Icon(Icons.watch_later_outlined),
-        onPressed: () async {
-          final TimeOfDay? pickedTime = await showTimePicker(
-            context: context,
-            initialTime: TimeOfDay.now(),
-          );
-          if (pickedTime != null) {
-            setState(() {
-              if (label == "In") {
-                inTime = pickedTime;
-              } else {
-                outTime = pickedTime;
-              }
-            });
-          }
-        },
-        label: Text(buttonText),
+    return TextButton.icon(
+      style: TextButton.styleFrom(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
+      onPressed: () async {
+        final TimeOfDay? pickedTime = await showTimePicker(
+          context: context,
+          initialTime: TimeOfDay.now(),
+        );
+        if (pickedTime != null) {
+          setState(() {
+            if (label == "In") {
+              inTime = pickedTime;
+            } else {
+              outTime = pickedTime;
+            }
+          });
+        }
+      },
+      icon: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment:
+            MainAxisAlignment.center, // Center the icon and text horizontally
+        children: [
+          Icon(
+            Icons.watch_later_outlined,
+            color: Colors.black, // Set icon color
+          ),
+          SizedBox(width: 8), // Add spacing between text and icon
+          Text(
+            buttonText,
+            style: TextStyle(color: Colors.black), // Set text color
+          ),
+        ],
+      ),
+      label: SizedBox.shrink(), // No label text
     );
   }
 
   Widget _buildDateTimePicker(String label, DateTime? date, TimeOfDay? time) {
     return Row(
       children: [
-        _buildDateButton(label, date),
-        const SizedBox(width: 20),
-        _buildTimeButton(label, time),
+        Expanded(
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 50, // Adjust height as needed
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey), // Add border
+                      ),
+                      child: _buildDateButton(label, date),
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      height: 50, // Adjust height as needed
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey), // Add border
+                      ),
+                      child: _buildTimeButton(label, time),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -223,11 +455,6 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
     return '${date.day}-${date.month}-${date.year}';
   }
 
-  // String _formatTime(TimeOfDay time) {
-  //   final hour = time.hour.toString().padLeft(2, '0');
-  //   final minute = time.minute.toString().padLeft(2, '0');
-  //   return '$hour:$minute';
-  // }
   String _formatTime(TimeOfDay time) {
     final hour = time.hourOfPeriod.toString().padLeft(2, '0');
     final minute = time.minute.toString().padLeft(2, '0');
@@ -244,7 +471,7 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
             const SnackBar(content: Text("Please Select the Pass type")));
         return;
       }
-      if (_reasonController.text == "") {
+      if (_reasonController.text.isEmpty) {
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Please enter the reason")));
@@ -265,9 +492,14 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
               content: Text('In time can\'t be after out time')));
           return;
         }
-        if (passType == "StayPass" && (inDate!.isBefore(outDate!))) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text('In date can\'t be after out date')));
+        if (passType == "StayPass" &&
+            (inDate!.isBefore(outDate!) || inDate == outDate)) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                  'In date can\'t be before or equal to out date in specail pass'),
+            ),
+          );
           return;
         }
         print("Destination: ${_destinationController.text}");
@@ -307,9 +539,7 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
       Navigator.pop(context);
       await Future.delayed(const Duration(milliseconds: 1));
 
-      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).clearSnackBars();
-      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
