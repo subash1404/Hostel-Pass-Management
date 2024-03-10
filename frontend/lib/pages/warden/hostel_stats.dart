@@ -1,8 +1,14 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hostel_pass_management/models/pass_request_model.dart';
+import 'package:hostel_pass_management/pages/warden/block_details_page.dart';
 import 'package:hostel_pass_management/providers/hostel_students_provider.dart';
 import 'package:hostel_pass_management/providers/warden_pass_provider.dart';
+import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:hostel_pass_management/widgets/warden/warden_drawer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StatsPage extends ConsumerStatefulWidget {
   @override
@@ -29,30 +35,149 @@ class _StatsPageState extends ConsumerState<StatsPage> {
       });
     });
 
-    // Build cards for each block
-    List<Widget> blockCards = List.generate(6, (index) {
-      return Card(
-        child: ListTile(
-          title: Text('Block ${index + 1}'),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Students Out: ${passCount[index]}'),
-              Text('Students In: ${blockCounts[index] - passCount[index]}'),
-              Text('Total Students: ${blockCounts[index]}'),
-            ],
-          ),
+    int totalStudentsIn =
+        blockCounts.reduce((value, element) => value + element);
+    int totalStudentsOut =
+        passCount.reduce((value, element) => value + element);
+
+    List<Widget> cardRows = [];
+    for (int i = 0; i < 6; i += 2) {
+      // final color = Theme.of(context).colorScheme.onSecondaryContainer;
+      final color = Color.fromARGB(255, 234, 233, 233);
+      // final color = Color.fromARGB(255, 0, 44, 80);
+
+      final card1 = _buildCard(color, i, blockCounts, passCount);
+      final card2 = _buildCard(color, i + 1, blockCounts, passCount);
+
+      cardRows.add(
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [card1, card2],
         ),
       );
-    });
+    }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Stats Page'),
+        title: Text('Stats and Blocks'),
       ),
       drawer: WardenDrawer(),
+      // backgroundColor: Color.fromARGB(255, 231, 231, 231),
       body: ListView(
-        children: blockCards,
+        padding: EdgeInsets.all(8.0),
+        children: [
+          ...cardRows,
+          _buildOverallCountRow(totalStudentsIn, totalStudentsOut),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCard(
+      Color color, int index, List<int> blockCounts, List<int> passCount) {
+    return Expanded(
+      child: Card(
+        color: color,
+        elevation: 2,
+        shadowColor: Colors.grey[300],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'Block ${index + 1}',
+                  style: TextStyle(color: Colors.black, fontSize: 24),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4.0, left: 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Icon(Icons.person, color: Colors.green),
+                    SizedBox(width: 8),
+                    Text(
+                      'In: ${blockCounts[index] - passCount[index]}',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4.0, left: 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Icon(Icons.exit_to_app, color: Colors.red),
+                    SizedBox(width: 8),
+                    Text(
+                      'Out: ${passCount[index]}',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOverallCountRow(int totalStudentsIn, int totalStudentsOut) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Card(
+              color: Color.fromARGB(255, 234, 233, 233),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Overall Count',
+                      style: TextStyle(color: Colors.black, fontSize: 20),
+                    ),
+                    SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.person, color: Colors.green),
+                        SizedBox(
+                          width: 12,
+                        ),
+                        Text(
+                          'In: $totalStudentsIn',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.exit_to_app, color: Colors.red),
+                        SizedBox(
+                          width: 12,
+                        ),
+                        Text(
+                          'Out: $totalStudentsOut',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

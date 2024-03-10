@@ -61,24 +61,12 @@ class WardenDrawer extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const WardenPage(),
+                  builder: (context) => StatsPage(),
                 ),
               );
             },
             leading: const Icon(Icons.home_filled),
             title: const Text("Home"),
-          ),
-          ListTile(
-            onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => StatsPage(),
-                ),
-              );
-            },
-            leading: const Icon(Icons.auto_graph_rounded),
-            title: const Text("Hostel Stats"),
           ),
           ListTile(
             onTap: () {

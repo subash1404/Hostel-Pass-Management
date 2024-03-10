@@ -130,7 +130,7 @@ class LoginPageState extends ConsumerState<LoginPage> {
         await ref.read(specialPassProvider.notifier).getSpecailPassesFromDB();
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => const WardenPage(),
+            builder: (context) => StatsPage(),
             // builder: (context) => StatsPage(),
           ),
         );
