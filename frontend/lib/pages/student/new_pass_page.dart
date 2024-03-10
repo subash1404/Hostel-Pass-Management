@@ -32,6 +32,7 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return Scaffold(
       appBar: AppBar(
         title: const Text("New Pass"),
@@ -88,7 +89,7 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: passType == 'GatePass'
-                                ? Colors.green
+                                ? Color.fromARGB(255, 1, 46, 76)
                                 : Colors.grey[300],
                             elevation: 0,
                             shape: RoundedRectangleBorder(
@@ -110,7 +111,7 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                                     ),
                                     child: Icon(
                                       Icons.check,
-                                      color: Colors.green,
+                                      color: Color.fromARGB(255, 1, 46, 76),
                                       size: 16,
                                     ),
                                   ),
@@ -129,6 +130,9 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                         ),
                       ),
                     ),
+                    SizedBox(
+                      width: 4,
+                    ),
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -140,7 +144,7 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                           },
                           style: ElevatedButton.styleFrom(
                               backgroundColor: passType == 'StayPass'
-                                  ? Colors.green
+                                  ? Color.fromARGB(255, 1, 46, 76)
                                   : Colors.grey[300],
                               elevation: 0,
                               shape: RoundedRectangleBorder(
@@ -160,7 +164,7 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                                     ),
                                     child: Icon(
                                       Icons.check,
-                                      color: Colors.green,
+                                      color: Color.fromARGB(255, 1, 46, 76),
                                       size: 16,
                                     ),
                                   ),
@@ -195,7 +199,7 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                           },
                           style: ElevatedButton.styleFrom(
                               backgroundColor: !isSpecialPass
-                                  ? Colors.green
+                                  ? Color.fromARGB(255, 1, 46, 76)
                                   : Colors.grey[300],
                               elevation: 0,
                               shape: RoundedRectangleBorder(
@@ -214,7 +218,7 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                                   ),
                                   child: Icon(
                                     Icons.check,
-                                    color: Colors.green,
+                                    color: Color.fromARGB(255, 1, 46, 76),
                                     size: 16,
                                   ),
                                 ),
@@ -243,7 +247,7 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                           },
                           style: ElevatedButton.styleFrom(
                               backgroundColor: isSpecialPass
-                                  ? Colors.green
+                                  ? Color.fromARGB(255, 1, 46, 76)
                                   : Colors.grey[300],
                               elevation: 0,
                               shape: RoundedRectangleBorder(
@@ -306,11 +310,27 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                   onChanged: (text) {},
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    _submitForm();
-                  },
-                  child: const Text('Submit'),
+                InkWell(
+                  onTap: _submitForm,
+                  child: Ink(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 18,
+                      horizontal: 20,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(255, 1, 46, 76),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      "Submit",
+                      textAlign: TextAlign.center,
+                      style: textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
