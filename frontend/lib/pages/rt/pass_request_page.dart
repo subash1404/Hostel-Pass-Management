@@ -12,8 +12,11 @@ import 'package:hostel_pass_management/widgets/rt/rt_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PassRequestPage extends ConsumerStatefulWidget {
-  const PassRequestPage(
-      {required this.pass, required this.passRequest, super.key});
+  const PassRequestPage({
+    required this.pass,
+    required this.passRequest,
+    super.key,
+  });
 
   final PassRequest pass;
   final bool passRequest;
@@ -43,7 +46,7 @@ class _PassRequestPageState extends ConsumerState<PassRequestPage> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 28),
+          padding: const EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -226,10 +229,11 @@ class _PassRequestPageState extends ConsumerState<PassRequestPage> {
                         children: [
                           Expanded(
                             child: InkWell(
+                              borderRadius: BorderRadius.circular(12),
                               onTap: () {
                                 // Call function to make a call to mother's number
                               },
-                              child: Container(
+                              child: Ink(
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
@@ -261,7 +265,7 @@ class _PassRequestPageState extends ConsumerState<PassRequestPage> {
                                         height:
                                             6), // Adjust the height as needed
                                     Text(
-                                      widget.pass.fatherPhNo,
+                                      widget.pass.motherPhNo,
                                       style: const TextStyle(fontSize: 14),
                                     ),
                                   ],
@@ -269,17 +273,13 @@ class _PassRequestPageState extends ConsumerState<PassRequestPage> {
                               ),
                             ),
                           ),
-                          const SizedBox(
-                              width: 8), // Adjust the width as needed
+                          const SizedBox(width: 10),
                           Expanded(
                             child: InkWell(
-                              onTap: () async {
-                                // await FlutterPhoneDirectCaller.callNumber(
-                                //     '6369216597');
-                                // await launch('tel:6369216597');
-                                print("call made");
-                              },
-                              child: Container(
+                              borderRadius: BorderRadius.circular(12),
+                              onTap: () {},
+                              child: Ink(
+                                padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(12),
@@ -291,10 +291,7 @@ class _PassRequestPageState extends ConsumerState<PassRequestPage> {
                                       offset: const Offset(0, 1),
                                     ),
                                   ],
-                                  // border: Border.all(
-                                  //     width: 3, color: Colors.grey[200]!)
                                 ),
-                                padding: const EdgeInsets.all(12),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -305,14 +302,9 @@ class _PassRequestPageState extends ConsumerState<PassRequestPage> {
                                         fontSize: 16,
                                       ),
                                     ),
-                                    SizedBox(
-                                      width: 8,
-                                    ),
-                                    const SizedBox(
-                                        height:
-                                            6), // Adjust the height as needed
+                                    const SizedBox(height: 6),
                                     Text(
-                                      widget.pass.motherPhNo,
+                                      widget.pass.fatherPhNo,
                                       style: const TextStyle(fontSize: 14),
                                     ),
                                   ],
@@ -326,16 +318,11 @@ class _PassRequestPageState extends ConsumerState<PassRequestPage> {
                   ),
                 ),
               ),
-
-              const SizedBox(
-                height: 8,
-              ),
               Card(
-                elevation: 1, // Adjust the elevation as needed
-                margin: const EdgeInsets.all(8), // Adjust the margin as needed
+                elevation: 1,
+                margin: const EdgeInsets.all(8),
                 child: Padding(
-                  padding:
-                      const EdgeInsets.all(16), // Adjust the padding as needed
+                  padding: const EdgeInsets.all(16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -346,66 +333,55 @@ class _PassRequestPageState extends ConsumerState<PassRequestPage> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 8), // Adjust the height as needed
+                      const SizedBox(height: 8),
                       Row(
                         children: [
                           Expanded(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 5),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  setState(() {
-                                    selectedParent = 'father';
-                                  });
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  foregroundColor: Colors.black,
-                                  side: BorderSide(
-                                    width: 2,
-                                    color: selectedParent == 'father'
-                                        ? const Color.fromARGB(255, 1, 46, 76)
-                                        : Colors.grey[300]!,
-                                  ), // Add border color
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  selectedParent = 'father';
+                                });
+                              },
+                              style: ElevatedButton.styleFrom(
+                                foregroundColor: Colors.black,
+                                side: BorderSide(
+                                  color: selectedParent == 'father'
+                                      ? const Color.fromARGB(255, 1, 46, 76)
+                                      : Colors.grey[300]!,
+                                ), // Add border color
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4),
                                 ),
-                                child: const Text(
-                                  'Father',
-                                ),
+                              ),
+                              child: const Text(
+                                'Father',
                               ),
                             ),
                           ),
-                          const SizedBox(
-                            height: 4,
-                          ),
+                          const SizedBox(width: 10),
                           Expanded(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 5),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  setState(() {
-                                    selectedParent = 'mother';
-                                  });
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  foregroundColor: Colors.black,
-                                  side: BorderSide(
-                                    color: selectedParent == 'mother'
-                                        ? const Color.fromARGB(255, 1, 46, 76)
-                                        : Colors.grey[300]!,
-                                  ), // Add border color
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  selectedParent = 'mother';
+                                });
+                              },
+                              style: ElevatedButton.styleFrom(
+                                foregroundColor: Colors.black,
+                                side: BorderSide(
+                                  color: selectedParent == 'mother'
+                                      ? const Color.fromARGB(255, 1, 46, 76)
+                                      : Colors.grey[300]!,
+                                ), // Add border color
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4),
                                 ),
-                                child: const Text(
-                                  'Mother',
-                                ),
+                              ),
+                              child: const Text(
+                                'Mother',
                               ),
                             ),
                           ),
@@ -415,96 +391,101 @@ class _PassRequestPageState extends ConsumerState<PassRequestPage> {
                   ),
                 ),
               ),
-
-              const SizedBox(
-                height: 12,
-              ),
+              const SizedBox(height: 0),
               Visibility(
                 visible: widget.passRequest,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextButton(
-                        style: TextButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 255, 198, 198),
-
-                          // shape: RoundedRectangleBorder(
-                          //     borderRadius: BorderRadius.circular(4))
-                        ),
-                        onPressed: warden
-                            ? () async {
-                                ref
-                                    .read(specialPassProvider.notifier)
-                                    .rejectPassRequest(widget.pass.passId);
-                                Navigator.of(context).pop();
-                              }
-                            : () async {
-                                ref
-                                    .read(rtPassProvider.notifier)
-                                    .rejectPassRequest(widget.pass.passId);
-                                Navigator.of(context).pop();
-                              },
-                        child: const Text(
-                          "Deny",
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 255, 57, 43),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal:8.0, vertical: 10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextButton(
+                          style: TextButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 255, 198, 198),
                           ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: TextButton(
-                        style: TextButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 179, 255, 181),
-                          // shape: RoundedRectangleBorder(
-                          //     borderRadius: BorderRadius.circular(4)),
-                        ),
-                        onPressed: warden
-                            ? () async {
-                                if (selectedParent != null) {
+                          onPressed: warden
+                              ? () async {
                                   ref
                                       .read(specialPassProvider.notifier)
-                                      .approvePassRequest(
-                                          widget.pass.passId, selectedParent!);
+                                      .rejectPassRequest(widget.pass.passId);
                                   Navigator.of(context).pop();
-                                } else {
-                                  ScaffoldMessenger.of(context)
-                                      .clearMaterialBanners();
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(const SnackBar(
-                                    content: Text('Please select a parent.'),
-                                  ));
                                 }
-                              }
-                            : () async {
-                                if (selectedParent != null) {
+                              : () async {
                                   ref
                                       .read(rtPassProvider.notifier)
-                                      .approvePassRequest(
-                                          widget.pass.passId, selectedParent!);
+                                      .rejectPassRequest(widget.pass.passId);
                                   Navigator.of(context).pop();
-                                } else {
-                                  // Handle case where no parent is selected
-                                  ScaffoldMessenger.of(context)
-                                      .clearMaterialBanners();
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(const SnackBar(
-                                    content: Text('Please select a parent.'),
-                                  ));
-                                }
-                              },
-                        child: const Text(
-                          "Approve",
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 57, 139, 60),
+                                },
+                          child: const Text(
+                            "Deny",
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 255, 57, 43),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextButton(
+                          style: TextButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 179, 255, 181),
+                            // shape: RoundedRectangleBorder(
+                            //     borderRadius: BorderRadius.circular(4)),
+                          ),
+                          onPressed: warden
+                              ? () async {
+                                  if (selectedParent != null) {
+                                    ref
+                                        .read(
+                                          specialPassProvider.notifier,
+                                        )
+                                        .approvePassRequest(
+                                          widget.pass.passId,
+                                          selectedParent!,
+                                        );
+                                    Navigator.of(context).pop();
+                                  } else {
+                                    ScaffoldMessenger.of(context)
+                                        .clearMaterialBanners();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content:
+                                            Text('Please select a parent.'),
+                                      ),
+                                    );
+                                  }
+                                }
+                              : () async {
+                                  if (selectedParent != null) {
+                                    ref
+                                        .read(rtPassProvider.notifier)
+                                        .approvePassRequest(
+                                          widget.pass.passId,
+                                          selectedParent!,
+                                        );
+                                    Navigator.of(context).pop();
+                                  } else {
+                                    // Handle case where no parent is selected
+                                    ScaffoldMessenger.of(context)
+                                        .clearMaterialBanners();
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(const SnackBar(
+                                      content: Text('Please select a parent.'),
+                                    ));
+                                  }
+                                },
+                          child: const Text(
+                            "Approve",
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 57, 139, 60),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               )
             ],
