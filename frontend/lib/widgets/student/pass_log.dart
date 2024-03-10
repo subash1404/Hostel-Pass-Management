@@ -59,7 +59,7 @@ class PassLog extends StatelessWidget {
                         border: Border(bottom: BorderSide(color: Colors.grey)),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        padding: const EdgeInsets.symmetric(vertical: 12.0),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -70,13 +70,12 @@ class PassLog extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
+                                    // crossAxisAlignment:
+                                    //     CrossAxisAlignment.center,
                                     children: [
-                                      Icon(
-                                        Icons.place,
-                                      ),
-                                      SizedBox(width: 12),
+                                      Icon(Icons.place),
                                       Text(
-                                        '${pass.destination}',
+                                        ' ${pass.destination}',
                                         style: TextStyle(fontSize: 16),
                                       ),
                                     ],
@@ -115,14 +114,13 @@ class PassLog extends StatelessWidget {
                               padding: EdgeInsets.only(right: 8),
                               alignment: Alignment.center,
                               child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.blue,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
+                                // decoration: BoxDecoration(
+                                //   color: Colors.blue,
+                                //   borderRadius: BorderRadius.circular(8),
+                                // ),
                                 padding: EdgeInsets.all(4),
                                 child: Text(
                                   pass.type,
-                                  style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ),
                             ),

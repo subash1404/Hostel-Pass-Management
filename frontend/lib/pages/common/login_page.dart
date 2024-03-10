@@ -288,8 +288,8 @@ class LoginPageState extends ConsumerState<LoginPage> {
                         obscureText: _obscureText,
                         decoration: InputDecoration(
                           focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            // borderRadius: BorderRadius.circular(8),
+                            // borderRadius: BorderRadius.circular(15),
+                            borderRadius: BorderRadius.circular(8),
                             borderSide: const BorderSide(
                               color: Color.fromARGB(255, 5, 44, 76),
                               width: 2.0,
