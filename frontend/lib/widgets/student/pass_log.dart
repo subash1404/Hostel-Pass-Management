@@ -55,9 +55,9 @@ class PassLog extends StatelessWidget {
                 child: Column(
                   children: passlog.map((pass) {
                     return Container(
-                      decoration: BoxDecoration(
-                        border: Border(bottom: BorderSide(color: Colors.grey)),
-                      ),
+                      // decoration: BoxDecoration(
+                      //   border: Border(bottom: BorderSide(color: Colors.grey)),
+                      // ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 12.0),
                         child: Row(
