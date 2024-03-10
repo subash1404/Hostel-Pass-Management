@@ -7,6 +7,7 @@ import 'package:hostel_pass_management/pages/student/student_page.dart';
 import 'package:hostel_pass_management/pages/student/rules_page.dart';
 import 'package:hostel_pass_management/pages/student/student_profile_page.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
+import 'package:hostel_pass_management/widgets/common/logout_tile.dart';
 import 'package:hostel_pass_management/widgets/rt/rt_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -110,31 +111,31 @@ class StudentDrawer extends StatelessWidget {
             title: Text("Bug Report"),
             leading: Icon(Icons.bug_report_rounded),
           ),
-          ListTile(
-            onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DeveloperPage(),
-                ),
-              );
-            },
-            title: Text("About us"),
-            leading: Icon(Icons.developer_mode),
-          ),
-          ListTile(
-            onTap: () async {
-              await prefs!.clear();
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => LoginPage(),
-                ),
-              );
-            },
-            title: Text("Logout"),
-            leading: Icon(Icons.logout_rounded),
-          )
+          // ListTile(
+          //   onTap: () {
+          //     Navigator.pushReplacement(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder: (context) => DeveloperPage(),
+          //       ),
+          //     );
+          //   },
+          //   title: Text("About us"),
+          //   leading: Icon(Icons.developer_mode),
+          // ),
+          // ListTile(
+          //   onTap: () async {
+          //     await prefs!.clear();
+          //     Navigator.pushReplacement(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder: (context) => LoginPage(),
+          //       ),
+          //     );
+          //   },
+          //   title: Text("Logout"),
+          //   leading: Icon(Icons.logout_rounded),
+          // )
         ],
       ),
     );

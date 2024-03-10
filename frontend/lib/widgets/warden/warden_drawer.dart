@@ -131,31 +131,31 @@ class WardenDrawer extends StatelessWidget {
             title: Text("Bug Report"),
             leading: Icon(Icons.bug_report_rounded),
           ),
-          ListTile(
-            onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const DeveloperPage(),
-                ),
-              );
-            },
-            title: const Text("About us"),
-            leading: const Icon(Icons.developer_mode),
-          ),
-          ListTile(
-            onTap: () async {
-              await prefs!.clear();
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const LoginPage(),
-                ),
-              );
-            },
-            title: const Text("Logout"),
-            leading: const Icon(Icons.logout_rounded),
-          )
+          // ListTile(
+          //   onTap: () {
+          //     Navigator.pushReplacement(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder: (context) => const DeveloperPage(),
+          //       ),
+          //     );
+          //   },
+          //   title: const Text("About us"),
+          //   leading: const Icon(Icons.developer_mode),
+          // ),
+          // ListTile(
+          //   onTap: () async {
+          //     await prefs!.clear();
+          //     Navigator.pushReplacement(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder: (context) => const LoginPage(),
+          //       ),
+          //     );
+          //   },
+          //   title: const Text("Logout"),
+          //   leading: const Icon(Icons.logout_rounded),
+          // )
         ],
       ),
     );

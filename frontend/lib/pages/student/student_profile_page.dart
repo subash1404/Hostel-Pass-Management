@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hostel_pass_management/models/block_student_model.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
+import 'package:hostel_pass_management/widgets/common/logout_tile.dart';
 import 'package:hostel_pass_management/widgets/common/profile_item.dart';
 import 'package:hostel_pass_management/widgets/student/student_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -312,7 +313,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                       ),
                     ),
                     Container(
-                      margin: const EdgeInsets.fromLTRB(0, 10, 0, 30),
+                      margin: const EdgeInsets.fromLTRB(0, 10, 0, 15),
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
@@ -339,6 +340,9 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                         ],
                       ),
                     ),
+                    if (widget.studentData == null) SizedBox(height: 15),
+                    if (widget.studentData == null) LogoutTile(),
+                    SizedBox(height: 20),
                   ],
                 ),
               )
