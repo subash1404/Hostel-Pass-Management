@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hostel_pass_management/models/pass_model.dart';
+import 'package:intl/intl.dart';
 
 class PassLog extends StatelessWidget {
   const PassLog({
@@ -55,74 +56,96 @@ class PassLog extends StatelessWidget {
                 child: Column(
                   children: passlog.map((pass) {
                     return Container(
+                      height: 100,
                       decoration: BoxDecoration(
-                        border: Border(bottom: BorderSide(color: Colors.grey)),
+                        border: Border(
+                          bottom: BorderSide(color: Colors.grey),
+                        ),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12.0),
-                        child: Row(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 12.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    // crossAxisAlignment:
-                                    //     CrossAxisAlignment.center,
-                                    children: [
-                                      Icon(Icons.place),
-                                      Text(
-                                        ' ${pass.destination}',
-                                        style: TextStyle(fontSize: 16),
-                                      ),
-                                    ],
+                            Row(
+                              children: [
+                                Text(
+                                  "Sriperumbudhur",
+                                  style: textTheme.bodyLarge!.copyWith(
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  SizedBox(height: 8),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Icon(Icons.calendar_today),
-                                      SizedBox(width: 12),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            '${pass.expectedInDate} - ${pass.expectedOutDate}',
-                                            style: TextStyle(fontSize: 14),
-                                          ),
-                                          Text(
-                                            '${pass.expectedInTime} - ${pass.expectedOutTime}',
-                                            style: TextStyle(
-                                              color: Colors.grey,
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Spacer(),
-                            Container(
-                              padding: EdgeInsets.only(right: 8),
-                              alignment: Alignment.center,
-                              child: Container(
-                                // decoration: BoxDecoration(
-                                //   color: Colors.blue,
-                                //   borderRadius: BorderRadius.circular(8),
-                                // ),
-                                padding: EdgeInsets.all(4),
-                                child: Text(
-                                  pass.type,
                                 ),
-                              ),
+                                Spacer(),
+                                // Container(
+                                //   padding: EdgeInsets.all(3),
+                                //   decoration: BoxDecoration(
+                                //     color: Colors.amber,
+                                //     shape: BoxShape.circle,
+                                //   ),
+                                //   child: Icon(
+                                //     Icons.star_rounded,
+                                //     color: Colors.white,
+                                //   ),
+                                // ),
+                                Icon(
+                                  Icons.star_rounded,
+                                  color: Colors.amber,
+                                ),
+                                SizedBox(width: 5),
+                                Text(
+                                  "Gatepass",
+                                  style: textTheme.bodyLarge!.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 5),
+                            Row(
+                              children: [
+                                Column(
+                                  children: [
+                                    Text(
+                                      pass.expectedOutDate,
+                                      style: textTheme.bodyMedium!.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(pass.expectedOutTime)
+                                  ],
+                                ),
+                                Spacer(),
+                                // Container(
+                                //   padding: EdgeInsets.all(3),
+                                //   decoration: BoxDecoration(
+                                //     color: Color.fromARGB(255, 119, 119, 119),
+                                //     shape: BoxShape.circle,
+                                //   ),
+                                //   child: Icon(
+                                //     Icons.compare_arrows_rounded,
+                                //     color: Colors.white,
+                                //     size: 30,
+                                //   ),
+                                // ),
+                                Icon(
+                                  Icons.compare_arrows_rounded,
+                                  // color: Colors.white,
+                                  size: 30,
+                                ),
+                                Spacer(),
+                                Column(
+                                  children: [
+                                    Text(
+                                      pass.expectedInDate,
+                                      style: textTheme.bodyMedium!.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(pass.expectedInTime)
+                                  ],
+                                ),
+                              ],
                             ),
                           ],
                         ),
