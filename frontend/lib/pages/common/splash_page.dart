@@ -63,8 +63,8 @@ class _SplashPageState extends ConsumerState<SplashPage> {
           await ref.read(specialPassProvider.notifier).getSpecailPassesFromDB();
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-              // builder: (context) => StatsPage(),
-              builder: (context) => WardenPage(),
+              builder: (context) => StatsPage(),
+              // builder: (context) => WardenPage(),
             ),
           );
         }
