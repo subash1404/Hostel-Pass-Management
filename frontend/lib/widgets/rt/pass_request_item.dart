@@ -32,27 +32,36 @@ class PassRequestItem extends StatelessWidget {
         child: Row(
           children: [
             Container(
+              alignment: Alignment.center,
               height: 55,
               width: 55,
               decoration: BoxDecoration(
                 color: colorScheme.primaryContainer,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.person),
+              child: Text(
+                pass.studentName[0],
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
             ),
             const SizedBox(width: 20),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  pass.studentName,
-                  style: textTheme.bodyLarge!.copyWith(
-                    fontWeight: FontWeight.bold,
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.65,
+                  child: Text(
+                    pass.studentName,
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
+                    style: textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-                const Text("Gatepass")
+                Text(pass.type)
               ],
-            )
+            ),
           ],
         ),
       ),

@@ -44,13 +44,13 @@ class WardenDrawer extends StatelessWidget {
                       "assets/images/logo.png",
                       width: 200,
                     ),
-                    Text(
-                      "Hostel Pass Management",
-                      style: textTheme.titleMedium!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 29, 79, 158),
-                      ),
-                    ),
+                    // Text(
+                    //   "Hostel Pass Manager",
+                    //   style: textTheme.titleMedium!.copyWith(
+                    //     fontWeight: FontWeight.bold,
+                    //     color: Color.fromARGB(255, 29, 79, 158),
+                    //   ),
+                    // ),
                   ],
                 ),
               ],
@@ -118,7 +118,7 @@ class WardenDrawer extends StatelessWidget {
             title: const Text("Rules and Regulations"),
             leading: const Icon(Icons.rule),
           ),
-          const Spacer(),
+          // const Spacer(),
           ListTile(
             onTap: () {
               Navigator.pushReplacement(

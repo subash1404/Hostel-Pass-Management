@@ -42,7 +42,7 @@ class RtDrawer extends StatelessWidget {
                       width: 200,
                     ),
                     Text(
-                      "Hostel Pass Management",
+                      "Hostel Pass Manager",
                       style: textTheme.titleMedium!.copyWith(
                         fontWeight: FontWeight.bold,
                         color: Color.fromARGB(255, 29, 79, 158),
@@ -137,7 +137,7 @@ class RtDrawer extends StatelessWidget {
             title: const Text("Rules and Regulations"),
             leading: const Icon(Icons.rule),
           ),
-          const Spacer(),
+          // const Spacer(),
           ListTile(
             onTap: () {
               Navigator.pushReplacement(

@@ -172,16 +172,19 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              // prefs!.getString("username")!,
-                              // "Naveen Naveen Naveen Naveen Naveen",
-                              student.username,
-                              overflow: TextOverflow.fade,
-                              softWrap: true,
-                              style: textTheme.bodyLarge!.copyWith(
-                                color: Color.fromARGB(255, 25, 32, 42),
-                                // color: Color.fromARGB(255, 112, 106, 106),
-                                fontWeight: FontWeight.bold,
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.65,
+                              child: Text(
+                                // prefs!.getString("username")!,
+                                // "Naveen Naveen Naveen Naveen Naveen",
+                                student.username,
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: true,
+                                style: textTheme.bodyLarge!.copyWith(
+                                  color: Color.fromARGB(255, 25, 32, 42),
+                                  // color: Color.fromARGB(255, 112, 106, 106),
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                             SizedBox(height: 4),

@@ -59,57 +59,63 @@ class _BlockStudentsPageState extends ConsumerState<BlockStudentsPage> {
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => StudentProfilePage(studentData: student),
+                        builder: (context) =>
+                            StudentProfilePage(studentData: student),
                       ),
                     );
                   },
                   child: Padding(
-                    padding: const EdgeInsets.only(
-                        right: 24.0, top: 8, bottom: 8, left: 8),
+                    padding: const EdgeInsets.all(8),
                     child: Column(
                       children: [
-                        Row(
-                          children: [
-                            Container(
-                              width: 50,
-                              height: 50,
-                              alignment: Alignment.center,
-                              clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: colorScheme.primaryContainer,
-                              ),
-                              child: Align(
+                        Padding(
+                          padding: EdgeInsets.only(left: 4),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 50,
+                                height: 50,
                                 alignment: Alignment.center,
-                                child: Text(
-                                  student.username[0],
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: colorScheme.primaryContainer,
+                                ),
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    student.username[0],
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(width: 15),
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    student.username,
-                                    style: textTheme.bodyLarge!
-                                        .copyWith(fontWeight: FontWeight.w500),
-                                  ),
-                                  Text("Room No: ${student.roomNo}")
-                                ],
+                              const SizedBox(width: 15),
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      student.username,
+                                      style: textTheme.bodyLarge!.copyWith(
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    Text("Room No: ${student.roomNo}")
+                                  ],
+                                ),
                               ),
-                            ),
-                            SizedBox(width: 20),
-                            Text(
-                              student.dept,
-                              overflow: TextOverflow.clip,
-                            ),
-                          ],
+                              SizedBox(width: 20),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 12.0),
+                                child: Text(
+                                  student.dept,
+                                  overflow: TextOverflow.clip,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         SizedBox(
                           height: 8,

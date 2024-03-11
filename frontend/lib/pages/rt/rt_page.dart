@@ -71,32 +71,79 @@ class _RtPageState extends ConsumerState<RtPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
         children: [
-          DropdownButton<int>(
-            value: 0,
-            onChanged: (int? value) {
-              setState(() {
-                // _selectedValue = value!;
-              });
-            },
-            items: List<DropdownMenuItem<int>>.generate(5, (int index) {
-              if (index == 1) {
-                index++;
-              }
-              return DropdownMenuItem<int>(
-                value: index,
-                child: Text(index == 0 ? "None" : 'Block ${index}'),
-              );
-            }),
-          ),
+          // DropdownButton<int>(
+          //   value: 0,
+          //   onChanged: (int? value) {
+          //     setState(() {
+          //       // _selectedValue = value!;
+          //     });
+          //   },
+          //   items: List<DropdownMenuItem<int>>.generate(5, (int index) {
+          //     if (index == 1) {
+          //       index++;
+          //     }
+          //     return DropdownMenuItem<int>(
+          //       value: index,
+          //       child: Text(index == 0 ? "None" : 'Block ${index}'),
+          //     );
+          //   }),
+          // ),
           Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 0, 10),
-              child: Visibility(
-                visible: studentsCount != 0,
-                child: Text(
-                  "Total Students: $studentsCount \n Students Outside: $passesCount",
-                  style: textTheme.titleLarge,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Row(
+              children: [
+                Visibility(
+                  visible: studentsCount != 0,
+                  child: Expanded(
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.directions_walk, color: Colors.green),
+                          SizedBox(width: 10),
+                          Text(
+                            "Students\nOutside: $passesCount",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-              )),
+                SizedBox(width: 10),
+                Visibility(
+                  visible: studentsCount != 0,
+                  child: Expanded(
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.home,
+                              color: Theme.of(context).colorScheme.primary),
+                          SizedBox(width: 10),
+                          Text(
+                            "Students\nInside: ${studentsCount - passesCount}",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
           if (pendingPasses.length == 0)
             const Expanded(
               child: Center(
