@@ -1,12 +1,15 @@
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/models/pass_request_model.dart';
 import 'package:hostel_pass_management/pages/warden/block_details_page.dart';
 import 'package:hostel_pass_management/providers/hostel_students_provider.dart';
 import 'package:hostel_pass_management/providers/warden_pass_provider.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
+import 'package:hostel_pass_management/widgets/warden/block_tile.dart';
 import 'package:hostel_pass_management/widgets/warden/warden_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,6 +21,8 @@ class StatsPage extends ConsumerStatefulWidget {
 class _StatsPageState extends ConsumerState<StatsPage> {
   @override
   Widget build(BuildContext context) {
+    TextTheme textTheme = Theme.of(context).textTheme;
+    ColorScheme colorScheme = Theme.of(context).colorScheme;
     final students = ref.watch(hostelStudentProvider);
     final passes = ref.watch(specialPassProvider);
 
@@ -58,16 +63,27 @@ class _StatsPageState extends ConsumerState<StatsPage> {
     }
 
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 245, 244, 250),
       appBar: AppBar(
         title: Text('Stats and Blocks'),
       ),
       drawer: WardenDrawer(),
       // backgroundColor: Color.fromARGB(255, 231, 231, 231),
-      body: ListView(
-        padding: EdgeInsets.all(8.0),
+      // body: ListView(
+      //   padding: EdgeInsets.all(8.0),
+      //   children: [
+      //     ...cardRows,
+      //     _buildOverallCountRow(totalStudentsIn, totalStudentsOut),
+      //   ],
+      // ),
+      body: Column(
         children: [
-          ...cardRows,
-          _buildOverallCountRow(totalStudentsIn, totalStudentsOut),
+          Row(
+            children: [
+              BlockTile(),
+              BlockTile(),
+            ],
+          )
         ],
       ),
     );

@@ -7,6 +7,7 @@ import 'package:hostel_pass_management/providers/hostel_students_provider.dart';
 import 'package:hostel_pass_management/providers/rt_pass_provider.dart';
 import 'package:hostel_pass_management/providers/warden_pass_provider.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
+import 'package:hostel_pass_management/widgets/warden/block_tile.dart';
 import 'package:hostel_pass_management/widgets/warden/warden_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,12 +21,9 @@ class WardenPage extends ConsumerStatefulWidget {
 class _WardenPageState extends ConsumerState<WardenPage> {
   @override
   Widget build(BuildContext context) {
-    final cumulativePasses = ref.watch(specialPassProvider);
-    List<PassRequest> inUsePasses =
-        cumulativePasses.where((pass) => pass.status == 'In use').toList();
-    List<PassRequest> usedPasses =
-        cumulativePasses.where((pass) => pass.status == 'Used').toList();
-    final hostelStudents = ref.watch(hostelStudentProvider);
+    TextTheme textTheme = Theme.of(context).textTheme;
+    ColorScheme colorScheme = Theme.of(context).colorScheme;
+
     final blocks =
         List.generate(6, (index) => index + 1); // Generating 6 blocks
     SharedPreferences? prefs = SharedPreferencesManager.preferences;
@@ -44,22 +42,7 @@ class _WardenPageState extends ConsumerState<WardenPage> {
               itemCount: blocks.length,
               itemBuilder: (context, index) {
                 final block = blocks[index];
-                return ListTile(
-                  title: Text('Block $block'),
-                  onTap: () {
-                    final filteredStudents = hostelStudents
-                        .where((student) => student.blockNo == index + 1)
-                        .toList();
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => BlockDetailPage(
-                        students: filteredStudents,
-                        inUsePasses: inUsePasses,
-                        usedPasses: usedPasses,
-                        blockNo: index + 1,
-                      ),
-                    ));
-                  },
-                );
+                return BlockTile();
               },
             ),
           ),

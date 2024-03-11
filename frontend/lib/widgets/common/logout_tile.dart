@@ -101,12 +101,14 @@ class LogoutTile extends StatelessWidget {
         // alignment: Alignment.center,
         decoration: BoxDecoration(
           color: colorScheme.errorContainer,
-          border: Border.all(color: colorScheme.error),
+          border: Border.all(
+            color: colorScheme.error,
+          ),
           borderRadius: BorderRadius.circular(10),
         ),
         // margin: EdgeInsets.symmetric(vertical: 20),
         width: double.infinity,
-        height: 60,
+        height: 55,
         child: Center(
           child: Text(
             "Logout",
