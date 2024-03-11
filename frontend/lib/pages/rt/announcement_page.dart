@@ -29,7 +29,7 @@ class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
       ),
       drawer: RtDrawer(),
       body: Padding(
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -40,9 +40,9 @@ class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
                 children: [
                   TextFormField(
                     controller: _titleController,
-                    maxLength: 20,
                     decoration: const InputDecoration(
                       labelText: "Title",
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(8)),
                       ),
@@ -57,9 +57,9 @@ class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
                   const SizedBox(height: 20),
                   TextFormField(
                     controller: _messageController,
-                    maxLength: 200,
                     decoration: const InputDecoration(
                       labelText: "Message",
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(8)),
                       ),
@@ -74,60 +74,73 @@ class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
                     maxLines: null,
                   ),
                   const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      _submitForm();
-                    },
-                    child: const Text('Submit'),
+                  InkWell(
+                    onTap: _submitForm,
+                    child: Ink(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 18,
+                        horizontal: 20,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 1, 46, 76),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        "Make Announcement",
+                        textAlign: TextAlign.center,
+                        style: textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
             ),
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              "Current Announcement(s)",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    const Text(
-                      "Current Announcement",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    ),
-                    ...announcements.map(
-                      (announcement) => ExpansionTile(
-                        childrenPadding:
-                            const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                        title: Text(announcement.title),
-                        leading: Container(
-                          width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: colorScheme.primaryContainer,
-                          ),
-                          child: Icon(
-                            Icons.announcement,
-                            color: colorScheme.onPrimaryContainer,
-                          ),
+              child: ListView.builder(
+                itemCount: announcements.length,
+                itemBuilder: (context, index) {
+                  final announcement = announcements[index];
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ListTile(
+                        title: Text(
+                          announcement.title,
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                         subtitle: Text(announcement.message),
-                        children: [
-                          ListTile(
-                            title: Text('Delete'),
-                            onTap: () async {
-                              await ref
-                                  .read(rtAnnouncementNotifier.notifier)
-                                  .deleteAnnouncement(
-                                      announcementId:
-                                          announcement.announcementId);
-                            },
+                        trailing: IconButton(
+                          icon: Icon(
+                            Icons.delete,
+                            color: Theme.of(context).colorScheme.error,
                           ),
-                        ],
+                          onPressed: () async {
+                            await ref
+                                .read(rtAnnouncementNotifier.notifier)
+                                .deleteAnnouncement(
+                                  announcementId: announcement.announcementId,
+                                );
+                          },
+                        ),
                       ),
-                    )
-                  ],
-                ),
+                    ],
+                  );
+                },
               ),
             ),
           ],

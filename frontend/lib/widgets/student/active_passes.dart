@@ -102,7 +102,7 @@ class _ActivePassesState extends ConsumerState<ActivePasses> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

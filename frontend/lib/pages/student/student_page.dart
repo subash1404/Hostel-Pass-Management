@@ -96,7 +96,7 @@ class _StudentPageState extends ConsumerState<StudentPage> {
                   }
                 : () {
                     showModalBottomSheet(
-                      scrollControlDisabledMaxHeightRatio: 0.7,
+                      scrollControlDisabledMaxHeightRatio: 0.6,
                       context: context,
                       builder: (context) {
                         return QrBottomSheet();

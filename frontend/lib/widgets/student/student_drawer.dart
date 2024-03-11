@@ -39,7 +39,7 @@ class StudentDrawer extends StatelessWidget {
                       width: 200,
                     ),
                     Text(
-                      "Hostel Pass Management",
+                      "Hostel Pass Manager",
                       style: textTheme.titleMedium!.copyWith(
                         fontWeight: FontWeight.bold,
                         color: Color.fromARGB(255, 29, 79, 158),
@@ -79,18 +79,6 @@ class StudentDrawer extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => AnnouncementsPage(),
-                ),
-              );
-            },
-            leading: Icon(Icons.notification_important_rounded),
-            title: Text("Announcements"),
-          ),
-          ListTile(
-            onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
                   builder: (context) => RulesPage(),
                 ),
               );
@@ -98,7 +86,7 @@ class StudentDrawer extends StatelessWidget {
             title: Text("Rules and Regulations"),
             leading: Icon(Icons.rule),
           ),
-          Spacer(),
+          // Spacer(),
           ListTile(
             onTap: () {
               Navigator.pushReplacement(
