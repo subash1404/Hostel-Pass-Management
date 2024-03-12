@@ -6,22 +6,28 @@ import 'package:hostel_pass_management/pages/warden/block_details_page.dart';
 import 'package:hostel_pass_management/providers/hostel_students_provider.dart';
 import 'package:hostel_pass_management/providers/warden_pass_provider.dart';
 
-class BlockTile extends ConsumerStatefulWidget {
+class BlockTile extends StatefulWidget {
   const BlockTile({
     super.key,
+    required this.blockName,
+    required this.inCount,
+    required this.outCount,
   });
+  final String blockName;
+  final int inCount;
+  final int outCount;
 
   @override
-  ConsumerState<BlockTile> createState() => _BlockTileState();
+  State<BlockTile> createState() => _BlockTileState();
 }
 
-class _BlockTileState extends ConsumerState<BlockTile> {
+class _BlockTileState extends State<BlockTile> {
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
 
-    return Expanded(
+    return SizedBox(
       child: Container(
         margin: EdgeInsets.all(10),
         padding: EdgeInsets.all(15),
@@ -42,7 +48,7 @@ class _BlockTileState extends ConsumerState<BlockTile> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Block 1",
+              widget.blockName,
               style: textTheme.titleLarge!.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -75,7 +81,7 @@ class _BlockTileState extends ConsumerState<BlockTile> {
                           ),
                         ),
                         Text(
-                          "1",
+                          (widget.inCount - widget.outCount).toString(),
                           style: textTheme.titleMedium!.copyWith(
                               fontWeight: FontWeight.bold, fontSize: 18),
                         ),
@@ -113,7 +119,7 @@ class _BlockTileState extends ConsumerState<BlockTile> {
                           ),
                         ),
                         Text(
-                          "1",
+                          widget.outCount.toString(),
                           style: textTheme.titleMedium!.copyWith(
                               fontWeight: FontWeight.bold, fontSize: 18),
                         ),
