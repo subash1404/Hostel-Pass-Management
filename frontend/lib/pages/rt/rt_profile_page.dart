@@ -14,7 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class RtProfilePage extends StatefulWidget {
-  const RtProfilePage({super.key});
+  const RtProfilePage({Key? key}) : super(key: key);
 
   @override
   State<RtProfilePage> createState() => _RtProfilePageState();
@@ -22,7 +22,37 @@ class RtProfilePage extends StatefulWidget {
 
 class _RtProfilePageState extends State<RtProfilePage> {
   String? profileBuffer;
-  SharedPreferences? prefs = SharedPreferencesManager.preferences;
+  SharedPreferences? prefs;
+  late int _selectedValue;
+  late int excludedBlock;
+  late List<DropdownMenuItem<int>> items;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchProfilePic();
+    loadPreferences();
+  }
+
+  Future<void> loadPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+    excludedBlock = prefs!.getInt("permanentBlock")!;
+    _selectedValue = excludedBlock == 1 ? 2 : 1;
+    items = List.generate(
+      8,
+      (int index) {
+        int value = index + 1;
+        if (value != prefs!.getInt("permanentBlock")) {
+          return DropdownMenuItem<int>(
+            value: value,
+            child: Text('Block $value'),
+          );
+        }
+        return null;
+      },
+    ).where((item) => item != null).toList().cast<DropdownMenuItem<int>>();
+    setState(() {}); // Update the UI after preferences are loaded
+  }
 
   void fetchProfilePic() async {
     try {
@@ -53,170 +83,238 @@ class _RtProfilePageState extends State<RtProfilePage> {
     }
   }
 
-  @override
-  void initState() {
-    fetchProfilePic();
-    super.initState();
+  void _submit() {
+    TextEditingController confirmController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+            title: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              child: Text(
+                "Type \"SWITCH\" to delete",
+                style: TextStyle(fontSize: 18),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            content: TextField(
+              controller: confirmController,
+              onChanged: (value) {
+                setState(() {});
+              },
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.all(8),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("Cancel"),
+              ),
+              TextButton(
+                onPressed: confirmController.text == "SWITCH"
+                    ? () async {
+                        try {
+                          await http.post(
+                            Uri.parse(
+                              "${dotenv.env["BACKEND_BASE_API"]}/rt/block/switchRt",
+                            ),
+                            headers: {
+                              "Content-Type": "application/json",
+                              "Authorization": prefs!.getString("jwtToken")!,
+                            },
+                            body: jsonEncode({
+                              "permanentBlockNo":
+                                  prefs!.getInt("permanentBlock"),
+                              "blockNo": _selectedValue
+                            }),
+                          );
+                        } catch (err) {
+                          print(
+                              "Error occurred: $err"); // Handle error more gracefully
+                        }
+                        print("selected value : $_selectedValue");
+                        Navigator.of(context).pop();
+                      }
+                    : null,
+                child: const Text("Switch"),
+              ),
+            ],
+          );
+        });
+      },
+    );
+  }
+
+  void _revert() {
+    TextEditingController confirmController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                child: Text(
+                  "Type \"REVERT\" to delete",
+                  style: TextStyle(fontSize: 18),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              content: TextField(
+                controller: confirmController,
+                onChanged: (value) {
+                  setState(() {}); // Rebuild the dialog when the text changes
+                },
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.all(8),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Cancel"),
+                ),
+                TextButton(
+                  onPressed: confirmController.text == "REVERT"
+                      ? () async {
+                          try {
+                            await http.post(
+                              Uri.parse(
+                                "${dotenv.env["BACKEND_BASE_API"]}/rt/block/revertSwitchRt",
+                              ),
+                              headers: {
+                                "Content-Type": "application/json",
+                                "Authorization": prefs!.getString("jwtToken")!,
+                              },
+                              body: jsonEncode({
+                                "permanentBlockNo":
+                                    prefs!.getInt("permanentBlock"),
+                              }),
+                            );
+                          } catch (err) {
+                            print(
+                                "Error occurred: $err"); // Handle error more gracefully
+                          }
+                          print("selected value : $_selectedValue");
+                          Navigator.of(context).pop();
+                        }
+                      : null,
+                  child: const Text("Revert"),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    // ignore: unused_local_variable
     TextTheme textTheme = Theme.of(context).textTheme;
-    // ignore: unused_local_variable
     ColorScheme colorScheme = Theme.of(context).colorScheme;
-    // print(prefs!.getString("profileBuffer"));
 
     return Scaffold(
-      body: Scaffold(
-        backgroundColor: const Color(0xf5f4fa),
-        appBar: AppBar(
-          // backgroundColor: const Color.fromARGB(255, 153, 0, 255),
-          // foregroundColor: Colors.white,
-          title: const Text(
-            "Profile",
-          ),
-          // centerTitle: true,
-        ),
-        drawer: RtDrawer(),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              margin: const EdgeInsets.fromLTRB(16, 10, 16, 10),
-              clipBehavior: Clip.hardEdge,
-              padding: EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    spreadRadius: 1,
-                    blurRadius: 1,
-                    offset: const Offset(0, 1),
-                  ),
-                ],
-                borderRadius: BorderRadius.circular(20),
-                color: colorScheme.primaryContainer,
-              ),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        height: 60,
-                        width: 60,
-                        clipBehavior: Clip.antiAlias,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                        ),
-                        child: profileBuffer == null
-                            ? const Icon(
-                                Icons.person_rounded,
-                                size: 30,
-                              )
-                            : Image.memory(
-                                base64Decode(profileBuffer!),
-                                fit: BoxFit.cover,
-                              ),
-                      ),
-                      SizedBox(width: 15),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            prefs!.getString("username")!,
-                            overflow: TextOverflow.fade,
-                            softWrap: true,
-                            style: textTheme.bodyLarge!.copyWith(
-                              color: Color.fromARGB(255, 25, 32, 42),
-                              // color: Color.fromARGB(255, 112, 106, 106),
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            "Block " +
-                                prefs!.getInt("permanentBlock").toString(),
-                            style: textTheme.bodyMedium!.copyWith(
-                              color: Color.fromARGB(255, 96, 102, 110),
-                              // fontSize: 17,
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(
-            //     horizontal: 16,
-            //     vertical: 0,
-            //   ),
-            //   child: Column(
-            //     crossAxisAlignment: CrossAxisAlignment.start,
-            //     children: [
-            //       Text(
-            //         'PERSONAL INFORMATION',
-            //         style: textTheme.bodyLarge!.copyWith(
-            //           fontWeight: FontWeight.bold,
-            //           // color: colorScheme.primary,
-            //           color: const Color.fromARGB(255, 30, 75, 130),
-            //         ),
-            //       ),
-            //       Container(
-            //         margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-            //         decoration: BoxDecoration(
-            //           boxShadow: [
-            //             BoxShadow(
-            //               color: Colors.black.withOpacity(0.2),
-            //               spreadRadius: 1,
-            //               blurRadius: 1,
-            //               offset: const Offset(0, 1),
-            //             ),
-            //           ],
-            //           borderRadius: BorderRadius.circular(20),
-            //           color: Colors.white,
-            //         ),
-            //         child: Column(
-            //           children: [
-            //             ProfileItem(
-            //               attribute: "Email",
-            //               value: prefs!.getString(("email"))!,
-            //             ),
-            //             const Divider(height: 0),
-            //             ProfileItem(
-            //               attribute: "Phone No",
-            //               value: prefs!.getString(("phNo"))!,
-            //             ),
-            //             const Divider(height: 0),
-            //             ProfileItem(
-            //               attribute: "Temporary Blocks Assigned",
-            //               value: prefs!
-            //                   .getStringList(("temporaryBlock"))!
-            //                   .join(", "),
-            //             ),
-            //           ],
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 0,
-              ),
-              child: Column(
+      appBar: AppBar(
+        title: const Text("Profile"),
+      ),
+      drawer: const RtDrawer(),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 20),
+                    clipBehavior: Clip.hardEdge,
+                    padding: const EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          spreadRadius: 1,
+                          blurRadius: 1,
+                          offset: const Offset(0, 1),
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(20),
+                      color: colorScheme.primaryContainer,
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              height: 60,
+                              width: 60,
+                              clipBehavior: Clip.antiAlias,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                              ),
+                              child: profileBuffer == null
+                                  ? const Icon(
+                                      Icons.person_rounded,
+                                      size: 30,
+                                    )
+                                  : Image.memory(
+                                      base64Decode(profileBuffer!),
+                                      fit: BoxFit.cover,
+                                    ),
+                            ),
+                            const SizedBox(width: 15),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  prefs!.getString("username")!,
+                                  overflow: TextOverflow.fade,
+                                  softWrap: true,
+                                  style: textTheme.bodyText1!.copyWith(
+                                    color:
+                                        const Color.fromARGB(255, 25, 32, 42),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  "Block " +
+                                      prefs!
+                                          .getInt("permanentBlock")
+                                          .toString(),
+                                  style: textTheme.bodyMedium!.copyWith(
+                                    color:
+                                        const Color.fromARGB(255, 96, 102, 110),
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                   Text(
                     'PERSONAL INFORMATION',
-                    style: textTheme.bodyLarge!.copyWith(
+                    style: textTheme.titleMedium!.copyWith(
                       fontWeight: FontWeight.bold,
-                      // color: colorScheme.primary,
                       color: const Color.fromARGB(255, 30, 75, 130),
                     ),
                   ),
@@ -255,16 +353,106 @@ class _RtProfilePageState extends State<RtProfilePage> {
                       ],
                     ),
                   ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'SWITCH RT',
+                    style: textTheme.titleMedium!.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: const Color.fromARGB(255, 30, 75, 130),
+                    ),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 18, vertical: 15),
+                    margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          spreadRadius: 1,
+                          blurRadius: 1,
+                          offset: const Offset(0, 1),
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.white,
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Switch to :",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 0),
+                              child: DropdownButton<int>(
+                                value: _selectedValue,
+                                onChanged: (int? value) {
+                                  setState(() {
+                                    _selectedValue = value!;
+                                  });
+                                },
+                                items: items,
+                                underline:
+                                    SizedBox(), // Hides the default underline
+                                icon: Icon(Icons
+                                    .arrow_drop_down), // Custom dropdown icon
+                                style: TextStyle(
+                                    fontSize: 18, color: Colors.black),
+                                dropdownColor: Colors
+                                    .white, // Background color of dropdown
+                                elevation: 8, // Elevation of the dropdown
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton(
+                              onPressed: _revert,
+                              style: ElevatedButton.styleFrom(
+                                foregroundColor: Colors.white,
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.error,
+                              ),
+                              child: const Text('Revert'),
+                            ),
+                            SizedBox(width: 15),
+                            ElevatedButton(
+                              onPressed: _submit,
+                              style: ElevatedButton.styleFrom(
+                                foregroundColor: Colors.white,
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.primary,
+                              ),
+                              child: const Text('Switch'),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
-            ),
-            Spacer(),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-              child: LogoutTile(),
-            ),
-          ],
+            ],
+          ),
         ),
+      ),
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: LogoutTile(),
       ),
     );
   }
