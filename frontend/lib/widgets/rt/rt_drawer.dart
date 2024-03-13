@@ -118,7 +118,7 @@ class RtDrawer extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const AnnouncementsPage(),
+                  builder: (context) => DropdownExample(),
                 ),
               );
             },

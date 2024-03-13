@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hostel_pass_management/models/block_student_model.dart';
+import 'package:hostel_pass_management/pages/student/aa.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:hostel_pass_management/widgets/common/logout_tile.dart';
 import 'package:hostel_pass_management/widgets/common/profile_item.dart';
@@ -149,6 +150,60 @@ class _RtProfilePageState extends State<RtProfilePage> {
               ),
             ),
             const SizedBox(height: 20),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(
+            //     horizontal: 16,
+            //     vertical: 0,
+            //   ),
+            //   child: Column(
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     children: [
+            //       Text(
+            //         'PERSONAL INFORMATION',
+            //         style: textTheme.bodyLarge!.copyWith(
+            //           fontWeight: FontWeight.bold,
+            //           // color: colorScheme.primary,
+            //           color: const Color.fromARGB(255, 30, 75, 130),
+            //         ),
+            //       ),
+            //       Container(
+            //         margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+            //         decoration: BoxDecoration(
+            //           boxShadow: [
+            //             BoxShadow(
+            //               color: Colors.black.withOpacity(0.2),
+            //               spreadRadius: 1,
+            //               blurRadius: 1,
+            //               offset: const Offset(0, 1),
+            //             ),
+            //           ],
+            //           borderRadius: BorderRadius.circular(20),
+            //           color: Colors.white,
+            //         ),
+            //         child: Column(
+            //           children: [
+            //             ProfileItem(
+            //               attribute: "Email",
+            //               value: prefs!.getString(("email"))!,
+            //             ),
+            //             const Divider(height: 0),
+            //             ProfileItem(
+            //               attribute: "Phone No",
+            //               value: prefs!.getString(("phNo"))!,
+            //             ),
+            //             const Divider(height: 0),
+            //             ProfileItem(
+            //               attribute: "Temporary Blocks Assigned",
+            //               value: prefs!
+            //                   .getStringList(("temporaryBlock"))!
+            //                   .join(", "),
+            //             ),
+            //           ],
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 16,
