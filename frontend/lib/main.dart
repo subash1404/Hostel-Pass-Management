@@ -29,7 +29,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Hostel Pass',
       theme: ThemeData(
         textTheme: GoogleFonts.amikoTextTheme(),
         // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
