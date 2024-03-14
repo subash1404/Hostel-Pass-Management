@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hostel_pass_management/models/block_student_model.dart';
-import 'package:hostel_pass_management/pages/student/aa.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:hostel_pass_management/widgets/common/logout_tile.dart';
 import 'package:hostel_pass_management/widgets/common/profile_item.dart';
@@ -22,7 +21,8 @@ class RtProfilePage extends StatefulWidget {
 
 class _RtProfilePageState extends State<RtProfilePage> {
   String? profileBuffer;
-  SharedPreferences? prefs;
+  List<Map<String, dynamic>> switchedRts = [];
+  SharedPreferences? prefs = SharedPreferencesManager.preferences;
   late int _selectedValue;
   late int excludedBlock;
   late List<DropdownMenuItem<int>> items;
@@ -31,11 +31,11 @@ class _RtProfilePageState extends State<RtProfilePage> {
   void initState() {
     super.initState();
     fetchProfilePic();
+    fetchSwitchedRts();
     loadPreferences();
   }
 
   Future<void> loadPreferences() async {
-    prefs = await SharedPreferences.getInstance();
     excludedBlock = prefs!.getInt("permanentBlock")!;
     _selectedValue = excludedBlock == 1 ? 2 : 1;
     items = List.generate(
@@ -51,7 +51,7 @@ class _RtProfilePageState extends State<RtProfilePage> {
         return null;
       },
     ).where((item) => item != null).toList().cast<DropdownMenuItem<int>>();
-    setState(() {}); // Update the UI after preferences are loaded
+    setState(() {});
   }
 
   void fetchProfilePic() async {
@@ -74,6 +74,42 @@ class _RtProfilePageState extends State<RtProfilePage> {
         profileBuffer = responseData["profileBuffer"];
       });
     } catch (e) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Something went wrong"),
+        ),
+      );
+    }
+  }
+
+  void fetchSwitchedRts() async {
+    try {
+      var permBlock = prefs!.getInt("permanentBlock");
+      var response = await http.get(
+        Uri.parse(
+            "${dotenv.env["BACKEND_BASE_API"]}/rt/block/getSwitchedRts/$permBlock"),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": prefs!.getString("jwtToken")!,
+        },
+      );
+      var responseData = jsonDecode(response.body);
+      if (response.statusCode > 399) {
+        throw responseData["message"];
+      }
+      List<Map<String, dynamic>> switchedRtsData =
+          (responseData as List).map((item) {
+        return {
+          "rtName": item["rtName"],
+          "permanentBlock": item["permanentBlock"].toString(),
+        };
+      }).toList();
+      setState(() {
+        switchedRts = switchedRtsData;
+        print(switchedRts);
+      });
+    } catch (err) {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -137,10 +173,16 @@ class _RtProfilePageState extends State<RtProfilePage> {
                             }),
                           );
                         } catch (err) {
-                          print(
-                              "Error occurred: $err"); // Handle error more gracefully
+                          print("Error occurred: $err");
+                          ScaffoldMessenger.of(context).clearSnackBars();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Something went wrong"),
+                            ),
+                          );
                         }
                         print("selected value : $_selectedValue");
+                        fetchSwitchedRts();
                         Navigator.of(context).pop();
                       }
                     : null,
@@ -173,7 +215,7 @@ class _RtProfilePageState extends State<RtProfilePage> {
               content: TextField(
                 controller: confirmController,
                 onChanged: (value) {
-                  setState(() {}); // Rebuild the dialog when the text changes
+                  setState(() {});
                 },
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.all(8),
@@ -207,10 +249,15 @@ class _RtProfilePageState extends State<RtProfilePage> {
                               }),
                             );
                           } catch (err) {
-                            print(
-                                "Error occurred: $err"); // Handle error more gracefully
+                            ScaffoldMessenger.of(context).clearSnackBars();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Something went wrong"),
+                              ),
+                            );
                           }
                           print("selected value : $_selectedValue");
+                          fetchSwitchedRts();
                           Navigator.of(context).pop();
                         }
                       : null,
@@ -287,7 +334,7 @@ class _RtProfilePageState extends State<RtProfilePage> {
                                   prefs!.getString("username")!,
                                   overflow: TextOverflow.fade,
                                   softWrap: true,
-                                  style: textTheme.bodyText1!.copyWith(
+                                  style: textTheme.bodyLarge!.copyWith(
                                     color:
                                         const Color.fromARGB(255, 25, 32, 42),
                                     fontWeight: FontWeight.bold,
@@ -353,7 +400,7 @@ class _RtProfilePageState extends State<RtProfilePage> {
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Text(
@@ -385,16 +432,16 @@ class _RtProfilePageState extends State<RtProfilePage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
+                            const Text(
                               "Switch to :",
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 10,
                             ),
                             Container(
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                   horizontal: 12, vertical: 0),
                               child: DropdownButton<int>(
                                 value: _selectedValue,
@@ -404,15 +451,12 @@ class _RtProfilePageState extends State<RtProfilePage> {
                                   });
                                 },
                                 items: items,
-                                underline:
-                                    SizedBox(), // Hides the default underline
-                                icon: Icon(Icons
-                                    .arrow_drop_down), // Custom dropdown icon
-                                style: TextStyle(
+                                underline: const SizedBox(),
+                                icon: const Icon(Icons.arrow_drop_down),
+                                style: const TextStyle(
                                     fontSize: 18, color: Colors.black),
-                                dropdownColor: Colors
-                                    .white, // Background color of dropdown
-                                elevation: 8, // Elevation of the dropdown
+                                dropdownColor: Colors.white,
+                                elevation: 8,
                               ),
                             ),
                           ],
@@ -429,7 +473,7 @@ class _RtProfilePageState extends State<RtProfilePage> {
                               ),
                               child: const Text('Revert'),
                             ),
-                            SizedBox(width: 15),
+                            const SizedBox(width: 15),
                             ElevatedButton(
                               onPressed: _submit,
                               style: ElevatedButton.styleFrom(
@@ -441,6 +485,42 @@ class _RtProfilePageState extends State<RtProfilePage> {
                             ),
                           ],
                         ),
+                        const SizedBox(height: 10),
+                        const Divider(),
+                        const SizedBox(height: 10),
+                        const Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Switched RTs:",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        // SizedBox(height: 10),
+                        switchedRts.isNotEmpty
+                            ? ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: switchedRts.length,
+                                itemBuilder: (context, index) {
+                                  return ListTile(
+                                    title: Text(
+                                        "${index + 1}. RT Name: ${switchedRts[index]['rtName']}"),
+                                    subtitle: Text(
+                                        "Block: ${switchedRts[index]['permanentBlock']}"),
+                                  );
+                                },
+                              )
+                            : const Padding(
+                                padding: EdgeInsets.only(top: 12.0),
+                                child: Text(
+                                  "No Rts Incharge for your block",
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
                       ],
                     ),
                   ),

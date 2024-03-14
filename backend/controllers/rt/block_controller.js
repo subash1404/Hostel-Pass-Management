@@ -111,5 +111,24 @@ router.post("/revertSwitchRt", async (req, res) => {
   }
 });
 
+router.get("/getSwitchedRts/:permanentBlock", async (req, res) => {
+  try {
+    const permanentBlock = req.params.permanentBlock;
+
+    const docs = await Rt.find({});
+
+    const rtArray = docs
+      .filter((doc) => doc.temporaryBlock.includes(permanentBlock))
+      .map((doc) => ({ uid: doc.uid, permanentBlock: doc.permanentBlock,rtName:doc.username }));
+
+    res.json(rtArray);
+  } catch (error) {
+    console.error("Error fetching rt documents:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+
 
 module.exports = router;
