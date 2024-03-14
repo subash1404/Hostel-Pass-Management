@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hostel_pass_management/widgets/security/security_drawer.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
 class SecurityPage extends StatefulWidget {
@@ -26,6 +27,7 @@ class _SecurityPageState extends State<SecurityPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: SecurityDrawer(),
       appBar: AppBar(
         title: const Text("Hostel Pass Scanner"),
       ),

@@ -11,6 +11,7 @@ class LogoutTile extends StatelessWidget {
   Widget build(BuildContext context) {
     void logout() async {
       await prefs!.clear();
+      Navigator.pop(context);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
