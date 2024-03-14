@@ -1,9 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/pages/common/login_page.dart';
+import 'package:hostel_pass_management/pages/common/maintenance.dart';
+import 'package:hostel_pass_management/pages/common/update_page.dart';
 import 'package:hostel_pass_management/pages/rt/rt_page.dart';
+import 'package:hostel_pass_management/pages/security/security_page.dart';
 import 'package:hostel_pass_management/pages/student/student_page.dart';
 import 'package:hostel_pass_management/pages/warden/hostel_stats.dart';
 import 'package:hostel_pass_management/pages/warden/warden_page.dart';
@@ -17,6 +22,7 @@ import 'package:hostel_pass_management/providers/warden_pass_provider.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:lottie/lottie.dart';
+import 'package:http/http.dart' as http;
 
 class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});
@@ -28,6 +34,47 @@ class SplashPage extends ConsumerStatefulWidget {
 
 class _SplashPageState extends ConsumerState<SplashPage> {
   SharedPreferences? prefs = SharedPreferencesManager.preferences;
+
+  Future<void> miscellaneous() async {
+    try {
+      var response = await http.get(
+        Uri.parse("${dotenv.env["BACKEND_BASE_API"]}/miscellaneous"),
+      );
+      var responseData = jsonDecode(response.body);
+      if (response.statusCode > 399) {
+        throw responseData["message"];
+      }
+      if (responseData["maintenance"] == "true") {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => MaintenancePage(),
+          ),
+        );
+        return;
+      } else if (responseData["version"] != dotenv.env["VERSION"]) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => UpdatePage(),
+          ),
+        );
+        return;
+      }
+      tokenCheck();
+    } catch (err) {
+      print(err);
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            err.toString(),
+          ),
+        ),
+      );
+    }
+  }
 
   void tokenCheck() async {
     try {
@@ -42,6 +89,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
               builder: (context) => StudentPage(),
             ),
           );
+          return;
         } else if (prefs!.getString("role") == "rt") {
           await ref
               .read(blockStudentProvider.notifier)
@@ -56,6 +104,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
               builder: (context) => RtPage(),
             ),
           );
+          return;
         } else if (prefs!.getString("role") == "warden") {
           await ref
               .read(hostelStudentProvider.notifier)
@@ -67,6 +116,14 @@ class _SplashPageState extends ConsumerState<SplashPage> {
               // builder: (context) => WardenPage(),
             ),
           );
+          return;
+        } else if (prefs!.getString("role") == "security") {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => SecurityPage(),
+            ),
+          );
+          return;
         }
       }
     } catch (e) {
@@ -93,7 +150,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
   @override
   void initState() {
     super.initState();
-    tokenCheck();
+    miscellaneous();
   }
 
   @override
@@ -136,7 +193,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
               child: Column(
                 children: [
                   Text(
-                    'App Version 1.0.0',
+                    'App Version ${dotenv.env["VERSION"]}',
                     style: textTheme.labelMedium!.copyWith(
                         fontWeight: FontWeight.bold,
                         color: const Color.fromARGB(255, 135, 135, 135)),

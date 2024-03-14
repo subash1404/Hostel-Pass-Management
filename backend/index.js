@@ -14,6 +14,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 require("dotenv").config();
 const checkAuth = require("./middleware/checkAuth");
+const Miscellaneous = require("./models/miscellaneous_model");
 const path = require("path");
 const fs = require("fs");
 
@@ -23,13 +24,6 @@ app.use(bodyParser.json());
 
 app.use("/test", (req, res) => {
   res.json({ message: "Hello from server" });
-});
-
-app.get("/fetchPhoto", (req, res) => {
-  let filePath = path.join(__dirname, "/images/profiles/students/" + "2021it0668.jpg");
-  const photoBuffer = fs.readFileSync(filePath);
-  const base64Image = photoBuffer.toString('base64');
-  res.send(base64Image);
 });
 
 mongoose
@@ -45,9 +39,18 @@ mongoose
     console.log(err);
   });
 
+app.get("/miscellaneous", async (req, res) => {
+  try {
+    const miscellaneous = await Miscellaneous.findOne({});
+    res.json(miscellaneous);
+  } catch (e) {
+    res.json({ message: "Internal Server Error" });
+  }
+});
+
 app.use("/bugReport", checkAuth, bugReportController);
-app.use("/auth", authController); 
-app.use("/profile", checkAuth, profilePicController); 
+app.use("/auth", authController);
+app.use("/profile", checkAuth, profilePicController);
 app.use("/student", checkAuth, studentRoute);
 app.use("/student", checkAuth, studentRoute);
 app.use("/warden", checkAuth, wardenRoute);

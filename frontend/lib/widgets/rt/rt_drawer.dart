@@ -7,7 +7,6 @@ import 'package:hostel_pass_management/pages/rt/announcement_page.dart';
 import 'package:hostel_pass_management/pages/rt/block_students_page.dart';
 import 'package:hostel_pass_management/pages/rt/pass_logs_page.dart';
 import 'package:hostel_pass_management/pages/rt/rt_page.dart';
-import 'package:hostel_pass_management/pages/student/announcements_page.dart';
 import 'package:hostel_pass_management/pages/student/student_page.dart';
 import 'package:hostel_pass_management/pages/student/rules_page.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
@@ -112,18 +111,6 @@ class RtDrawer extends StatelessWidget {
             },
             leading: const Icon(Icons.person),
             title: const Text("Profile"),
-          ),
-          ListTile(
-            onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const AnnouncementsPage(),
-                ),
-              );
-            },
-            leading: const Icon(Icons.announcement),
-            title: const Text("Announcements"),
           ),
           ListTile(
             onTap: () {

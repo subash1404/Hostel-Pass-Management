@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hostel_pass_management/pages/common/forget_password.dart';
 import 'package:hostel_pass_management/pages/rt/rt_page.dart';
+import 'package:hostel_pass_management/pages/security/security_page.dart';
 import 'package:hostel_pass_management/pages/student/student_page.dart';
 import 'package:hostel_pass_management/pages/warden/hostel_stats.dart';
 import 'package:hostel_pass_management/pages/warden/warden_page.dart';
@@ -134,7 +135,21 @@ class LoginPageState extends ConsumerState<LoginPage> {
             // builder: (context) => StatsPage(),
           ),
         );
-      } else if (responseData["role"] == "security") {}
+      } else if (responseData["role"] == "security") {
+        await prefs?.setString('jwtToken', responseData['jwtToken']);
+        await prefs?.setString('uid', responseData['uid']);
+        await prefs?.setString('securityId', responseData['securityId']);
+        await prefs?.setString('username', responseData['username']);
+        await prefs?.setString('email', responseData['email']);
+        await prefs?.setString('role', responseData['role']);
+        await prefs?.setString('phNo', responseData['phNo']);
+        
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => SecurityPage(),
+          ),
+        );
+      }
     } catch (err) {
       if (!mounted) {
         return;

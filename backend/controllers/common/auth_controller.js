@@ -12,6 +12,7 @@ const { v4: uuidv4 } = require("uuid");
 const Student = require("../../models/student_model");
 const Rt = require("../../models/rt_model");
 const Warden = require("../../models/warden_model");
+const Security = require("../../models/security_model");
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -64,6 +65,7 @@ router.post("/login", async (req, res) => {
       uid: user.uid,
       studentId: student.studentId,
       email: user.email,
+      // Email field needs to be added to student model
       username: user.username,
       role: user.role,
       phNo: student.phNo,
@@ -124,6 +126,28 @@ router.post("/login", async (req, res) => {
       username: warden.username,
       email: warden.email,
       phNo: warden.phNo,
+      role: user.role,
+    });
+  } else if (user.role == "security") {
+    const security = await Security.findOne({ uid: user.uid });
+    const jwtToken = jwt.sign(
+      {
+        uid: user.uid,
+        securityId: security.securityId,
+        username: security.username,
+        email: security.email,
+        phNo: security.phNo,
+        role: user.role,
+      },
+      process.env.JWT_KEY
+    );
+    res.json({
+      jwtToken,
+      uid: user.uid,
+      securityId: security.securityId,
+      username: security.username,
+      email: security.email,
+      phNo: security.phNo,
       role: user.role,
     });
   }
@@ -383,24 +407,22 @@ router.post("/resetPassword", async (req, res) => {
 
 // router.get("/dummy", async (req, res) => {
 //   const uid = "user_" + uuidv4();
-//   const wardenId = "warden_" + uuidv4();
+//   const securityId = "security_" + uuidv4();
 //   try {
 //     await new User({
-//       username: "WARDEN",
-//       email: "naveen.akash0904@gmail.com",
+//       username: "Security 1",
+//       email: "security1@gmail.com",
 //       password: "$2b$10$sW1Ay1MBfv7/Tv33C4bdaOmvPTP3Vd/LFah/Dw2XDqfEBX2ZCoLRK",
 //       uid: uid,
-//       role: "warden",
+//       role: "security",
 //     }).save();
 
-//     await new Warden({
-//       // WARDEN
-//       email: "naveen.akash0904@gmail.com",
-//       name: "Warden",
-//       phno: "1234567890",
+//     await new Security({
+//       email: "security1@gmail.com",
+//       username: "Security 1",
+//       phNo: "0987654321",
+//       securityId: securityId,
 //       uid: uid,
-//       photoPath: "lskm/sv/sdv",
-//       wardenId: wardenId,
 
 //       // RT
 //       // email: "naveen.akash0904@gmail.com",

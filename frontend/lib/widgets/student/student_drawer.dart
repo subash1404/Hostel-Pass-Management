@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hostel_pass_management/pages/common/developer_page.dart';
 import 'package:hostel_pass_management/pages/common/bug_report_page.dart';
 import 'package:hostel_pass_management/pages/common/login_page.dart';
-import 'package:hostel_pass_management/pages/student/announcements_page.dart';
 import 'package:hostel_pass_management/pages/student/student_page.dart';
 import 'package:hostel_pass_management/pages/student/rules_page.dart';
 import 'package:hostel_pass_management/pages/student/student_profile_page.dart';
