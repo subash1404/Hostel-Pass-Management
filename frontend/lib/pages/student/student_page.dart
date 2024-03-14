@@ -25,6 +25,11 @@ class _StudentPageState extends ConsumerState<StudentPage> {
   @override
   Widget build(BuildContext context) {
     final List<Pass> passes = ref.watch(studentPassProvider);
+    final List<Pass> usedPasses = passes
+        .where(
+          (pass) => pass.status == "Used",
+        )
+        .toList();
     final activePass = ref.read(studentPassProvider.notifier).getActivePass();
     final List<Announcement>? announcement =
         ref.read(studentAnnouncementNotifier);
@@ -137,7 +142,7 @@ class _StudentPageState extends ConsumerState<StudentPage> {
           ),
           Expanded(
             child: PassLog(
-              passlog: passes,
+              passlog: usedPasses,
             ),
           ),
         ],
