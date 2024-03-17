@@ -11,7 +11,7 @@ router.post("/newReport", (req, res, next) => {
       username: req.body.USER_username, 
       report: report,
     }).save();
-    res.json({ message: "Bug Report Submitted Successfully!" });
+    res.json({ message: "Thank you for reporting. We will work fixing it" });
   } catch {
     res.status(400).json({ message: "Internal Server Error" });
   }

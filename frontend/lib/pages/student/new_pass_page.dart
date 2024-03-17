@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/providers/student_pass_provider.dart';
 
@@ -19,6 +20,7 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
   TimeOfDay? outTime;
   String? passType;
   bool isSpecialPass = false;
+  bool isSubmitLoading = false;
 
   bool isTimeOfDayBefore(TimeOfDay first, TimeOfDay second) {
     if (first.hour < second.hour) {
@@ -32,7 +34,8 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    TextTheme textTheme = Theme.of(context).textTheme;
+    ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
         title: const Text("New Pass"),
@@ -191,20 +194,21 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5),
-                        child: ElevatedButton(
+                        child: TextButton(
                           onPressed: () {
                             setState(() {
                               isSpecialPass = false;
                             });
                           },
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: !isSpecialPass
-                                  ? Color.fromARGB(255, 1, 46, 76)
-                                  : Colors.grey[300],
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4),
-                              )),
+                          style: TextButton.styleFrom(
+                            backgroundColor: !isSpecialPass
+                                ? Color.fromARGB(255, 1, 46, 76)
+                                : Colors.grey[300],
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                          ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -311,7 +315,7 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                 ),
                 const SizedBox(height: 20),
                 InkWell(
-                  onTap: _submitForm,
+                  onTap: isSubmitLoading ? null : _submitForm,
                   child: Ink(
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(
@@ -322,14 +326,22 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                       color: Color.fromARGB(255, 1, 46, 76),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Text(
-                      "Submit",
-                      textAlign: TextAlign.center,
-                      style: textTheme.bodyLarge!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
+                    child: isSubmitLoading
+                        ? Column(
+                            children: [
+                              CircularProgressIndicator(
+                                color: colorScheme.background,
+                              ),
+                            ],
+                          )
+                        : Text(
+                            "Submit",
+                            textAlign: TextAlign.center,
+                            style: textTheme.bodyLarge!.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
                   ),
                 ),
               ],
@@ -344,9 +356,12 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
     String buttonText = date != null ? _formatDate(date) : '$label Date';
 
     return TextButton.icon(
-      style: TextButton.styleFrom(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+      style: ButtonStyle(
+        overlayColor: MaterialStateProperty.resolveWith<Color>(
+          (Set<MaterialState> states) {
+            return Colors.transparent;
+          },
+        ),
       ),
       onPressed: label == "In" && passType == "GatePass"
           ? null
@@ -397,9 +412,12 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
     String buttonText = time != null ? _formatTime(time) : '$label Time';
 
     return TextButton.icon(
-      style: TextButton.styleFrom(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+      style: ButtonStyle(
+        overlayColor: MaterialStateProperty.resolveWith<Color>(
+          (Set<MaterialState> states) {
+            return Colors.transparent;
+          },
+        ),
       ),
       onPressed: () async {
         final TimeOfDay? pickedTime = await showTimePicker(
@@ -483,61 +501,68 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
   }
 
   void _submitForm() async {
-    if (_formKey.currentState!.validate()) {
-      print(passType);
-      if (passType == null) {
-        ScaffoldMessenger.of(context).clearSnackBars();
+    HapticFeedback.selectionClick();
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    print(passType);
+    if (passType == null) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Please Select the Pass type")));
+      return;
+    }
+    if (_reasonController.text.isEmpty) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Please enter the reason")));
+      return;
+    }
+    if (inDate != null &&
+        inTime != null &&
+        outDate != null &&
+        outTime != null) {
+      if (passType == 'StayPass' && (inDate!.isBefore(outDate!))) {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Please Select the Pass type")));
+            SnackBar(content: Text('In date should be after out date')));
         return;
       }
-      if (_reasonController.text.isEmpty) {
-        ScaffoldMessenger.of(context).clearSnackBars();
+      if (passType == "GatePass" &&
+          (inDate == outDate && isTimeOfDayBefore(inTime!, outTime!))) {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Please enter the reason")));
+            const SnackBar(content: Text('In time can\'t be after out time')));
         return;
       }
-      if (inDate != null &&
-          inTime != null &&
-          outDate != null &&
-          outTime != null) {
-        if (passType == 'StayPass' && (inDate!.isBefore(outDate!))) {
-          ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('In date should be after out date')));
-          return;
-        }
-        if (passType == "GatePass" &&
-            (inDate == outDate && isTimeOfDayBefore(inTime!, outTime!))) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text('In time can\'t be after out time')));
-          return;
-        }
-        if (passType == "StayPass" &&
-            (inDate!.isBefore(outDate!) || inDate == outDate)) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                  'In date can\'t be before or equal to out date in specail pass'),
-            ),
-          );
-          return;
-        }
-        print("Destination: ${_destinationController.text}");
-        print(_reasonController.text);
-        print("In Date: $inDate");
-        print("In Time: $inTime");
-        print("Out Date: $outDate");
-        print("Out Time: $outTime");
-        print(passType);
-      } else {
+      if (passType == "StayPass" &&
+          (inDate!.isBefore(outDate!) || inDate == outDate)) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Please select all date and time fields.'),
+          SnackBar(
+            content: Text(
+                'In date can\'t be before or equal to out date in specail pass'),
           ),
         );
+        return;
       }
+      print("Destination: ${_destinationController.text}");
+      print(_reasonController.text);
+      print("In Date: $inDate");
+      print("In Time: $inTime");
+      print("Out Date: $outDate");
+      print("Out Time: $outTime");
+      print(passType);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select all date and time fields.'),
+        ),
+      );
     }
+
     try {
+      setState(() {
+        isSubmitLoading = true;
+      });
       await ref.read(studentPassProvider.notifier).addPass(
             destination: _destinationController.text,
             inDate: _formatDate(inDate!),
@@ -548,11 +573,17 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
             type: passType!,
             isSpecialPass: isSpecialPass,
           );
+      setState(() {
+        isSubmitLoading = false;
+      });
       if (!mounted) {
         return;
       }
       Navigator.pop(context);
     } catch (error) {
+      setState(() {
+        isSubmitLoading = false;
+      });
       if (!mounted) {
         return;
       }
@@ -567,6 +598,8 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
           ),
         ),
       );
+    } finally {
+      HapticFeedback.heavyImpact();
     }
   }
 }

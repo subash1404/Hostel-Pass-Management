@@ -20,6 +20,7 @@ class BugReportPage extends StatefulWidget {
 
 class BugReportPageState extends State<BugReportPage> {
   double starRating = 0;
+  bool isLoading = false;
   final TextEditingController reportController = TextEditingController();
   SharedPreferences? prefs = SharedPreferencesManager.preferences;
 
@@ -37,7 +38,7 @@ class BugReportPageState extends State<BugReportPage> {
     }
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
-    Future<void> submitFeedback() async {
+    Future<void> submitReport() async {
       if (reportController.text.isEmpty) {
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
@@ -47,27 +48,35 @@ class BugReportPageState extends State<BugReportPage> {
         );
         return;
       }
-      if (starRating == 0) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Please rate the app."),
-          ),
-        );
-        return;
-      }
+      // if (starRating == 0) {
+      //   ScaffoldMessenger.of(context).clearSnackBars();
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     const SnackBar(
+      //       content: Text("Please rate the app."),
+      //     ),
+      //   );
+      //   return;
+      // }
       try {
+        setState(() {
+          isLoading = true;
+        });
+
         var response = await http.post(
           Uri.parse("${dotenv.env["BACKEND_BASE_API"]}/bugReport/newReport"),
           headers: {
             "Content-Type": "application/json",
-            "Authorization": prefs!.getString("jwtToken")!,
+            "Authorization": prefs.getString("jwtToken")!,
           },
           body: jsonEncode({
             "report": reportController.text,
             // "rating": starRating,
           }),
         );
+
+        setState(() {
+          isLoading = false;
+        });
 
         var responseData = jsonDecode(response.body);
 
@@ -83,9 +92,10 @@ class BugReportPageState extends State<BugReportPage> {
             ),
           ),
         );
-
-        Navigator.pop(context);
       } catch (e) {
+        setState(() {
+          isLoading = false;
+        });
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -124,7 +134,7 @@ class BugReportPageState extends State<BugReportPage> {
                 controller: reportController,
                 maxLines: null,
                 decoration: const InputDecoration(
-                  labelText: "Bug Report",
+                  labelText: "Describe the bug",
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -151,7 +161,7 @@ class BugReportPageState extends State<BugReportPage> {
               const SizedBox(height: 30),
               InkWell(
                 borderRadius: BorderRadius.circular(16),
-                onTap: submitFeedback,
+                onTap: isLoading ? null : submitReport,
                 child: Ink(
                   decoration: BoxDecoration(
                     color: colorScheme.primaryContainer,
@@ -160,13 +170,19 @@ class BugReportPageState extends State<BugReportPage> {
                   width: MediaQuery.of(context).size.width - 200,
                   height: 50,
                   child: Center(
-                    child: Text(
-                      "Report",
-                      style: textTheme.bodyLarge!.copyWith(
-                        fontWeight: FontWeight.w500,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
+                    child: isLoading
+                        ? SizedBox(
+                            width: 25,
+                            height: 25,
+                            child: CircularProgressIndicator(),
+                          )
+                        : Text(
+                            "Report",
+                            style: textTheme.bodyLarge!.copyWith(
+                              fontWeight: FontWeight.w500,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
                   ),
                 ),
               ),

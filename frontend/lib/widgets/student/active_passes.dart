@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/models/pass_model.dart';
 import 'package:hostel_pass_management/providers/student_pass_provider.dart';
@@ -15,69 +16,23 @@ class ActivePasses extends ConsumerStatefulWidget {
   ConsumerState<ActivePasses> createState() => _ActivePassesState();
 }
 
+bool isDeletePassLoading = false;
+
 class _ActivePassesState extends ConsumerState<ActivePasses> {
   void deletePassConfirmation(BuildContext context) {
     // Create a TextEditingController to handle user input
-    TextEditingController confirmController = TextEditingController();
 
     // Show the AlertDialog
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            child: Text(
-              "Type \"CONFIRM\" to delete",
-              style: TextStyle(fontSize: 18),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          content: TextField(
-            controller: confirmController,
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.all(8),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text("Cancel"),
-            ),
-            TextButton(
-              onPressed: () {
-                if (confirmController.text == "CONFIRM") {
-                  deletePass();
-                  Navigator.of(context).pop();
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text("Please type CONFIRM to delete"),
-                  ));
-                }
-              },
-              child: Text("Delete"),
-            ),
-          ],
-        );
+        return DeletePassDialog(pass: widget.pass);
       },
     );
   }
 
-  void deletePass() {
-    if (widget.pass != null) {
-      // Call the function in the provider to delete the pass
-      ref.read(studentPassProvider.notifier).deletePass(widget.pass!.passId);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final activePasses = ref.watch(studentPassProvider);
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
 
@@ -147,6 +102,102 @@ class _ActivePassesState extends ConsumerState<ActivePasses> {
           )
         ],
       ),
+    );
+  }
+}
+
+class DeletePassDialog extends ConsumerStatefulWidget {
+  const DeletePassDialog({required this.pass, super.key});
+  final Pass? pass;
+
+  @override
+  ConsumerState<DeletePassDialog> createState() => _DeletePassDialogState();
+}
+
+class _DeletePassDialogState extends ConsumerState<DeletePassDialog> {
+  TextEditingController confirmController = TextEditingController();
+
+  Future<void> deletePass() async {
+    if (widget.pass != null) {
+      // Call the function in the provider to delete the pass
+      HapticFeedback.selectionClick();
+      setState(() {
+        isDeletePassLoading = true;
+      });
+      await ref
+          .read(studentPassProvider.notifier)
+          .deletePass(widget.pass!.passId);
+      setState(() {
+        isDeletePassLoading = false;
+      });
+      HapticFeedback.heavyImpact();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    TextTheme textTheme = Theme.of(context).textTheme;
+    ColorScheme colorScheme = Theme.of(context).colorScheme;
+
+    return AlertDialog(
+      title: const Text(
+        "Delete active pass",
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const Text(
+            "Type \"DELETE\" to delete",
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          TextField(
+            onChanged: (val) {
+              setState(() {});
+            },
+            controller: confirmController,
+            decoration: InputDecoration(
+              hintText: "DELETE",
+              contentPadding: const EdgeInsets.all(8),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
+        ],
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text("Cancel"),
+        ),
+        TextButton(
+          style: TextButton.styleFrom(
+              backgroundColor: colorScheme.errorContainer,
+              foregroundColor: colorScheme.error),
+          onPressed: isDeletePassLoading
+              ? null
+              : confirmController.text != "DELETE"
+                  ? null
+                  : () async {
+                      await deletePass();
+                      Navigator.of(context).pop();
+                    },
+          child: isDeletePassLoading
+              ? SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(
+                    color: colorScheme.error,
+                  ),
+                )
+              : const Text("Delete"),
+        ),
+      ],
     );
   }
 }

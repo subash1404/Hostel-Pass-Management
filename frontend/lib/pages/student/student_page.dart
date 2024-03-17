@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/models/announcement_model.dart';
 import 'package:hostel_pass_management/models/pass_model.dart';
@@ -43,7 +44,7 @@ class _StudentPageState extends ConsumerState<StudentPage> {
           IconButton(
               onPressed: () {
                 showModalBottomSheet(
-                  scrollControlDisabledMaxHeightRatio: 0.5,
+                  scrollControlDisabledMaxHeightRatio: 0.6,
                   context: context,
                   builder: (context) {
                     return announcement!.isNotEmpty
@@ -52,18 +53,45 @@ class _StudentPageState extends ConsumerState<StudentPage> {
                             child: Padding(
                               padding: const EdgeInsets.all(20),
                               child: SingleChildScrollView(
-                                child: ListTile(
-                                  title: Text(
-                                    announcement[0].title,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 28,
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      "Announcements",
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 28,
+                                      ),
                                     ),
-                                  ),
-                                  subtitle: Text(
-                                    announcement[0].message,
-                                    style: TextStyle(fontSize: 16),
-                                  ),
+                                    SizedBox(height: 10),
+                                    ListTile(
+                                      title: Text(
+                                        "1. ${announcement[0].title}",
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                      subtitle: Text(
+                                        announcement[0].message,
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ),
+                                    Divider(),
+                                    ListTile(
+                                      title: Text(
+                                        "2. ${announcement[0].title}",
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                      subtitle: Text(
+                                        announcement[0].message,
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ),
+                                    Divider(),
+                                  ],
                                 ),
                               ),
                             ),
@@ -92,6 +120,7 @@ class _StudentPageState extends ConsumerState<StudentPage> {
           child: InkWell(
             onTap: activePass == null
                 ? () {
+                    HapticFeedback.selectionClick();
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -100,6 +129,7 @@ class _StudentPageState extends ConsumerState<StudentPage> {
                     );
                   }
                 : () {
+                    HapticFeedback.selectionClick();
                     showModalBottomSheet(
                       scrollControlDisabledMaxHeightRatio: 0.6,
                       context: context,

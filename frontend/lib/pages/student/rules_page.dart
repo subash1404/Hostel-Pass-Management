@@ -41,16 +41,23 @@ class RulesPage extends StatelessWidget {
       body: Padding(
         padding: EdgeInsets.all(20),
         child: SingleChildScrollView(
-          child: Column(children: [
-            for (var index = 0; index < rules.length; index++)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 20),
-                child: Text(
-                  "$index. ${rules[index]}",
-                  style: textTheme.bodyLarge!.copyWith(height: 2),
+          child: Column(
+            children: [
+              for (var index = 0; index < rules.length; index++)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  child: Column(
+                    children: [
+                      Text(
+                        "$index. ${rules[index]}",
+                        style: textTheme.bodyLarge!.copyWith(height: 2),
+                      ),
+                      Divider()
+                    ],
+                  ),
                 ),
-              ),
-          ]),
+            ],
+          ),
         ),
       ),
     );

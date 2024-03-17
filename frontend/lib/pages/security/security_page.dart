@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:hostel_pass_management/pages/security/pass_details.dart';
 import 'package:hostel_pass_management/widgets/security/security_drawer.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
@@ -20,7 +22,12 @@ class _SecurityPageState extends State<SecurityPage> {
       ),
     );
     if (res != "-1" && res is String) {
-      print(res);
+      HapticFeedback.lightImpact();
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => PassDetails(qrData: res),
+        ),
+      );
     }
   }
 

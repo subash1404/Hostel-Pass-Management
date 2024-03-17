@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hostel_pass_management/pages/common/forget_password.dart';
@@ -33,12 +34,18 @@ class LoginPageState extends ConsumerState<LoginPage> {
   final TextEditingController _passController = TextEditingController();
   SharedPreferences? prefs = SharedPreferencesManager.preferences;
   bool isForgotPassLoading = false;
+  bool isLoginLoading = false;
 
   void login() async {
+    HapticFeedback.selectionClick();
     if (!_loginFormKey.currentState!.validate()) {
       return;
     }
     try {
+      setState(() {
+        isLoginLoading = true;
+      });
+
       var response = await http.post(
         Uri.parse("${dotenv.env["BACKEND_BASE_API"]}/auth/login"),
         headers: {"Content-Type": "application/json"},
@@ -49,6 +56,7 @@ class LoginPageState extends ConsumerState<LoginPage> {
           },
         ),
       );
+
       var responseData = jsonDecode(response.body);
       if (response.statusCode > 399) {
         throw responseData["message"];
@@ -142,7 +150,9 @@ class LoginPageState extends ConsumerState<LoginPage> {
         await prefs?.setString('email', responseData['email']);
         await prefs?.setString('role', responseData['role']);
         await prefs?.setString('phNo', responseData['phNo']);
-
+        setState(() {
+          isLoginLoading = false;
+        });
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => SecurityPage(),
@@ -153,6 +163,9 @@ class LoginPageState extends ConsumerState<LoginPage> {
       if (!mounted) {
         return;
       }
+      setState(() {
+        isLoginLoading = false;
+      });
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -161,6 +174,8 @@ class LoginPageState extends ConsumerState<LoginPage> {
           ),
         ),
       );
+    } finally {
+      HapticFeedback.heavyImpact();
     }
   }
 
@@ -339,7 +354,7 @@ class LoginPageState extends ConsumerState<LoginPage> {
                       ),
                       const SizedBox(height: 32),
                       InkWell(
-                        onTap: login,
+                        onTap: isLoginLoading ? null : login,
                         child: Ink(
                           width: double.infinity,
                           padding: const EdgeInsets.symmetric(
@@ -350,14 +365,22 @@ class LoginPageState extends ConsumerState<LoginPage> {
                             color: Color.fromARGB(255, 1, 46, 76),
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: Text(
-                            "Login",
-                            textAlign: TextAlign.center,
-                            style: textTheme.bodyLarge!.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
+                          child: isLoginLoading
+                              ? Column(
+                                  children: [
+                                    CircularProgressIndicator(
+                                      color: colorScheme.background,
+                                    ),
+                                  ],
+                                )
+                              : Text(
+                                  "Login",
+                                  textAlign: TextAlign.center,
+                                  style: textTheme.bodyLarge!.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
                         ),
                       ),
                     ],
@@ -383,4 +406,7 @@ class LoginPageState extends ConsumerState<LoginPage> {
       ),
     );
   }
+}
+
+class HapticFeedbackConstants {
 }

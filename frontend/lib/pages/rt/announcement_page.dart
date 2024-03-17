@@ -16,6 +16,7 @@ class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _messageController = TextEditingController();
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +76,7 @@ class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
                   ),
                   const SizedBox(height: 20),
                   InkWell(
-                    onTap: _submitForm,
+                    onTap: isLoading ? null : _submitForm,
                     child: Ink(
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(
@@ -86,14 +87,22 @@ class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
                         color: Color.fromARGB(255, 1, 46, 76),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: Text(
-                        "Make Announcement",
-                        textAlign: TextAlign.center,
-                        style: textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
+                      child: isLoading
+                          ? Column(
+                              children: [
+                                CircularProgressIndicator(
+                                  color: colorScheme.background,
+                                ),
+                              ],
+                            )
+                          : Text(
+                              "Make Announcement",
+                              textAlign: TextAlign.center,
+                              style: textTheme.bodyLarge!.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
                     ),
                   ),
                 ],
@@ -130,11 +139,18 @@ class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
                             color: Theme.of(context).colorScheme.error,
                           ),
                           onPressed: () async {
+                            setState(() {
+                              isLoading = true;
+                            });
                             await ref
                                 .read(rtAnnouncementNotifier.notifier)
                                 .deleteAnnouncement(
                                   announcementId: announcement.announcementId,
                                 );
+
+                            setState(() {
+                              isLoading = false;
+                            });
                           },
                         ),
                       ),
@@ -150,34 +166,45 @@ class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
   }
 
   void _submitForm() async {
-    if (_formKey.currentState!.validate()) {
-      final String title = _titleController.text;
-      final String message = _messageController.text;
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
 
-      try {
-        await ref
-            .read(rtAnnouncementNotifier.notifier)
-            .makeAnnouncement(title: title, message: message);
-        if (!mounted) {
-          return;
-        }
-        _titleController.clear();
-        _messageController.clear();
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Announcement Made")));
-      } catch (error) {
-        if (!mounted) {
-          return;
-        }
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              error.toString(),
-            ),
-          ),
-        );
+    final String title = _titleController.text;
+    final String message = _messageController.text;
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      await ref
+          .read(rtAnnouncementNotifier.notifier)
+          .makeAnnouncement(title: title, message: message);
+      if (!mounted) {
+        return;
       }
+      _titleController.clear();
+      _messageController.clear();
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Announcement Made")));
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            error.toString(),
+          ),
+        ),
+      );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 }

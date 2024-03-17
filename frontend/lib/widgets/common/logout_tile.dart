@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hostel_pass_management/pages/common/login_page.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,6 +11,7 @@ class LogoutTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void logout() async {
+      HapticFeedback.heavyImpact();
       await prefs!.clear();
       Navigator.pop(context);
       Navigator.pushReplacement(
