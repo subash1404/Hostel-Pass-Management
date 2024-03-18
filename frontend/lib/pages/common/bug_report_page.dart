@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
+import 'package:hostel_pass_management/widgets/common/toast.dart';
 import 'package:hostel_pass_management/widgets/rt/rt_drawer.dart';
 import 'package:hostel_pass_management/widgets/student/student_drawer.dart';
 import 'package:hostel_pass_management/widgets/warden/warden_drawer.dart';
@@ -23,9 +25,11 @@ class BugReportPageState extends State<BugReportPage> {
   bool isLoading = false;
   final TextEditingController reportController = TextEditingController();
   SharedPreferences? prefs = SharedPreferencesManager.preferences;
-
+  late FToast toast;
   @override
   Widget build(BuildContext context) {
+    toast = FToast();
+    toast.init(context);
     var drawer;
     SharedPreferences? prefs = SharedPreferencesManager.preferences;
     if (prefs!.getString("role") == "student") {
@@ -77,21 +81,26 @@ class BugReportPageState extends State<BugReportPage> {
         setState(() {
           isLoading = false;
         });
-
+        reportController.clear();
+        toast.removeQueuedCustomToasts();
+        toast.showToast(
+            child: ToastMsg(
+                text: "Thanks for reporting!. We will working fixing it",
+                bgColor: Theme.of(context).colorScheme.tertiaryContainer));
         var responseData = jsonDecode(response.body);
 
         if (response.statusCode >= 400) {
           throw responseData["message"];
         }
 
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              responseData["message"],
-            ),
-          ),
-        );
+        // ScaffoldMessenger.of(context).clearSnackBars();
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(
+        //     content: Text(
+        //       responseData["message"],
+        //     ),
+        //   ),
+        // );
       } catch (e) {
         setState(() {
           isLoading = false;

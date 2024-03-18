@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hostel_pass_management/models/pass_model.dart';
 import 'package:hostel_pass_management/models/pass_request_model.dart';
 import 'package:hostel_pass_management/providers/rt_pass_provider.dart';
@@ -8,6 +9,7 @@ import 'package:hostel_pass_management/providers/warden_pass_provider.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:hostel_pass_management/widgets/common/pass_tile.dart';
 import 'package:hostel_pass_management/widgets/common/profile_item.dart';
+import 'package:hostel_pass_management/widgets/common/toast.dart';
 import 'package:hostel_pass_management/widgets/rt/rt_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -27,7 +29,7 @@ class PassRequestPage extends ConsumerStatefulWidget {
 }
 
 class _PassRequestPageState extends ConsumerState<PassRequestPage> {
-  @override
+  late FToast toast;
   var selectedParent = null;
   void setSelectedParent(String? parent) {
     setState(() {
@@ -36,6 +38,8 @@ class _PassRequestPageState extends ConsumerState<PassRequestPage> {
   }
 
   Widget build(BuildContext context) {
+    toast = FToast();
+    toast.init(context);
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     SharedPreferences? prefs = SharedPreferencesManager.preferences;
@@ -203,12 +207,30 @@ class _PassRequestPageState extends ConsumerState<PassRequestPage> {
                                       .read(specialPassProvider.notifier)
                                       .rejectPassRequest(widget.pass.passId);
                                   Navigator.of(context).pop();
+                                  toast.removeQueuedCustomToasts();
+
+                                  toast.showToast(
+                                      child: ToastMsg(
+                                    text: "Pass Rejected",
+                                    bgColor: Theme.of(context)
+                                        .colorScheme
+                                        .errorContainer,
+                                  ));
                                 }
                               : () async {
                                   ref
                                       .read(rtPassProvider.notifier)
                                       .rejectPassRequest(widget.pass.passId);
                                   Navigator.of(context).pop();
+                                  toast.removeQueuedCustomToasts();
+
+                                  toast.showToast(
+                                      child: ToastMsg(
+                                    text: "Pass Rejected",
+                                    bgColor: Theme.of(context)
+                                        .colorScheme
+                                        .errorContainer,
+                                  ));
                                 },
                           child: const Text(
                             "Deny",
@@ -239,6 +261,14 @@ class _PassRequestPageState extends ConsumerState<PassRequestPage> {
                                           selectedParent!,
                                         );
                                     Navigator.of(context).pop();
+                                    toast.removeQueuedCustomToasts();
+
+                                    toast.showToast(
+                                        child: const ToastMsg(
+                                      text: "Pass Approved",
+                                      bgColor: Colors.greenAccent,
+                                      icondata: Icons.check,
+                                    ));
                                   } else {
                                     ScaffoldMessenger.of(context)
                                         .clearMaterialBanners();
@@ -259,6 +289,14 @@ class _PassRequestPageState extends ConsumerState<PassRequestPage> {
                                           selectedParent!,
                                         );
                                     Navigator.of(context).pop();
+                                    toast.removeQueuedCustomToasts();
+
+                                    toast.showToast(
+                                        child: const ToastMsg(
+                                      text: "Pass Approved",
+                                      bgColor: Colors.greenAccent,
+                                      icondata: Icons.check,
+                                    ));
                                   } else {
                                     // Handle case where no parent is selected
                                     ScaffoldMessenger.of(context)

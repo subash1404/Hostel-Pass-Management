@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hostel_pass_management/pages/common/forget_password.dart';
 import 'package:hostel_pass_management/pages/rt/rt_page.dart';
@@ -17,6 +18,7 @@ import 'package:hostel_pass_management/providers/student_pass_provider.dart';
 import 'package:hostel_pass_management/providers/warden_pass_provider.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:hostel_pass_management/utils/validators.dart';
+import 'package:hostel_pass_management/widgets/common/toast.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -35,6 +37,7 @@ class LoginPageState extends ConsumerState<LoginPage> {
   SharedPreferences? prefs = SharedPreferencesManager.preferences;
   bool isForgotPassLoading = false;
   bool isLoginLoading = false;
+  late FToast toast;
 
   void login() async {
     HapticFeedback.selectionClick();
@@ -91,6 +94,13 @@ class LoginPageState extends ConsumerState<LoginPage> {
             builder: (context) => const StudentPage(),
           ),
         );
+        toast.removeQueuedCustomToasts();
+        toast.showToast(
+            child: const ToastMsg(
+          text: "Login Success",
+          bgColor: Colors.greenAccent,
+          icondata: Icons.check,
+        ));
       } else if (responseData["role"] == "rt") {
         await prefs?.setString('jwtToken', responseData['jwtToken']);
         await prefs?.setString('uid', responseData['uid']);
@@ -123,6 +133,13 @@ class LoginPageState extends ConsumerState<LoginPage> {
             builder: (context) => const RtPage(),
           ),
         );
+        toast.removeQueuedCustomToasts();
+        toast.showToast(
+            child: const ToastMsg(
+          text: "Login Success",
+          bgColor: Colors.greenAccent,
+          icondata: Icons.check,
+        ));
       } else if (responseData["role"] == "warden") {
         await prefs?.setString('jwtToken', responseData['jwtToken']);
         await prefs?.setString('uid', responseData['uid']);
@@ -142,6 +159,13 @@ class LoginPageState extends ConsumerState<LoginPage> {
             // builder: (context) => StatsPage(),
           ),
         );
+        toast.removeQueuedCustomToasts();
+        toast.showToast(
+            child: const ToastMsg(
+          text: "Login Success",
+          bgColor: Colors.greenAccent,
+          icondata: Icons.check,
+        ));
       } else if (responseData["role"] == "security") {
         await prefs?.setString('jwtToken', responseData['jwtToken']);
         await prefs?.setString('uid', responseData['uid']);
@@ -155,9 +179,16 @@ class LoginPageState extends ConsumerState<LoginPage> {
         });
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => SecurityPage(),
+            builder: (context) => const SecurityPage(),
           ),
         );
+        toast.removeQueuedCustomToasts();
+        toast.showToast(
+            child: const ToastMsg(
+          text: "Login Success",
+          bgColor: Colors.greenAccent,
+          icondata: Icons.check,
+        ));
       }
     } catch (err) {
       if (!mounted) {
@@ -253,6 +284,8 @@ class LoginPageState extends ConsumerState<LoginPage> {
   bool _obscureText = true;
   @override
   Widget build(BuildContext context) {
+    toast = FToast();
+    toast.init(context);
     // ignore: unused_local_variable
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
@@ -274,7 +307,7 @@ class LoginPageState extends ConsumerState<LoginPage> {
                   "Login your account",
                   style: textTheme.titleLarge!.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(229, 0, 0, 0),
+                    color: const Color.fromARGB(229, 0, 0, 0),
                     fontSize: 20,
                   ),
                 ),
@@ -332,7 +365,7 @@ class LoginPageState extends ConsumerState<LoginPage> {
                               _obscureText
                                   ? Icons.visibility_off
                                   : Icons.visibility,
-                              color: Color.fromARGB(255, 1, 46, 76),
+                              color: const Color.fromARGB(255, 1, 46, 76),
                             ),
                             onPressed: () {
                               setState(() {
@@ -362,7 +395,7 @@ class LoginPageState extends ConsumerState<LoginPage> {
                             horizontal: 20,
                           ),
                           decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 1, 46, 76),
+                            color: const Color.fromARGB(255, 1, 46, 76),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: isLoginLoading
@@ -386,7 +419,7 @@ class LoginPageState extends ConsumerState<LoginPage> {
                     ],
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 24,
                 ),
                 TextButton(
@@ -395,8 +428,8 @@ class LoginPageState extends ConsumerState<LoginPage> {
                       ? const CircularProgressIndicator()
                       : Text(
                           "Forgot Password?",
-                          style: textTheme.bodyMedium!
-                              .copyWith(color: Color.fromARGB(255, 15, 60, 91)),
+                          style: textTheme.bodyMedium!.copyWith(
+                              color: const Color.fromARGB(255, 15, 60, 91)),
                         ),
                 ),
               ],
@@ -408,5 +441,4 @@ class LoginPageState extends ConsumerState<LoginPage> {
   }
 }
 
-class HapticFeedbackConstants {
-}
+class HapticFeedbackConstants {}

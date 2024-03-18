@@ -30,7 +30,7 @@ class _BlockTileState extends State<BlockTile> {
     return SizedBox(
       child: Container(
         margin: EdgeInsets.all(10),
-        padding: EdgeInsets.all(15),
+        padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
@@ -43,7 +43,7 @@ class _BlockTileState extends State<BlockTile> {
             ),
           ],
         ),
-        height: 200,
+        height: 170,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -74,12 +74,12 @@ class _BlockTileState extends State<BlockTile> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          "Present",
-                          style: textTheme.bodyMedium!.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                        // Text(
+                        //   "Present",
+                        //   style: textTheme.bodyMedium!.copyWith(
+                        //     fontWeight: FontWeight.bold,
+                        //   ),
+                        // ),
                         Text(
                           (widget.inCount - widget.outCount).toString(),
                           style: textTheme.titleMedium!.copyWith(
@@ -112,12 +112,12 @@ class _BlockTileState extends State<BlockTile> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          "Away",
-                          style: textTheme.bodyMedium!.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                        // Text(
+                        //   "Away",
+                        //   style: textTheme.bodyMedium!.copyWith(
+                        //     fontWeight: FontWeight.bold,
+                        //   ),
+                        // ),
                         Text(
                           widget.outCount.toString(),
                           style: textTheme.titleMedium!.copyWith(

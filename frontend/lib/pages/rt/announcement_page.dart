@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hostel_pass_management/providers/rt_announcement_provider.dart';
+import 'package:hostel_pass_management/widgets/common/toast.dart';
 import 'package:hostel_pass_management/widgets/rt/rt_drawer.dart';
 
 class AnnouncementPage extends ConsumerStatefulWidget {
@@ -17,9 +19,12 @@ class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _messageController = TextEditingController();
   bool isLoading = false;
+  late FToast toast;
 
   @override
   Widget build(BuildContext context) {
+    toast = FToast();
+    toast.init(context);
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     TextTheme textTheme = Theme.of(context).textTheme;
     final announcements = ref.watch(rtAnnouncementNotifier);
@@ -147,6 +152,13 @@ class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
                                 .deleteAnnouncement(
                                   announcementId: announcement.announcementId,
                                 );
+                            toast.removeQueuedCustomToasts();
+                            toast.showToast(
+                                child: ToastMsg(
+                                    text: "Announcement Deleted",
+                                    bgColor: Theme.of(context)
+                                        .colorScheme
+                                        .errorContainer));
 
                             setState(() {
                               isLoading = false;
@@ -186,9 +198,23 @@ class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
       }
       _titleController.clear();
       _messageController.clear();
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Announcement Made")));
+      toast.removeQueuedCustomToasts();
+      toast.showToast(
+          child: const ToastMsg(
+            text: "Announcement Made",
+            bgColor: Colors.greenAccent,
+            icondata: Icons.check_rounded,
+          ),
+          gravity: ToastGravity.BOTTOM);
+      // Fluttertoast.showToast(
+      //     msg: "Annoucement made",
+      //     fontSize: 18,
+      //     gravity: ToastGravity.BOTTOM,
+      //     backgroundColor: Colors.black,
+      //     textColor: Colors.white);
+      // ScaffoldMessenger.of(context).clearSnackBars();
+      // ScaffoldMessenger.of(context)
+      //     .showSnackBar(SnackBar(content: Text("Announcement Made")));
     } catch (error) {
       if (!mounted) {
         return;

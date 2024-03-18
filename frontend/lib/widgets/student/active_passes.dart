@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hostel_pass_management/models/pass_model.dart';
 import 'package:hostel_pass_management/providers/student_pass_provider.dart';
+import 'package:hostel_pass_management/widgets/common/toast.dart';
 import 'package:hostel_pass_management/widgets/student/pass_item.dart';
 
 class ActivePasses extends ConsumerStatefulWidget {
@@ -116,7 +118,7 @@ class DeletePassDialog extends ConsumerStatefulWidget {
 
 class _DeletePassDialogState extends ConsumerState<DeletePassDialog> {
   TextEditingController confirmController = TextEditingController();
-
+  late FToast toast;
   Future<void> deletePass() async {
     if (widget.pass != null) {
       // Call the function in the provider to delete the pass
@@ -130,12 +132,19 @@ class _DeletePassDialogState extends ConsumerState<DeletePassDialog> {
       setState(() {
         isDeletePassLoading = false;
       });
+      toast.removeQueuedCustomToasts();
+      toast.showToast(
+          child: ToastMsg(
+              text: "Pass Deleted",
+              bgColor: Theme.of(context).colorScheme.errorContainer));
       HapticFeedback.heavyImpact();
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    toast = FToast();
+    toast.init(context);
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
 
