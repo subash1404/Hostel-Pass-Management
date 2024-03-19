@@ -143,6 +143,7 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                           onPressed: () {
                             setState(() {
                               passType = 'StayPass';
+                              inDate=null;
                             });
                           },
                           style: ElevatedButton.styleFrom(
@@ -366,6 +367,15 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
       onPressed: label == "In" && passType == "GatePass"
           ? null
           : () async {
+              if (passType == null) {
+                ScaffoldMessenger.of(context).clearSnackBars();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("Please select pass type first"),
+                  ),
+                );
+                return;
+              }
               DateTime? pickedDate;
               if (label == "Out") {
                 pickedDate = await showDatePicker(
@@ -374,13 +384,32 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                   firstDate: DateTime.now(),
                   lastDate: DateTime(2026),
                 );
+                inDate = null;
               } else {
-                pickedDate = await showDatePicker(
-                  context: context,
-                  initialDate: inDate ?? DateTime.now(),
-                  firstDate: DateTime.now(),
-                  lastDate: DateTime(2026),
-                );
+                if (outDate == null) {
+                  ScaffoldMessenger.of(context).clearSnackBars();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Please select leaving date first"),
+                    ),
+                  );
+                  return;
+                }
+                if (passType == "StayPass") {
+                  pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: inDate ?? outDate!.add(Duration(days: 1)),
+                    firstDate: outDate!.add(Duration(days: 1)),
+                    lastDate: DateTime(2026),
+                  );
+                } else {
+                  pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime.now(),
+                    lastDate: DateTime(2026),
+                  );
+                }
               }
 
               if (pickedDate != null) {
