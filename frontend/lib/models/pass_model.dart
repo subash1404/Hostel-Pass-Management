@@ -2,6 +2,7 @@ class Pass {
   Pass({
     required this.passId,
     required this.studentId,
+    required this.gender,
     required this.qrId,
     required this.status,
     required this.destination,
@@ -22,6 +23,7 @@ class Pass {
 
   final String passId;
   final String studentId;
+  final String gender;
   final String qrId;
   final String status;
   final String destination;

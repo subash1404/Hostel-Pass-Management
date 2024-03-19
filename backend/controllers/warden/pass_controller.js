@@ -18,6 +18,7 @@ router.get("/getPass", async (req, res) => {
         passes.push({
           ...pass._doc,
           studentName: student.username,
+          gender:student.gender,
           dept: student.dept,
           fatherPhNo: student.fatherPhNo,
           motherPhNo: student.motherPhNo,

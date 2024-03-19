@@ -24,12 +24,19 @@ class _BlockStudentsPageState extends ConsumerState<BlockStudentsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final blockStudents;
+    var blockStudents;
     var drawer;
     var appbar;
 
     if (widget.students == null) {
       blockStudents = ref.watch(blockStudentProvider);
+      if (prefs!.getBool('isBoysHostelRt')!) {
+        blockStudents =
+            blockStudents.where((student) => student.gender == 'M').toList();
+      } else {
+        blockStudents =
+            blockStudents.where((student) => student.gender == 'F').toList();
+      }
       drawer = RtDrawer();
       appbar = AppBar(
         title: const Text('Block Students'),

@@ -63,34 +63,38 @@ class _StudentPageState extends ConsumerState<StudentPage> {
                                       ),
                                     ),
                                     SizedBox(height: 10),
-                                    ListTile(
-                                      title: Text(
-                                        "1. ${announcement[0].title}",
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20,
+                                    if (announcement.length > 0) ...[
+                                      ListTile(
+                                        title: Text(
+                                          "1. ${announcement[0].title}",
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
+                                          ),
+                                        ),
+                                        subtitle: Text(
+                                          announcement[0].message,
+                                          style: TextStyle(fontSize: 16),
                                         ),
                                       ),
-                                      subtitle: Text(
-                                        announcement[0].message,
-                                        style: TextStyle(fontSize: 16),
-                                      ),
-                                    ),
-                                    Divider(),
-                                    ListTile(
-                                      title: Text(
-                                        "2. ${announcement[0].title}",
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20,
+                                      if (announcement.length > 1) ...[
+                                        Divider(),
+                                        ListTile(
+                                          title: Text(
+                                            "2. ${announcement[1].title}",
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                          subtitle: Text(
+                                            announcement[1].message,
+                                            style: TextStyle(fontSize: 16),
+                                          ),
                                         ),
-                                      ),
-                                      subtitle: Text(
-                                        announcement[0].message,
-                                        style: TextStyle(fontSize: 16),
-                                      ),
-                                    ),
-                                    Divider(),
+                                        Divider(),
+                                      ],
+                                    ],
                                   ],
                                 ),
                               ),

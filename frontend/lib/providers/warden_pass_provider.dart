@@ -35,6 +35,7 @@ class WardenPassRequestsNotifier extends StateNotifier<List<PassRequest>> {
             passId: pass["passId"],
             qrId: pass["qrId"],
             studentId: pass["studentId"],
+            gender: pass['gender'],
             status: pass["status"],
             destination: pass["destination"],
             type: pass["type"],
@@ -92,6 +93,7 @@ class WardenPassRequestsNotifier extends StateNotifier<List<PassRequest>> {
         PassRequest updatedPass = PassRequest(
           passId: state[passIndex].passId,
           qrId: state[passIndex].qrId,
+          gender: state[passIndex].gender,
           studentId: state[passIndex].studentId,
           status: 'Approved',
           approvedBy: prefs!.getString("username")!,
@@ -148,6 +150,7 @@ class WardenPassRequestsNotifier extends StateNotifier<List<PassRequest>> {
           passId: state[passIndex].passId,
           qrId: state[passIndex].qrId,
           studentId: state[passIndex].studentId,
+          gender: state[passIndex].gender,
           status: 'Rejected',
           approvedBy: prefs!.getString("username")!,
           confirmedWith: 'None',

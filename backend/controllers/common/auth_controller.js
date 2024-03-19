@@ -43,6 +43,7 @@ router.post("/login", async (req, res) => {
         uid: user.uid,
         studentId: student.studentId,
         email: user.email,
+        gender:student.gender,
         username: user.username,
         role: user.role,
         phNo: student.phNo,
@@ -66,6 +67,7 @@ router.post("/login", async (req, res) => {
       studentId: student.studentId,
       email: user.email,
       // Email field needs to be added to student model
+      gender:student.gender,
       username: user.username,
       role: user.role,
       phNo: student.phNo,
@@ -86,6 +88,7 @@ router.post("/login", async (req, res) => {
       {
         uid: user.uid,
         rtId: rt.rtId,
+        isBoysHostelRt:rt.isBoysHostelRt,
         username: rt.username,
         email: rt.email,
         permanentBlock: rt.permanentBlock,
@@ -99,6 +102,7 @@ router.post("/login", async (req, res) => {
       jwtToken,
       uid: user.uid,
       rtId: rt.rtId,
+      isBoysHostelRt: rt.isBoysHostelRt,
       username: rt.username,
       email: rt.email,
       permanentBlock: rt.permanentBlock,

@@ -39,6 +39,7 @@ class StudentPassNotifier extends StateNotifier<List<Pass>> {
           Pass(
             passId: pass["passId"],
             studentId: pass["studentId"],
+            gender: pass['gender'],
             qrId: pass["qrId"],
             status: pass["status"],
             destination: pass["destination"],
@@ -115,6 +116,7 @@ class StudentPassNotifier extends StateNotifier<List<Pass>> {
           status: responseData["status"],
           destination: responseData["destination"],
           type: responseData["type"],
+          gender: responseData['gender'],
           isActive: responseData["isActive"],
           reason: responseData["reason"],
           expectedInDate: "${inDate.day}-${inDate.month}-${inDate.year}",
@@ -143,6 +145,7 @@ class StudentPassNotifier extends StateNotifier<List<Pass>> {
           });
       state = state.where((pass) => pass.passId != passId).toList();
     } catch (err) {
+      print(err);
       throw "Something went wrong";
     }
   }

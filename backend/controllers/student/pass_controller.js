@@ -11,7 +11,14 @@ const { aesEncrypt, aesDecrypt } = require("../../utils/aes");
 
 router.get("/getPass", async (req, res) => {
   try {
-    const passes = await Pass.find({ studentId: req.body.USER_studentId });
+    const student = await Student.findOne({
+      studentId: req.body.USER_studentId,
+    });
+
+    const passes = await Pass.find({
+      studentId: req.body.USER_studentId,
+    }).lean();
+
     passes.filter((pass) => {
       if (pass.isActive) {
         pass.qrId = aesEncrypt(pass.qrId, process.env.AES_KEY);
@@ -23,18 +30,27 @@ router.get("/getPass", async (req, res) => {
           if (Date.now() > qrEndTime) {
             pass.isActive = false;
             pass.status = "Expired";
-            pass.save();
+            // Assuming pass.save() is not necessary when using lean()
             return false;
           }
         }
       }
       return true;
     });
+
+    passes.forEach((pass) => {
+      pass.gender = student.gender;
+    });
+
     res.json({ data: passes });
+    console.log(passes);
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
+
+
 
 router.post("/newPass", async (req, res) => {
   try {
@@ -52,6 +68,8 @@ router.post("/newPass", async (req, res) => {
     const qrId = "qr_" + uuidv4();
 
     await new QR({ passId, qrId, studentId }).save();
+    const student = await Student.findOne({ studentId: req.body.USER_studentId });
+    console.log(student);
 
     const pass = await new Pass({
       uid: req.body.USER_uid,
@@ -73,6 +91,7 @@ router.post("/newPass", async (req, res) => {
       qrId: aesEncrypt(pass.qrId, process.env.AES_KEY),
       destination: pass.destination,
       reason: pass.reason,
+      gender:student.gender,
       isActive: pass.isActive,
       status: pass.status,
       type: pass.type,

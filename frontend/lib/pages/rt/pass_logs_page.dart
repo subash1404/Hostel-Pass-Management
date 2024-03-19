@@ -56,9 +56,21 @@ class _PassLogsPageState extends ConsumerState<PassLogsPage>
           .toList();
     } else if (prefs.getString("role") == "rt") {
       passRequests = ref.watch(rtPassProvider);
-      inUsePasses =
-          passRequests.where((pass) => pass.status == 'In use').toList();
-      usedPasses = passRequests.where((pass) => pass.status == 'Used').toList();
+      if (prefs.getBool('isBoysHostelRt')!) {
+        inUsePasses = passRequests
+            .where((pass) => pass.status == 'In use' && pass.gender == 'M')
+            .toList();
+        usedPasses = passRequests
+            .where((pass) => pass.status == 'Used' && pass.gender == 'M')
+            .toList();
+      } else {
+        inUsePasses = passRequests
+            .where((pass) => pass.status == 'In use' && pass.gender == 'F')
+            .toList();
+        usedPasses = passRequests
+            .where((pass) => pass.status == 'Used' && pass.gender == 'F')
+            .toList();
+      }
     }
 
     return Scaffold(

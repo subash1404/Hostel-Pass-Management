@@ -40,12 +40,12 @@ const PassSchema = new schema(
     approvedBy: {
       type: String,
       required: true,
-      default:"None"
+      default: "None",
     },
     confirmedWith: {
       type: String,
       required: true,
-      default:"None"
+      default: "None",
     },
     exitScanBy: {
       type: String,
