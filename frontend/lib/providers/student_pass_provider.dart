@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/models/pass_model.dart';
@@ -44,16 +45,21 @@ class StudentPassNotifier extends StateNotifier<List<Pass>> {
             type: pass["type"],
             isActive: pass["isActive"],
             reason: pass["reason"],
-            expectedInDate: pass["expectedInDate"],
-            expectedInTime: pass["expectedInTime"],
-            expectedOutDate: pass["expectedOutDate"],
-            expectedOutTime: pass["expectedOutTime"],
+            expectedInDate:
+                "${DateTime.parse(pass['expectedIn']).day}-${DateTime.parse(pass['expectedIn']).month}-${DateTime.parse(pass['expectedIn']).year}",
+            expectedInTime:
+                "${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedIn'])).hour}:${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedIn'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedIn'])).period.name.toUpperCase()}",
+            expectedOutDate:
+                "${DateTime.parse(pass['expectedOut']).day}-${DateTime.parse(pass['expectedOut']).month}-${DateTime.parse(pass['expectedOut']).year}",
+            expectedOutTime:
+                "${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).hour}:${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).period.name.toUpperCase()}",
             isSpecialPass: pass["isSpecialPass"],
           ),
         );
       }
       state = passes;
     } catch (e) {
+      print(e);
       throw "Something went wrong";
     }
   }
@@ -62,10 +68,10 @@ class StudentPassNotifier extends StateNotifier<List<Pass>> {
     required String destination,
     required String type,
     required String reason,
-    required String inDate,
-    required String inTime,
-    required String outDate,
-    required String outTime,
+    required DateTime inDate,
+    required TimeOfDay inTime,
+    required DateTime outDate,
+    required TimeOfDay outTime,
     required bool isSpecialPass,
   }) async {
     try {
@@ -82,10 +88,12 @@ class StudentPassNotifier extends StateNotifier<List<Pass>> {
             "destination": destination,
             "type": type,
             "reason": reason,
-            "inDate": inDate,
-            "inTime": inTime,
-            "outDate": outDate,
-            "outTime": outTime,
+            "outDateTime": DateTime.parse(
+                    "${outDate.year}-${outDate.month.toString().padLeft(2, '0')}-${outDate.day.toString().padLeft(2, '0')} ${outTime.hour.toString().padLeft(2, '0')}:${outTime.minute.toString().padLeft(2, '0')}:00")
+                .toIso8601String(),
+            "inDateTime": DateTime.parse(
+                    "${inDate.year}-${inDate.month.toString().padLeft(2, '0')}-${inDate.day.toString().padLeft(2, '0')} ${inTime.hour.toString().padLeft(2, '0')}:${inTime.minute.toString().padLeft(2, '0')}:00")
+                .toIso8601String(),
             "isSpecialPass": isSpecialPass,
           },
         ),
@@ -103,14 +111,17 @@ class StudentPassNotifier extends StateNotifier<List<Pass>> {
           type: responseData["type"],
           isActive: responseData["isActive"],
           reason: responseData["reason"],
-          expectedInDate: responseData["inDate"],
-          expectedInTime: responseData["inTime"],
-          expectedOutDate: responseData["outDate"],
-          expectedOutTime: responseData["outTime"],
+          expectedInDate: "${inDate.day}-${inDate.month}-${inDate.year}",
+          expectedInTime:
+              "${inTime.hourOfPeriod}:${inTime.minute} ${inTime.period.name}",
+          expectedOutDate: "${outDate.day}-${outDate.month}-${outDate.year}",
+          expectedOutTime:
+              "${outTime.hour}:${outTime.minute} ${outTime.period.name}",
           isSpecialPass: responseData["isSpecialPass"],
         )
       ];
     } catch (e) {
+      print(e);
       throw "Something went wrong";
     }
   }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/models/pass_model.dart';
@@ -46,10 +47,14 @@ class RtPassRequestsNotifier extends StateNotifier<List<PassRequest>> {
               type: pass["type"],
               isActive: pass["isActive"],
               reason: pass["reason"],
-              expectedInDate: pass["expectedInDate"],
-              expectedInTime: pass["expectedInTime"],
-              expectedOutDate: pass["expectedOutDate"],
-              expectedOutTime: pass["expectedOutTime"],
+              expectedInDate:
+                  "${DateTime.parse(pass['expectedIn']).day}-${DateTime.parse(pass['expectedIn']).month}-${DateTime.parse(pass['expectedIn']).year}",
+              expectedInTime:
+                  "${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedIn'])).hour}:${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedIn'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedIn'])).period.name.toUpperCase()}",
+              expectedOutDate:
+                  "${DateTime.parse(pass['expectedOut']).day}-${DateTime.parse(pass['expectedOut']).month}-${DateTime.parse(pass['expectedOut']).year}",
+              expectedOutTime:
+                  "${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).hour}:${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).period.name.toUpperCase()}",
               isSpecialPass: pass["isSpecialPass"],
 
               // This Class Constructor parameters

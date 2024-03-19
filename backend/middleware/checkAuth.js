@@ -38,6 +38,11 @@ const checkAuth = (req, res, next) =>  {
       req.body.USER_role = result.role;
       req.body.USER_phNo = result.phNo;
     } else if (result.role == "security") {
+      req.body.USER_uid = result.uid;
+      req.body.USER_securityId = result.securityId;
+      req.body.USER_username = result.username;
+      req.body.USER_email = result.email;
+      req.body.USER_phNo = result.phNo;
     }
     next();
   } catch {

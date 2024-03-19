@@ -12,8 +12,6 @@ const { aesEncrypt, aesDecrypt } = require("../../utils/aes");
 router.get("/getDetails/:qrData", async (req, res) => {
   const qrId = aesDecrypt(req.params.qrData, process.env.AES_KEY);
 
-  console.log(qrId);
-  
   const qr = await Qr.findOne({ qrId: qrId });
   const pass = await Pass.findOne({ passId: qr.passId, isActive: true });
   const student = await Student.findOne({ studentId: pass.studentId });
@@ -32,10 +30,36 @@ router.get("/getDetails/:qrData", async (req, res) => {
     username: student.username,
     roomNo: student.roomNo,
     passType: pass.type,
-    leavingTime: `${pass.expectedOutDate} ${pass.expectedOutTime}`,
-    returningTime: `${pass.expectedInDate} ${pass.expectedInTime}`,
+    leavingDateTime: `${pass.expectedOut}`,
+    returningDateTime: `${pass.expectedIn}`,
     approvedBy: pass.approvedBy,
+    exitScanBy: pass.exitScanBy,
+    entryScanBy: pass.entryScanBy,
+    exitScanAt: pass.exitScanAt,
+    entryScanAt: pass.entryScanAt,
   });
 });
-router.get("/confirmScan/:qrId", async (req, res) => {});
+
+router.post("/confirmScan/:qrData", async (req, res) => {
+  const qrId = aesDecrypt(req.params.qrData, process.env.AES_KEY);
+  const qr = await Qr.findOne({ qrId: qrId });
+  const pass = await Pass.findOne({ passId: qr.passId, isActive: true });
+
+  if (pass.exitScanAt == undefined) {
+    pass.exitScanBy = req.body.USER_username;
+    pass.exitScanAt = req.body.scanAt;
+    pass.status = "In use";
+    pass.save();
+    qr.save();
+  } else if (pass.entryScanAt == undefined) {
+    pass.entryScanBy = req.body.USER_username;
+    pass.entryScanAt = req.body.scanAt;
+    pass.status = "Used";
+    pass.isActive = false;
+    pass.save();
+    Qr.deleteOne({ qrId: qrId });
+  }
+
+  res.json({message: "Scan successful"});
+});
 module.exports = router;

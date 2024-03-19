@@ -141,10 +141,11 @@ class _PassRequestPageState extends ConsumerState<PassRequestPage> {
                   child:
                       PassTile(title: "Reason", content: widget.pass.reason)),
               Visibility(
-                  visible: !widget.passRequest,
-                  child: PassTile(
-                      title: "Confirmed With",
-                      content: widget.pass.confirmedWith)),
+                visible: !widget.passRequest,
+                child: PassTile(
+                    title: "Confirmed With",
+                    content: widget.pass.confirmedWith),
+              ),
               Visibility(
                 visible: widget.passRequest,
                 child: const Padding(

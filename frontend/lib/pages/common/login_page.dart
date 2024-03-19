@@ -419,9 +419,7 @@ class LoginPageState extends ConsumerState<LoginPage> {
                     ],
                   ),
                 ),
-                const SizedBox(
-                  height: 24,
-                ),
+                SizedBox(height: 24),
                 TextButton(
                   onPressed: isForgotPassLoading ? null : forgotPass,
                   child: isForgotPassLoading
@@ -440,5 +438,3 @@ class LoginPageState extends ConsumerState<LoginPage> {
     );
   }
 }
-
-class HapticFeedbackConstants {}
