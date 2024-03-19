@@ -196,7 +196,7 @@ class _QrBottomSheetState extends ConsumerState<QrBottomSheet> {
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     Pass activePass = ref.read(studentPassProvider.notifier).getActivePass()!;
-
+    
     return Column(
       children: [
         Expanded(
@@ -228,7 +228,7 @@ class _QrBottomSheetState extends ConsumerState<QrBottomSheet> {
                     borderRadius: BorderRadius.circular(20),
                     color: colorScheme.primaryContainer,
                   ),
-                  child: activePass.status == "Approved"
+                  child: activePass.status == "Approved" || activePass.status == "In use"
                       ? QrImageView(
                           data: activePass.qrId,
                           semanticsLabel: "skuf",

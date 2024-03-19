@@ -15,12 +15,6 @@ const QrSchema = new schema(
       type: String,
       required: true,
     },
-    exitScanAt: {
-      type: String,
-    },
-    entryScanAt: {
-      type: String,
-    },
   },
   { timestamps: true }
 );

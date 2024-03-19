@@ -366,12 +366,23 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
       onPressed: label == "In" && passType == "GatePass"
           ? null
           : () async {
-              final DateTime? pickedDate = await showDatePicker(
-                context: context,
-                initialDate: DateTime.now(),
-                firstDate: DateTime.now(),
-                lastDate: DateTime(2026),
-              );
+              DateTime? pickedDate;
+              if (label == "Out") {
+                pickedDate = await showDatePicker(
+                  context: context,
+                  initialDate: outDate ?? DateTime.now(),
+                  firstDate: DateTime.now(),
+                  lastDate: DateTime(2026),
+                );
+              } else {
+                pickedDate = await showDatePicker(
+                  context: context,
+                  initialDate: inDate ?? DateTime.now(),
+                  firstDate: DateTime.now(),
+                  lastDate: DateTime(2026),
+                );
+              }
+
               if (pickedDate != null) {
                 setState(() {
                   if (label == "Out") {
@@ -420,10 +431,18 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
         ),
       ),
       onPressed: () async {
-        final TimeOfDay? pickedTime = await showTimePicker(
-          context: context,
-          initialTime: TimeOfDay.now(),
-        );
+        TimeOfDay? pickedTime;
+        if (label == "In") {
+          pickedTime = await showTimePicker(
+            context: context,
+            initialTime: inTime ?? TimeOfDay.now(),
+          );
+        } else {
+          pickedTime = await showTimePicker(
+            context: context,
+            initialTime: outTime ?? TimeOfDay.now(),
+          );
+        }
         if (pickedTime != null) {
           setState(() {
             if (label == "In") {
@@ -544,13 +563,14 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
         );
         return;
       }
-      print("Destination: ${_destinationController.text}");
-      print(_reasonController.text);
-      print("In Date: $inDate");
-      print("In Time: $inTime");
-      print("Out Date: $outDate");
-      print("Out Time: $outTime");
-      print(passType);
+      // print("Destination: ${_destinationController.text}");
+      // print(_reasonController.text);
+      // print("In Date: $inDate");
+      // print("In Time: $inTime");
+      // print("Out Date: $outDate");
+      // print("Out Time: $outTime");
+      // // print(DateTime.parse("${inDate}"));
+      // print(passType);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -565,10 +585,10 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
       });
       await ref.read(studentPassProvider.notifier).addPass(
             destination: _destinationController.text,
-            inDate: _formatDate(inDate!),
-            inTime: _formatTime(inTime!),
-            outDate: _formatDate(outDate!),
-            outTime: _formatTime(outTime!),
+            inDate: inDate!,
+            inTime: inTime!,
+            outDate: outDate!,
+            outTime: outTime!,
             reason: _reasonController.text,
             type: passType!,
             isSpecialPass: isSpecialPass,

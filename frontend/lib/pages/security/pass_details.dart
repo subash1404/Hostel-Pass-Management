@@ -46,7 +46,6 @@ class _PassDetailsState extends State<PassDetails> {
       if (passResponse.statusCode > 399) {
         throw passData["message"];
       }
-      print(passData);
     } catch (e) {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
@@ -61,39 +60,51 @@ class _PassDetailsState extends State<PassDetails> {
     }
   }
 
-  // void confirmScan() async {
-  //   setState(() {
-  //     isButtonLoading = true;
-  //   });
-  //   try {
-  //     response = await http.post(
-  //       Uri.parse(
-  //           "${dotenv.env["BACKEND_BASE_API"]}/${prefs!.getString("role")}/pass/confirmScan/${widget.qrData}"),
-  //       body: jsonEncode({"action": "ENTRY"}),
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         "Authorization": prefs!.getString("jwtToken")!,
-  //       },
-  //     );
+  void confirmScan() async {
+    setState(() {
+      isButtonLoading = true;
+    });
+    try {
+      dynamic response = await http.post(
+        Uri.parse(
+            "${dotenv.env["BACKEND_BASE_API"]}/${prefs!.getString("role")}/pass/confirmScan/${widget.qrData}"),
+        body: jsonEncode(
+          {
+            "scanAt": DateTime.now().toIso8601String(),
+          },
+        ),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": prefs!.getString("jwtToken")!,
+        },
+      );
 
-  //     var responseData = jsonDecode(response.body);
+      dynamic responseData = jsonDecode(response.body);
 
-  //     if (response.statusCode > 399) {
-  //       throw responseData["message"];
-  //     }
-  //   } catch (e) {
-  //     ScaffoldMessenger.of(context).clearSnackBars();
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       const SnackBar(
-  //         content: Text("Something went wrong"),
-  //       ),
-  //     );
-  //   } finally {
-  //     setState(() {
-  //       isButtonLoading = false;
-  //     });
-  //   }
-  // }
+      if (response.statusCode > 399) {
+        throw responseData["message"];
+      }
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(responseData["message"]),
+        ),
+      );
+
+      Navigator.pop(context);
+    } catch (e) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Something went wrong"),
+        ),
+      );
+    } finally {
+      setState(() {
+        isButtonLoading = false;
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -110,163 +121,145 @@ class _PassDetailsState extends State<PassDetails> {
     // print(prefs!.getString("profileBuffer"));
 
     return Scaffold(
-      body: Scaffold(
-        backgroundColor: const Color(0xf5f4fa),
-        floatingActionButton: FloatingActionButton.extended(
-          // backgroundColor: colorScheme.errorContainer,
-          backgroundColor: Color.fromARGB(255, 179, 255, 181),
-          onPressed: () {},
-          label: Row(
-            children: [
-              Icon(Icons.check),
-              SizedBox(width: 5),
-              Text("Confirm Entry"),
-            ],
-          ),
-        ),
-        appBar: AppBar(
-          // backgroundColor: const Color.fromARGB(255, 153, 0, 255),
-          // foregroundColor: Colors.white,
-          title: const Text(
-            "Student Pass",
-          ),
-          // centerTitle: true,
-        ),
-        drawer: SecurityDrawer(),
-        body: isPassLoading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.fromLTRB(16, 10, 16, 10),
-                      clipBehavior: Clip.hardEdge,
-                      padding: EdgeInsets.all(30),
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            spreadRadius: 1,
-                            blurRadius: 1,
-                            offset: const Offset(0, 1),
-                          ),
-                        ],
-                        borderRadius: BorderRadius.circular(20),
-                        color: Color.fromARGB(255, 179, 255, 181),
-                        // color: colorScheme.errorContainer,
-                      ),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: 200,
-                            width: 200,
-                            clipBehavior: Clip.antiAlias,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                            ),
-                            child: profileBuffer == null
-                                ? const Icon(
-                                    Icons.person_rounded,
-                                    size: 100,
-                                  )
-                                : Image.memory(
-                                    base64Decode(profileBuffer!),
-                                    fit: BoxFit.cover,
-                                  ),
-                          ),
-                          SizedBox(height: 15),
-                          Text(
-                            passData["username"],
-                            textAlign: TextAlign.center,
-                            style: textTheme.titleLarge!.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
+      floatingActionButton: isPassLoading
+          ? null
+          : FloatingActionButton.extended(
+              backgroundColor: passData["exitScanBy"] == null
+                  ? colorScheme.errorContainer
+                  : Color.fromARGB(255, 179, 255, 181),
+              onPressed: isButtonLoading ? null : confirmScan,
+              label: isButtonLoading
+                  ? CircularProgressIndicator()
+                  : Row(
+                      children: [
+                        Icon(Icons.check),
+                        SizedBox(width: 5),
+                        Text(
+                          passData["exitScanBy"] == null
+                              ? "Confirm Exit"
+                              : "Confirm Entry",
+                        ),
+                      ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  spreadRadius: 1,
-                                  blurRadius: 1,
-                                  offset: const Offset(0, 1),
-                                ),
-                              ],
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.white,
-                            ),
-                            child: Column(
-                              children: [
-                                ProfileItem(
-                                  attribute: "Room No",
-                                  value: passData["roomNo"].toString(),
-                                ),
-                                const Divider(height: 0),
-                                ProfileItem(
-                                  attribute: "Pass Type",
-                                  value: passData["passType"],
-                                ),
-                                const Divider(height: 0),
-                                ProfileItem(
-                                  attribute: "Leaving Time",
-                                  value: passData["leavingTime"],
-                                ),
-                                const Divider(height: 0),
-                                ProfileItem(
-                                  attribute: "Retruning Time",
-                                  value: passData["returningTime"],
-                                ),
-                                const Divider(height: 0),
-                                ProfileItem(
-                                  attribute: "Approved by",
-                                  value: passData["approvedBy"],
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          // InkWell(
-                          //   onTap: () {},
-                          //   borderRadius: BorderRadius.circular(15),
-                          //   child: Ink(
-                          //     padding: EdgeInsets.symmetric(vertical: 20),
-                          //     width: double.infinity,
-                          //     decoration: BoxDecoration(
-                          //       borderRadius: BorderRadius.circular(15),
-                          //       color: Color.fromARGB(255, 179, 255, 181),
-                          //     ),
-                          //     child: Text(
-                          //       "Entry Log",
-                          //       style: textTheme.titleMedium!.copyWith(
-                          //         fontWeight: FontWeight.bold,
-                          //         color: Color.fromARGB(255, 22, 71, 23),
-                          //       ),
-                          //       textAlign: TextAlign.center,
-                          //     ),
-                          //   ),
-                          // ),
-                          SizedBox(height: 20),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
+            ),
+      appBar: AppBar(
+        title: const Text(
+          "Student Pass",
+        ),
       ),
+      drawer: SecurityDrawer(),
+      body: isPassLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(16, 10, 16, 10),
+                    clipBehavior: Clip.hardEdge,
+                    padding: EdgeInsets.all(30),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          spreadRadius: 1,
+                          blurRadius: 1,
+                          offset: const Offset(0, 1),
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(20),
+                      color: passData["exitScanBy"] == null
+                          ? colorScheme.errorContainer
+                          : Color.fromARGB(255, 179, 255, 181),
+                    ),
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 200,
+                          width: 200,
+                          clipBehavior: Clip.antiAlias,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                          ),
+                          child: profileBuffer == null
+                              ? const Icon(
+                                  Icons.person_rounded,
+                                  size: 100,
+                                )
+                              : Image.memory(
+                                  base64Decode(profileBuffer!),
+                                  fit: BoxFit.cover,
+                                ),
+                        ),
+                        SizedBox(height: 15),
+                        Text(
+                          passData["username"],
+                          textAlign: TextAlign.center,
+                          style: textTheme.titleLarge!.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                spreadRadius: 1,
+                                blurRadius: 1,
+                                offset: const Offset(0, 1),
+                              ),
+                            ],
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.white,
+                          ),
+                          child: Column(
+                            children: [
+                              ProfileItem(
+                                attribute: "Room No",
+                                value: passData["roomNo"].toString(),
+                              ),
+                              const Divider(height: 0),
+                              ProfileItem(
+                                attribute: "Pass Type",
+                                value: passData["passType"],
+                              ),
+                              const Divider(height: 0),
+                              ProfileItem(
+                                attribute: "Leaving Time",
+                                value: "${DateTime.parse(passData['leavingDateTime']).day}-${DateTime.parse(passData['leavingDateTime']).month}-${DateTime.parse(passData['leavingDateTime']).year} ${TimeOfDay.fromDateTime(DateTime.parse(passData['leavingDateTime'])).hourOfPeriod}:${TimeOfDay.fromDateTime(DateTime.parse(passData['leavingDateTime'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(passData['leavingDateTime'])).period.name}",
+                              ),
+                              const Divider(height: 0),
+                              ProfileItem(
+                                attribute: "Retruning Time",
+                                value: "${DateTime.parse(passData['returningDateTime']).day}-${DateTime.parse(passData['returningDateTime']).month}-${DateTime.parse(passData['returningDateTime']).year} ${TimeOfDay.fromDateTime(DateTime.parse(passData['returningDateTime'])).hourOfPeriod}:${TimeOfDay.fromDateTime(DateTime.parse(passData['returningDateTime'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(passData['returningDateTime'])).period.name}",
+                              ),
+                              const Divider(height: 0),
+                              ProfileItem(
+                                attribute: "Approved by",
+                                value: passData["approvedBy"],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
     );
   }
 }
