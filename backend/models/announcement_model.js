@@ -4,7 +4,8 @@ const announcementSchema = mongoose.Schema({
     title:{type:String,required:true},
     message:{type:String,required:true},
     rtId:{type:String,required:true},
-    blockNo:{type:Number,required:true}
+    blockNo:{type:Number,required:true},
+    isBoysHostelRt:{type:Boolean,required:true}
 })
 
 module.exports = mongoose.model('announcement',announcementSchema);

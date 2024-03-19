@@ -22,7 +22,7 @@ class StudentPage extends ConsumerStatefulWidget {
 
 class _StudentPageState extends ConsumerState<StudentPage> {
   SharedPreferences? prefs = SharedPreferencesManager.preferences;
-
+  List<Announcement>? announcement;
   @override
   Widget build(BuildContext context) {
     final List<Pass> passes = ref.watch(studentPassProvider);
@@ -32,8 +32,18 @@ class _StudentPageState extends ConsumerState<StudentPage> {
         )
         .toList();
     final activePass = ref.read(studentPassProvider.notifier).getActivePass();
-    final List<Announcement>? announcement =
-        ref.read(studentAnnouncementNotifier);
+    if (prefs!.getString('gender') == 'M') {
+      announcement = ref
+          .read(studentAnnouncementNotifier)
+          .where((announcement) => announcement.isBoysHostelRt)
+          .toList();
+    } else {
+      announcement = ref
+          .read(studentAnnouncementNotifier)
+          .where((announcement) => !announcement.isBoysHostelRt)
+          .toList();
+    }
+
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
@@ -55,45 +65,52 @@ class _StudentPageState extends ConsumerState<StudentPage> {
                               child: SingleChildScrollView(
                                 child: Column(
                                   children: [
-                                    Text(
+                                    const Text(
                                       "Announcements",
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 28,
                                       ),
                                     ),
-                                    SizedBox(height: 10),
-                                    if (announcement.length > 0) ...[
+                                    const SizedBox(height: 10),
+                                    if (announcement != null &&
+                                        announcement!.isNotEmpty) ...[
                                       ListTile(
                                         title: Text(
-                                          "1. ${announcement[0].title}",
+                                          "1. ${announcement![0].title}",
                                           style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 20,
                                           ),
                                         ),
                                         subtitle: Text(
-                                          announcement[0].message,
-                                          style: TextStyle(fontSize: 16),
+                                          announcement![0].message,
+                                          style: const TextStyle(fontSize: 16),
                                         ),
                                       ),
-                                      if (announcement.length > 1) ...[
-                                        Divider(),
+                                      if (announcement!.length > 1) ...[
+                                        const Divider(),
                                         ListTile(
                                           title: Text(
-                                            "2. ${announcement[1].title}",
+                                            "2. ${announcement![1].title}",
                                             style: const TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20,
                                             ),
                                           ),
                                           subtitle: Text(
-                                            announcement[1].message,
-                                            style: TextStyle(fontSize: 16),
+                                            announcement![1].message,
+                                            style:
+                                                const TextStyle(fontSize: 16),
                                           ),
                                         ),
-                                        Divider(),
+                                        const Divider(),
                                       ],
+                                    ] else ...[
+                                      const Text(
+                                        "No announcements",
+                                        style: TextStyle(fontSize: 16),
+                                      ),
                                     ],
                                   ],
                                 ),
@@ -128,7 +145,7 @@ class _StudentPageState extends ConsumerState<StudentPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => NewPassPage(),
+                        builder: (context) => const NewPassPage(),
                       ),
                     );
                   }

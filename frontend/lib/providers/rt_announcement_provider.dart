@@ -29,17 +29,18 @@ class RtAnnoucementNotifier extends StateNotifier<List<Announcement>> {
         throw responseData["message"];
       }
       List<Announcement> announcements = [];
-      for (var annoucement in responseData) {
+      for (var announcement in responseData) {
         announcements.add(Announcement(
-            announcementId: annoucement["_id"],
-            rtId: annoucement["rtId"],
-            title: annoucement["title"],
-            message: annoucement["message"],
-            blockNo: annoucement["blockNo"]));
+            announcementId: announcement["_id"],
+            rtId: announcement["rtId"],
+            isBoysHostelRt: announcement["isBoysHostelRt"],
+            title: announcement["title"],
+            message: announcement["message"],
+            blockNo: announcement["blockNo"]));
       }
       state = announcements;
     } catch (err) {
-      throw "annoucement error";
+      throw "rt annoucement error";
     }
   }
 
@@ -59,6 +60,7 @@ class RtAnnoucementNotifier extends StateNotifier<List<Announcement>> {
           {
             "title": title,
             "rtId": prefs!.getString("rtId"),
+            "isBoysHostelRt": prefs!.getBool('isBoysHostelRt'),
             "message": message,
             "blockNo": prefs!.getInt("permanentBlock"),
           },
@@ -70,6 +72,7 @@ class RtAnnoucementNotifier extends StateNotifier<List<Announcement>> {
         Announcement(
           announcementId: responseData["_id"],
           title: responseData["title"],
+          isBoysHostelRt: responseData['isBoysHostelRt'],
           message: responseData["message"],
           blockNo: responseData["blockNo"],
           rtId: responseData["rtId"],

@@ -30,7 +30,6 @@ router.get("/getPass", async (req, res) => {
           if (Date.now() > qrEndTime) {
             pass.isActive = false;
             pass.status = "Expired";
-            // Assuming pass.save() is not necessary when using lean()
             return false;
           }
         }

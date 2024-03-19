@@ -32,12 +32,13 @@ router.get("/getStudents", async (req, res, next) => {
 
 router.post("/postAnnouncement", async (req, res) => {
   try {
-    const { title, message, blockNo, rtId } = req.body;
+    const { title, message, blockNo, rtId ,isBoysHostelRt} = req.body;
     const announcement = await new Announcement({
       title: title,
       message: message,
       blockNo: blockNo,
       rtId: rtId,
+      isBoysHostelRt:isBoysHostelRt
     }).save();
     res.json({
       _id: announcement._id,
@@ -45,6 +46,7 @@ router.post("/postAnnouncement", async (req, res) => {
       title: announcement.title,
       blockNo: announcement.blockNo,
       message: announcement.message,
+      isBoysHostelRt:announcement.isBoysHostelRt
     });
   } catch (err) {
     console.log(err);
