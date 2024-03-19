@@ -12,10 +12,23 @@ const { aesEncrypt, aesDecrypt } = require("../../utils/aes");
 router.get("/getPass", async (req, res) => {
   try {
     const passes = await Pass.find({ studentId: req.body.USER_studentId });
-    passes.forEach((pass) => {
+    passes.filter((pass) => {
       if (pass.isActive) {
         pass.qrId = aesEncrypt(pass.qrId, process.env.AES_KEY);
+        if (pass.status == "Approved") {
+          const expectedOutTime = new Date(pass.expectedOut).getTime();
+          const qrEndTime = expectedOutTime + 60 * 60000;
+          console.log(Date.now());
+          console.log(qrEndTime);
+          if (Date.now() > qrEndTime) {
+            pass.isActive = false;
+            pass.status = "Expired";
+            pass.save();
+            return false;
+          }
+        }
       }
+      return true;
     });
     res.json({ data: passes });
   } catch (error) {
@@ -72,11 +85,15 @@ router.post("/newPass", async (req, res) => {
 });
 
 router.delete("/deletePass/:passId", async (req, res) => {
-  try{
+  try {
     const passId = req.params.passId;
-    await Pass.deleteOne({passId:passId});
-    res.json({message:"Pass deleted Successfully"});
-  }catch(err){
+    let pass = await Pass.findOne({ passId: passId });
+    if (pass.status == "In use" || pass.status == "Used") {
+      res.status(400).json({ message: "Cannot delete In use pass" });
+    }
+    await Pass.deleteOne({ passId: passId });
+    res.json({ message: "Pass deleted Successfully" });
+  } catch (err) {
     console.log(err);
     res.status(500).json("Internal Server Error");
   }

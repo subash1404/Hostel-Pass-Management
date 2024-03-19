@@ -27,6 +27,19 @@ app.use("/test", (req, res) => {
   res.json({ message: "Hello from server" });
 });
 
+app.use("/timeTest", (req, res) => {
+  const currentTime = Date.now();
+  const initialTime = new Date("2024-03-19T13:57:00.000");
+  const limitTime = new Date(initialTime.getTime() + 12 * 60000); // 60000 milliseconds in a minute
+
+  if (currentTime > limitTime) {
+    console.log("The time has exceeded the limit.");
+  } else {
+    console.log("The time has not exceeded the limit.");
+  }
+
+  res.send();
+});
 mongoose
   .connect(
     "mongodb+srv://NaveenAkash:09naveen@cluster0.3n8lzcq.mongodb.net/outpass?retryWrites=true"

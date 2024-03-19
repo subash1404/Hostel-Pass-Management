@@ -53,6 +53,12 @@ class StudentPassNotifier extends StateNotifier<List<Pass>> {
                 "${DateTime.parse(pass['expectedOut']).day}-${DateTime.parse(pass['expectedOut']).month}-${DateTime.parse(pass['expectedOut']).year}",
             expectedOutTime:
                 "${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).hour}:${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).period.name.toUpperCase()}",
+            showQr: DateTime.parse(pass['expectedOut'])
+                    .add(Duration(minutes: 60))
+                    .isAfter(DateTime.now()) &&
+                DateTime.parse(pass['expectedOut'])
+                    .subtract(Duration(minutes: 60))
+                    .isBefore(DateTime.now()),
             isSpecialPass: pass["isSpecialPass"],
           ),
         );
@@ -135,11 +141,10 @@ class StudentPassNotifier extends StateNotifier<List<Pass>> {
             "Content-Type": "application/json",
             "Authorization": prefs!.getString("jwtToken")!
           });
+      state = state.where((pass) => pass.passId != passId).toList();
     } catch (err) {
-      print(err);
       throw "Something went wrong";
     }
-    state = state.where((pass) => pass.passId != passId).toList();
   }
 
   Pass? getActivePass() {

@@ -49,10 +49,13 @@ class _PassDetailsState extends State<PassDetails> {
     } catch (e) {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Something went wrong"),
+        SnackBar(
+          content: Text(e.toString()),
         ),
       );
+
+      Navigator.pop(context);
+
     } finally {
       setState(() {
         isPassLoading = false;

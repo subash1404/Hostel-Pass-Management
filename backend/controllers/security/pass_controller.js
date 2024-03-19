@@ -16,6 +16,14 @@ router.get("/getDetails/:qrData", async (req, res) => {
   const pass = await Pass.findOne({ passId: qr.passId, isActive: true });
   const student = await Student.findOne({ studentId: pass.studentId });
 
+  console.log(new Date(pass.expectedOut).getTime() + 60 * 60000);
+  console.log(Date.now());
+
+  if (new Date(pass.expectedOut).getTime() + 60 * 60000 < Date.now()) {
+    res.status(400).json({ message: "QR expired" });
+    return;
+  }
+
   // let photoFilePath;
 
   // photoFilePath = path.join(
@@ -60,6 +68,6 @@ router.post("/confirmScan/:qrData", async (req, res) => {
     Qr.deleteOne({ qrId: qrId });
   }
 
-  res.json({message: "Scan successful"});
+  res.json({ message: "Scan successful" });
 });
 module.exports = router;

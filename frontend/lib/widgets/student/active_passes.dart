@@ -120,24 +120,37 @@ class _DeletePassDialogState extends ConsumerState<DeletePassDialog> {
   TextEditingController confirmController = TextEditingController();
   late FToast toast;
   Future<void> deletePass() async {
-    if (widget.pass != null) {
-      // Call the function in the provider to delete the pass
-      HapticFeedback.selectionClick();
-      setState(() {
-        isDeletePassLoading = true;
-      });
-      await ref
-          .read(studentPassProvider.notifier)
-          .deletePass(widget.pass!.passId);
-      setState(() {
-        isDeletePassLoading = false;
-      });
-      toast.removeQueuedCustomToasts();
-      toast.showToast(
+    try {
+      if (widget.pass != null) {
+        // Call the function in the provider to delete the pass
+        HapticFeedback.selectionClick();
+        setState(() {
+          isDeletePassLoading = true;
+        });
+        await ref
+            .read(studentPassProvider.notifier)
+            .deletePass(widget.pass!.passId);
+        setState(() {
+          isDeletePassLoading = false;
+        });
+        toast.removeQueuedCustomToasts();
+        toast.showToast(
           child: ToastMsg(
+              icondata: Icons.check_circle_outline_rounded,
               text: "Pass Deleted",
-              bgColor: Theme.of(context).colorScheme.errorContainer));
-      HapticFeedback.heavyImpact();
+              bgColor: Theme.of(context).colorScheme.errorContainer),
+        );
+        HapticFeedback.heavyImpact();
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            e.toString(),
+          ),
+        ),
+      );
     }
   }
 

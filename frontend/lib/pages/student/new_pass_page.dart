@@ -96,8 +96,7 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                                 : Colors.grey[300],
                             elevation: 0,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  4), // Set the border radius to 0 for square borders
+                              borderRadius: BorderRadius.circular(4),
                             ),
                           ),
                           child: Center(
@@ -143,7 +142,7 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                           onPressed: () {
                             setState(() {
                               passType = 'StayPass';
-                              inDate=null;
+                              inDate = null;
                             });
                           },
                           style: ElevatedButton.styleFrom(

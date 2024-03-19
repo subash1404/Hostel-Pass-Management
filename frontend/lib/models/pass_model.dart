@@ -13,6 +13,7 @@ class Pass {
     required this.expectedOutTime,
     required this.expectedOutDate,
     required this.isSpecialPass,
+    this.showQr,
     // this.actualInTime,
     // this.actualInDate,
     // this.actualOutTime,
@@ -32,6 +33,7 @@ class Pass {
   final String expectedOutTime;
   final String expectedOutDate;
   final bool isSpecialPass;
+  bool? showQr;
   // final String? actualInTime;
   // final String? actualInDate;
   // final String? actualOutTime;

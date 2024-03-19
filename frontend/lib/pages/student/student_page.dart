@@ -131,7 +131,7 @@ class _StudentPageState extends ConsumerState<StudentPage> {
                 : () {
                     HapticFeedback.selectionClick();
                     showModalBottomSheet(
-                      scrollControlDisabledMaxHeightRatio: 0.6,
+                      scrollControlDisabledMaxHeightRatio: 0.65,
                       context: context,
                       builder: (context) {
                         return QrBottomSheet();
@@ -196,7 +196,7 @@ class _QrBottomSheetState extends ConsumerState<QrBottomSheet> {
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     Pass activePass = ref.read(studentPassProvider.notifier).getActivePass()!;
-    
+
     return Column(
       children: [
         Expanded(
@@ -228,18 +228,26 @@ class _QrBottomSheetState extends ConsumerState<QrBottomSheet> {
                     borderRadius: BorderRadius.circular(20),
                     color: colorScheme.primaryContainer,
                   ),
-                  child: activePass.status == "Approved" || activePass.status == "In use"
-                      ? QrImageView(
-                          data: activePass.qrId,
-                          semanticsLabel: "skuf",
-                        )
+                  child: activePass.status == "Approved" ||
+                          activePass.status == "In use"
+                      ? activePass.showQr!
+                          ? QrImageView(
+                              data: activePass.qrId,
+                              semanticsLabel: "skuf",
+                            )
+                          : const Center(
+                              child: Text(
+                                "QR will be generated 1hour before leaving time",
+                                textAlign: TextAlign.center,
+                              ),
+                            )
                       : const Center(
                           child: Text("Pass not yet approved"),
                         ),
                 ),
                 const SizedBox(height: 25),
                 const Text(
-                  "Use this QR for Exit and Entry",
+                  "QR will be expired 1hour after specified leaving time",
                   textAlign: TextAlign.center,
                 ),
               ],
