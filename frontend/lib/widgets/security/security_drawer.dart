@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hostel_pass_management/pages/common/developer_page.dart';
 import 'package:hostel_pass_management/pages/common/bug_report_page.dart';
 import 'package:hostel_pass_management/pages/common/login_page.dart';
+import 'package:hostel_pass_management/pages/security/security_page.dart';
 import 'package:hostel_pass_management/pages/student/student_profile_page.dart';
 import 'package:hostel_pass_management/pages/rt/announcement_page.dart';
 import 'package:hostel_pass_management/pages/rt/block_students_page.dart';
@@ -57,7 +58,7 @@ class SecurityDrawer extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const RtPage(),
+                  builder: (context) => const SecurityPage(),
                 ),
               );
             },

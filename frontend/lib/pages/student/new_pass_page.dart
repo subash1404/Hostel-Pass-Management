@@ -49,8 +49,8 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Destination"),
-                SizedBox(
+                const Text("Destination"),
+                const SizedBox(
                   height: 4,
                 ),
                 TextFormField(
@@ -70,7 +70,7 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                 const Text(
                   "Select Pass Type",
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 8,
                 ),
                 Row(
@@ -92,7 +92,7 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: passType == 'GatePass'
-                                ? Color.fromARGB(255, 1, 46, 76)
+                                ? const Color.fromARGB(255, 1, 46, 76)
                                 : Colors.grey[300],
                             elevation: 0,
                             shape: RoundedRectangleBorder(
@@ -108,11 +108,11 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                                   Container(
                                     width: 20,
                                     height: 20,
-                                    decoration: BoxDecoration(
+                                    decoration: const BoxDecoration(
                                       shape: BoxShape.circle,
                                       color: Colors.white,
                                     ),
-                                    child: Icon(
+                                    child: const Icon(
                                       Icons.check,
                                       color: Color.fromARGB(255, 1, 46, 76),
                                       size: 16,
@@ -133,7 +133,7 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 4,
                     ),
                     Expanded(
@@ -148,7 +148,7 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                           },
                           style: ElevatedButton.styleFrom(
                               backgroundColor: passType == 'StayPass'
-                                  ? Color.fromARGB(255, 1, 46, 76)
+                                  ? const Color.fromARGB(255, 1, 46, 76)
                                   : Colors.grey[300],
                               elevation: 0,
                               shape: RoundedRectangleBorder(
@@ -162,11 +162,11 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                                   Container(
                                     width: 20,
                                     height: 20,
-                                    decoration: BoxDecoration(
+                                    decoration: const BoxDecoration(
                                       shape: BoxShape.circle,
                                       color: Colors.white,
                                     ),
-                                    child: Icon(
+                                    child: const Icon(
                                       Icons.check,
                                       color: Color.fromARGB(255, 1, 46, 76),
                                       size: 16,
@@ -203,7 +203,7 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                           },
                           style: TextButton.styleFrom(
                             backgroundColor: !isSpecialPass
-                                ? Color.fromARGB(255, 1, 46, 76)
+                                ? const Color.fromARGB(255, 1, 46, 76)
                                 : Colors.grey[300],
                             elevation: 0,
                             shape: RoundedRectangleBorder(
@@ -217,11 +217,11 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                                 Container(
                                   width: 20,
                                   height: 20,
-                                  decoration: BoxDecoration(
+                                  decoration: const BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: Colors.white,
                                   ),
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.check,
                                     color: Color.fromARGB(255, 1, 46, 76),
                                     size: 16,
@@ -252,7 +252,7 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                           },
                           style: ElevatedButton.styleFrom(
                               backgroundColor: isSpecialPass
-                                  ? Color.fromARGB(255, 1, 46, 76)
+                                  ? const Color.fromARGB(255, 1, 46, 76)
                                   : Colors.grey[300],
                               elevation: 0,
                               shape: RoundedRectangleBorder(
@@ -265,13 +265,13 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                                 Container(
                                   width: 20,
                                   height: 20,
-                                  decoration: BoxDecoration(
+                                  decoration: const BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: Colors.white,
                                   ),
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.check,
-                                    color: Colors.green,
+                                    color: Color.fromARGB(255, 1, 46, 76),
                                     size: 16,
                                   ),
                                 ),
@@ -291,18 +291,18 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
-                Text("Leaving Time"),
+                const Text("Leaving Time"),
                 const SizedBox(height: 8),
                 _buildDateTimePicker("Out", outDate, outTime),
                 const SizedBox(height: 20),
-                Text("Returning Time"),
+                const Text("Returning Time"),
                 const SizedBox(height: 8),
                 _buildDateTimePicker("In", inDate, inTime),
                 const SizedBox(height: 20),
-                Text("Reason"),
+                const Text("Reason"),
                 const SizedBox(height: 4),
                 TextField(
                   controller: _reasonController,
@@ -324,7 +324,7 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
                       horizontal: 20,
                     ),
                     decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 1, 46, 76),
+                      color: const Color.fromARGB(255, 1, 46, 76),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: isSubmitLoading
@@ -433,18 +433,18 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
         mainAxisAlignment:
             MainAxisAlignment.center, // Center the icon and text horizontally
         children: [
-          Icon(
+          const Icon(
             Icons.calendar_month_outlined,
             color: Colors.black, // Set icon color
           ),
-          SizedBox(width: 8), // Add spacing between text and icon
+          const SizedBox(width: 8), // Add spacing between text and icon
           Text(
             buttonText,
-            style: TextStyle(color: Colors.black), // Set text color
+            style: const TextStyle(color: Colors.black), // Set text color
           ),
         ],
       ),
-      label: SizedBox.shrink(), // No label text
+      label: const SizedBox.shrink(), // No label text
     );
   }
 
@@ -487,18 +487,18 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
         mainAxisAlignment:
             MainAxisAlignment.center, // Center the icon and text horizontally
         children: [
-          Icon(
+          const Icon(
             Icons.watch_later_outlined,
             color: Colors.black, // Set icon color
           ),
-          SizedBox(width: 8), // Add spacing between text and icon
+          const SizedBox(width: 8), // Add spacing between text and icon
           Text(
             buttonText,
-            style: TextStyle(color: Colors.black), // Set text color
+            style: const TextStyle(color: Colors.black), // Set text color
           ),
         ],
       ),
-      label: SizedBox.shrink(), // No label text
+      label: const SizedBox.shrink(), // No label text
     );
   }
 
@@ -573,7 +573,7 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
         outTime != null) {
       if (passType == 'StayPass' && (inDate!.isBefore(outDate!))) {
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('In date should be after out date')));
+            const SnackBar(content: Text('In date should be after out date')));
         return;
       }
       if (passType == "GatePass" &&
@@ -585,9 +585,9 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
       if (passType == "StayPass" &&
           (inDate!.isBefore(outDate!) || inDate == outDate)) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text(
-                'In date can\'t be before or equal to out date in specail pass'),
+                'In date can\'t be before or equal to out date in special pass'),
           ),
         );
         return;
@@ -606,6 +606,7 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
           content: Text('Please select all date and time fields.'),
         ),
       );
+      return;
     }
 
     try {
