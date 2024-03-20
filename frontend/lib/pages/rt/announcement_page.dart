@@ -216,12 +216,13 @@ class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
       _messageController.clear();
       toast.removeQueuedCustomToasts();
       toast.showToast(
-          child: const ToastMsg(
-            text: "Announcement Made",
-            bgColor: Colors.greenAccent,
-            icondata: Icons.check_rounded,
-          ),
-          gravity: ToastGravity.BOTTOM);
+        child: const ToastMsg(
+          text: "Announcement Made",
+          bgColor: Colors.greenAccent,
+          icondata: Icons.check_rounded,
+        ),
+        gravity: ToastGravity.BOTTOM,
+      );
       // Fluttertoast.showToast(
       //     msg: "Annoucement made",
       //     fontSize: 18,

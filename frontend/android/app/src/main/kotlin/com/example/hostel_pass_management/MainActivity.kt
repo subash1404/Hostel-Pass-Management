@@ -1,6 +1,6 @@
 package com.example.hostel_pass_management
 
-import io.flutter.embedding.android.FlutterFragmentActivity
+import io.flutter.embedding.android.FlutterActivity
 
-class MainActivity: FlutterFragmentActivity() {
+class MainActivity: FlutterActivity() {
 }

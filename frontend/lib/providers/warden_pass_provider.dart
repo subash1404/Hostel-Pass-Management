@@ -51,13 +51,13 @@ class WardenPassRequestsNotifier extends StateNotifier<List<PassRequest>> {
                 expectedOutTime:
                     "${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).hour}:${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).period.name.toUpperCase()}",
                 actualInDate:
-                    "${DateTime.parse(pass['actualIn']).day}-${DateTime.parse(pass['actualIn']).month}-${DateTime.parse(pass['actualIn']).year}",
+                    "${DateTime.parse(pass['entryScanAt']).day}-${DateTime.parse(pass['entryScanAt']).month}-${DateTime.parse(pass['entryScanAt']).year}",
                 actualInTime:
-                    "${TimeOfDay.fromDateTime(DateTime.parse(pass['actualIn'])).hour}:${TimeOfDay.fromDateTime(DateTime.parse(pass['actualIn'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(pass['actualIn'])).period.name.toUpperCase()}",
+                    "${TimeOfDay.fromDateTime(DateTime.parse(pass['entryScanAt'])).hour}:${TimeOfDay.fromDateTime(DateTime.parse(pass['entryScanAt'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(pass['entryScanAt'])).period.name.toUpperCase()}",
                 actualOutDate:
-                    "${DateTime.parse(pass['actualOut']).day}-${DateTime.parse(pass['actualOut']).month}-${DateTime.parse(pass['actualOut']).year}",
+                    "${DateTime.parse(pass['exitScanAt']).day}-${DateTime.parse(pass['exitScanAt']).month}-${DateTime.parse(pass['exitScanAt']).year}",
                 actualOutTime:
-                    "${TimeOfDay.fromDateTime(DateTime.parse(pass['actualOut'])).hour}:${TimeOfDay.fromDateTime(DateTime.parse(pass['actualOut'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(pass['actualOut'])).period.name.toUpperCase()}",
+                    "${TimeOfDay.fromDateTime(DateTime.parse(pass['exitScanAt'])).hour}:${TimeOfDay.fromDateTime(DateTime.parse(pass['exitScanAt'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(pass['exitScanAt'])).period.name.toUpperCase()}",
                 isSpecialPass: pass["isSpecialPass"],
                 studentName: pass["studentName"],
                 dept: pass["dept"],
@@ -69,6 +69,7 @@ class WardenPassRequestsNotifier extends StateNotifier<List<PassRequest>> {
                 blockNo: pass["blockNo"],
                 approvedBy: pass["approvedBy"],
                 confirmedWith: pass["confirmedWith"],
+                isLate: pass["isLate"],
               )
             : PassRequest(
                 passId: pass["passId"],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:hostel_pass_management/models/pass_request_model.dart';
 import 'package:hostel_pass_management/providers/warden_pass_provider.dart';
 import 'package:hostel_pass_management/widgets/rt/pass_request_item.dart';
@@ -52,12 +53,31 @@ class _WardenPassRequestPageState extends ConsumerState<WardenPassRequestPage> {
   }
 
   Widget _buildPasses(List<PassRequest> passes, String gender) {
+    TextTheme textTheme = Theme.of(context).textTheme;
+    ColorScheme colorScheme = Theme.of(context).colorScheme;
     final filteredPasses =
         passes.where((pass) => pass.gender == gender).toList();
 
     if (filteredPasses.isEmpty) {
       return Center(
-        child: Text('No pass requests'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Spacer(),
+            SvgPicture.asset(
+              "assets/images/no-pass.svg",
+              width: 300,
+            ),
+            SizedBox(height: 10),
+            Text(
+              "No pass requests detected.\nSit back and Enjoy",
+              textAlign: TextAlign.center,
+              style: textTheme.titleMedium,
+            ),
+            Spacer(),
+            Spacer()
+          ],
+        ),
       );
     } else {
       return ListView.builder(

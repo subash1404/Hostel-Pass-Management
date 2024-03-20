@@ -19,6 +19,7 @@ class Pass {
     this.actualOutTime,
     this.actualOutDate,
     this.showQr,
+    this.isLate,
     // this.actualInTime,
     // this.actualInDate,
     // this.actualOutTime,
@@ -44,6 +45,7 @@ class Pass {
   final String? actualOutDate;
   final bool isSpecialPass;
   bool? showQr;
+  bool? isLate;
   // final String? actualInTime;
   // final String? actualInDate;
   // final String? actualOutTime;

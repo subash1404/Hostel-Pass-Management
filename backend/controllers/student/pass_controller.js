@@ -41,15 +41,22 @@ router.get("/getPass", async (req, res) => {
       pass.gender = student.gender;
     });
 
-    res.json({ data: passes });
-    console.log(passes);
+    let finalPasses = [];
+    passes.forEach((pass) => {
+      finalPasses.push({
+        ...pass,
+        isLate:
+          new Date(pass.entryScanAt).getTime() >
+          new Date(pass.expectedIn).getTime() + 60 * 60000,
+      });
+    });
+
+    res.json({ data: finalPasses });
+    console.log(finalPasses);
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
-
-
-
 
 router.post("/newPass", async (req, res) => {
   try {
@@ -67,7 +74,9 @@ router.post("/newPass", async (req, res) => {
     const qrId = "qr_" + uuidv4();
 
     await new QR({ passId, qrId, studentId }).save();
-    const student = await Student.findOne({ studentId: req.body.USER_studentId });
+    const student = await Student.findOne({
+      studentId: req.body.USER_studentId,
+    });
     console.log(student);
 
     const pass = await new Pass({
@@ -90,7 +99,7 @@ router.post("/newPass", async (req, res) => {
       qrId: aesEncrypt(pass.qrId, process.env.AES_KEY),
       destination: pass.destination,
       reason: pass.reason,
-      gender:student.gender,
+      gender: student.gender,
       isActive: pass.isActive,
       status: pass.status,
       type: pass.type,

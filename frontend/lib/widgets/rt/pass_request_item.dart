@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:hostel_pass_management/models/pass_model.dart';
 import 'package:hostel_pass_management/models/pass_request_model.dart';
 import 'package:hostel_pass_management/pages/rt/pass_request_page.dart';
@@ -28,7 +29,7 @@ class PassRequestItem extends StatelessWidget {
       },
       child: Container(
         padding: const EdgeInsets.fromLTRB(15, 10, 10, 10),
-        width: double.infinity,
+        width: MediaQuery.of(context).size.width,
         child: Row(
           children: [
             Container(
@@ -41,15 +42,18 @@ class PassRequestItem extends StatelessWidget {
               ),
               child: Text(
                 pass.studentName[0],
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             const SizedBox(width: 20),
             Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              // crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  width: MediaQuery.of(context).size.width * 0.65,
+                  width: MediaQuery.of(context).size.width * 0.7,
                   child: Text(
                     pass.studentName,
                     softWrap: false,
@@ -59,7 +63,31 @@ class PassRequestItem extends StatelessWidget {
                     ),
                   ),
                 ),
-                Text(pass.type)
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(pass.type),
+                      if (pass.status == "Used" && !passRequest && pass.isLate!)
+                        Container(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                          decoration: BoxDecoration(
+                            // color: Color.fromARGB(110, 230, 57, 103),
+                            color: colorScheme.errorContainer,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Text(
+                            "LATE",
+                            style: textTheme.labelSmall!.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: colorScheme.error),
+                          ),
+                        )
+                    ],
+                  ),
+                ),
               ],
             ),
           ],

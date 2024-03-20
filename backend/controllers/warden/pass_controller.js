@@ -26,6 +26,9 @@ router.get("/getPass", async (req, res) => {
           blockNo:student.blockNo,
           roomNo: student.roomNo,
           year: student.year,
+          isLate:
+          new Date(pass.entryScanAt).getTime() >
+          new Date(pass.expectedIn).getTime() + 60 * 60000,
         });
       }
     }

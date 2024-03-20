@@ -24,6 +24,13 @@ router.get("/getDetails/:qrData", async (req, res) => {
     return;
   }
 
+  if(pass.status == "In use"){
+    if(new Date(pass.exitScanAt).getTime() + 30 * 60000 > Date.now()){
+      res.status(400).json({ message: "Entry scan should be after 30 mins of Exit scan" });
+      return;
+    }
+  }
+
   // let photoFilePath;
 
   // photoFilePath = path.join(

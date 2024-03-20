@@ -84,9 +84,13 @@ class BugReportPageState extends State<BugReportPage> {
         reportController.clear();
         toast.removeQueuedCustomToasts();
         toast.showToast(
-            child: ToastMsg(
-                text: "Thanks for reporting!. We will working fixing it",
-                bgColor: Theme.of(context).colorScheme.tertiaryContainer));
+          child: ToastMsg(
+            icondata: Icons.check,
+            text: "Thanks for reporting!. We will working fixing it",
+            bgColor: Theme.of(context).colorScheme.tertiaryContainer,
+          ),
+          gravity: ToastGravity.BOTTOM,
+        );
         var responseData = jsonDecode(response.body);
 
         if (response.statusCode >= 400) {

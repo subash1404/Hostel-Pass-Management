@@ -70,6 +70,7 @@ class StudentPassNotifier extends StateNotifier<List<Pass>> {
                         .subtract(Duration(minutes: 60))
                         .isBefore(DateTime.now()),
                 isSpecialPass: pass["isSpecialPass"],
+                isLate: pass["isLate"],
               )
             : Pass(
                 passId: pass["passId"],

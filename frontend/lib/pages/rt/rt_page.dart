@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:hostel_pass_management/models/pass_request_model.dart';
 import 'package:hostel_pass_management/providers/block_students_provider.dart';
 import 'package:hostel_pass_management/providers/rt_announcement_provider.dart';
@@ -180,9 +181,26 @@ class _RtPageState extends ConsumerState<RtPage> {
           ),
 
           if (pendingPasses.length == 0)
-            const Expanded(
+            Expanded(
               child: Center(
-                child: Text("No pass requests. Enjoy!!"),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Spacer(),
+                    SvgPicture.asset(
+                      "assets/images/no-pass.svg",
+                      width: 300,
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      "No pass requests detected.\nSit back and Enjoy",
+                      textAlign: TextAlign.center,
+                      style: textTheme.titleMedium,
+                    ),
+                    Spacer(),
+                    Spacer()
+                  ],
+                ),
               ),
             )
           else

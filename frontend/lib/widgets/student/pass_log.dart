@@ -88,10 +88,11 @@ class PassLog extends StatelessWidget {
                                 //     color: Colors.white,
                                 //   ),
                                 // ),
-                                Icon(
-                                  Icons.star_rounded,
-                                  color: Colors.amber,
-                                ),
+                                if (pass.isSpecialPass)
+                                  Icon(
+                                    Icons.star_rounded,
+                                    color: Colors.amber,
+                                  ),
                                 SizedBox(width: 5),
                                 Text(
                                   "Gatepass",
