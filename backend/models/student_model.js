@@ -11,6 +11,11 @@ const StudentSchema = new schema(
       type: String,
       required: true,
     },
+    gender: {
+      type: String,
+      required: true,
+      emum: ["M", "F"],
+    },
     regNo: {
       type: String,
       required: true,

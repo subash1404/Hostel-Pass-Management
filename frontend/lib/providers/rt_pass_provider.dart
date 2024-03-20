@@ -40,6 +40,7 @@ class RtPassRequestsNotifier extends StateNotifier<List<PassRequest>> {
           PassRequest(
               // Parent Class Constructor parameters
               passId: pass["passId"],
+              gender: pass['gender'],
               qrId: pass["qrId"],
               studentId: pass["studentId"],
               status: pass["status"],
@@ -104,6 +105,7 @@ class RtPassRequestsNotifier extends StateNotifier<List<PassRequest>> {
           qrId: state[passIndex].qrId,
           studentId: state[passIndex].studentId,
           status: 'Approved',
+          gender: state[passIndex].gender,
           approvedBy: prefs!.getString("username")!,
           confirmedWith: confirmedWith,
           destination: state[passIndex].destination,
@@ -157,6 +159,7 @@ class RtPassRequestsNotifier extends StateNotifier<List<PassRequest>> {
         PassRequest updatedPass = PassRequest(
           passId: state[passIndex].passId,
           qrId: state[passIndex].qrId,
+          gender: state[passIndex].gender,
           studentId: state[passIndex].studentId,
           status: 'Rejected',
           approvedBy: prefs!.getString("username")!,

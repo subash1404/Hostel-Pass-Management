@@ -15,11 +15,13 @@ class BlockStudent {
     required this.blockNo,
     required this.roomNo,
     required this.section,
+    required this.gender,
   });
 
   final String uid;
   final String studentId;
   final String username;
+  final String gender;
   final String email;
   final String regNo;
   final String phNo;

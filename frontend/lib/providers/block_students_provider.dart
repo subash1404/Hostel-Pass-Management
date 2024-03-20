@@ -40,6 +40,7 @@ class BlockStudentsNotifier extends StateNotifier<List<BlockStudent>> {
               studentId: student['studentId'],
               uid: student['uid'],
               username: student['username'],
+              gender: student['gender'],
               email: student['email'],
               blockNo: student['blockNo'],
               dept: student['dept'],

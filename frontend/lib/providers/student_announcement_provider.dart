@@ -34,12 +34,13 @@ class StudentAnnouncementNotifier extends StateNotifier<List<Announcement>> {
             announcementId: announcement["_id"],
             rtId: announcement["rtId"],
             title: announcement["title"],
+            isBoysHostelRt: announcement['isBoysHostelRt'],
             message: announcement["message"],
             blockNo: announcement["blockNo"]));
       }
       state = announcements;
     } catch (err) {
-      throw "announcement error";
+      throw "student announcement error";
     }
   }
 }

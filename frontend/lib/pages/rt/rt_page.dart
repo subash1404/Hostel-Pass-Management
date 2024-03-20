@@ -24,6 +24,8 @@ class _RtPageState extends ConsumerState<RtPage> {
   @override
   Widget build(BuildContext context) {
     final passRequests;
+    var studentPasses;
+    List<PassRequest> pendingPasses;
     var students = [];
     int studentsCount = 0;
     int passesCount = 0;
@@ -41,24 +43,57 @@ class _RtPageState extends ConsumerState<RtPage> {
       passRequests = ref.watch(rtPassProvider);
       students = ref.watch(blockStudentProvider);
 
-      students.forEach((student) {
-        studentsCount++;
-      });
-      students.forEach((student) {
-        final studentPasses = passRequests.where((pass) =>
-            pass.studentId == student.studentId && pass.status == "In use");
-        studentPasses.forEach((pass) {
-          passesCount++;
+      if (prefs.getBool('isBoysHostelRt')!) {
+        students.where((student) => student.gender == 'M').forEach((student) {
+          studentsCount++;
         });
-      });
+
+        students.where((student) => student.gender == 'M').forEach((student) {
+          studentPasses = passRequests.where((pass) =>
+              pass.studentId == student.studentId && pass.status == "In use");
+          studentPasses.forEach((pass) {
+            passesCount++;
+          });
+        });
+      } else {
+        students.where((student) => student.gender == 'F').forEach((student) {
+          studentsCount++;
+        });
+
+        students.where((student) => student.gender == 'F').forEach((student) {
+          studentPasses = passRequests.where((pass) =>
+              pass.studentId == student.studentId && pass.status == "In use");
+          studentPasses.forEach((pass) {
+            passesCount++;
+          });
+        });
+      }
+      // students.forEach((student) {
+      //   studentsCount++;
+      // });
+      // students.forEach((student) {
+      //   studentPasses = passRequests.where((pass) =>
+      //       pass.studentId == student.studentId && pass.status == "In use");
+      //   studentPasses.forEach((pass) {
+      //     passesCount++;
+      //   });
+      // });
+      if (prefs.getBool('isBoysHostelRt')!) {
+        pendingPasses = passRequests
+            .where((pass) => pass.status == 'Pending' && pass.gender == 'M')
+            .toList();
+      } else {
+        pendingPasses = passRequests
+            .where((pass) => pass.status == 'Pending' && pass.gender == 'F')
+            .toList();
+      }
       print("stduents $studentsCount");
       print("pases $passesCount");
     } else {
       passRequests = ref.watch(specialPassProvider);
+      pendingPasses =
+          passRequests.where((pass) => pass.status == 'Pending').toList();
     }
-
-    List<PassRequest> pendingPasses =
-        passRequests.where((pass) => pass.status == 'Pending').toList();
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Scaffold(

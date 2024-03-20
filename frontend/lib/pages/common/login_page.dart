@@ -69,6 +69,7 @@ class LoginPageState extends ConsumerState<LoginPage> {
         await prefs?.setString('jwtToken', responseData['jwtToken']);
         await prefs?.setString('uid', responseData['uid']);
         await prefs?.setString('studentId', responseData['studentId']);
+        await prefs?.setString('gender', responseData['gender']);
         await prefs?.setString('email', responseData['email']);
         await prefs?.setString('username', responseData['username']);
         await prefs?.setString('role', responseData['role']);
@@ -110,6 +111,7 @@ class LoginPageState extends ConsumerState<LoginPage> {
         await prefs?.setString('role', responseData['role']);
         await prefs?.setString('phNo', responseData['phNo']);
         await prefs?.setInt('permanentBlock', responseData['permanentBlock']);
+        await prefs?.setBool('isBoysHostelRt', responseData['isBoysHostelRt']);
 
         List<String> temporaryBlock = [];
 
@@ -201,7 +203,7 @@ class LoginPageState extends ConsumerState<LoginPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            err.toString(),
+            "login err" + err.toString(),
           ),
         ),
       );

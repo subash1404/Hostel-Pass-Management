@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hostel_pass_management/models/block_student_model.dart';
 import 'package:hostel_pass_management/models/pass_request_model.dart';
 import 'package:hostel_pass_management/pages/warden/block_details_page.dart';
 import 'package:hostel_pass_management/providers/hostel_students_provider.dart';
@@ -18,93 +19,150 @@ class _StatsPageState extends ConsumerState<StatsPage> {
     final students = ref.watch(hostelStudentProvider);
     final passes = ref.watch(specialPassProvider);
 
-    List<int> blockCounts = [0, 0, 0, 0, 0, 0];
-    List<int> passCount = [0, 0, 0, 0, 0, 0];
-    students.forEach((student) {
-      blockCounts[student.blockNo - 1]++;
-    });
-    students.forEach((student) {
-      final studentPasses = passes.where((pass) =>
-          pass.studentId == student.studentId && pass.status == "In use");
-      studentPasses.forEach((pass) {
-        passCount[student.blockNo - 1]++;
-      });
-    });
-    List<PassRequest> inUsePasses =
-        passes.where((pass) => pass.status == "In use").toList();
-    List<PassRequest> usedPasses =
-        passes.where((pass) => pass.status == "Used").toList();
+    // Filter students and passes based on gender
+    final maleStudents =
+        students.where((student) => student.gender == 'M').toList();
+    final femaleStudents =
+        students.where((student) => student.gender == 'F').toList();
 
-    int totalStudentsIn =
-        blockCounts.reduce((value, element) => value + element);
-    int totalStudentsOut =
-        passCount.reduce((value, element) => value + element);
-    int NO_OF_BLOCKS = blockCounts.length;
-    List<Widget> blockTiles = [];
-    for (int i = 0; i < NO_OF_BLOCKS; i += 2) {
-      blockTiles.add(
-        Row(
-          children: [
-            Flexible(
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => BlockDetailPage(
-                            blockNo: i + 1,
-                            inUsePasses: inUsePasses,
-                            students: students
-                                .where((student) => student.blockNo == i + 1)
-                                .toList(),
-                            usedPasses: usedPasses,
-                          )));
-                },
-                child: BlockTile(
-                  blockName: "Block ${i + 1}",
-                  inCount: blockCounts[i],
-                  outCount: passCount[i],
-                ),
-              ),
-            ),
-            if (i + 1 < NO_OF_BLOCKS)
-              Flexible(
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => BlockDetailPage(
-                              blockNo: i + 1,
-                              inUsePasses: inUsePasses,
-                              students: students
-                                  .where((student) => student.blockNo == i + 2)
-                                  .toList(),
-                              usedPasses: usedPasses,
-                            )));
-                  },
-                  child: BlockTile(
-                    blockName: "Block ${i + 2}",
-                    inCount: blockCounts[i + 1],
-                    outCount: passCount[i + 1],
-                  ),
-                ),
-              ),
-          ],
+    // final maleInUsePasses = passes
+    //     .where((pass) => maleStudents.any((student) =>
+    //         student.studentId == pass.studentId && pass.status == "In use"))
+    // .toList();
+    final maleInUsePasses =
+        passes.where((pass) => pass.gender == 'M' && pass.status == 'In use');
+    final femaleInUsePasses = passes
+        .where((pass) => femaleStudents.any((student) =>
+            student.studentId == pass.studentId && pass.status == "In use"))
+        .toList();
+    final malePasses = passes
+        .where((pass) =>
+            maleStudents.any((student) => student.studentId == pass.studentId))
+        .toList();
+    final femalePasses = passes
+        .where((pass) => femaleStudents
+            .any((student) => student.studentId == pass.studentId))
+        .toList();
+
+    List<int> maleBlockCounts = List.filled(8, 0);
+    List<int> femaleBlockCounts = List.filled(8, 0);
+    List<int> malePassCount = List.filled(8, 0);
+    List<int> femalePassCount = List.filled(8, 0);
+
+    maleStudents.forEach((student) {
+      maleBlockCounts[student.blockNo - 1]++;
+    });
+
+    femaleStudents.forEach((student) {
+      femaleBlockCounts[student.blockNo - 1]++;
+    });
+
+    maleInUsePasses.forEach((pass) {
+      malePassCount[pass.blockNo - 1]++;
+    });
+
+    femaleInUsePasses.forEach((pass) {
+      femalePassCount[pass.blockNo - 1]++;
+    });
+
+    print(maleBlockCounts);
+    print(malePassCount);
+
+    List<Widget> maleBlockTiles = [];
+    List<Widget> femaleBlockTiles = [];
+    final NO_OF_BLOCKS = maleBlockCounts.length;
+
+    for (int i = 0; i < NO_OF_BLOCKS; i++) {
+      maleBlockTiles.add(
+        GestureDetector(
+          onTap: () {
+            _navigateToBlockDetails(context, i + 1, maleStudents, malePasses);
+          },
+          child: BlockTile(
+            blockName: "Block ${i + 1} (Male)",
+            inCount: maleBlockCounts[i],
+            outCount: malePassCount[i],
+          ),
+        ),
+      );
+
+      femaleBlockTiles.add(
+        GestureDetector(
+          onTap: () {
+            _navigateToBlockDetails(
+                context, i + 1, femaleStudents, femalePasses);
+          },
+          child: BlockTile(
+            blockName: "Block ${i + 1} (Female)",
+            inCount: femaleBlockCounts[i],
+            outCount: femalePassCount[i],
+          ),
         ),
       );
     }
 
-    return Scaffold(
-      backgroundColor: Color.fromARGB(255, 245, 244, 250),
-      appBar: AppBar(
-        title: Text('Stats and Blocks'),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        backgroundColor: const Color.fromARGB(255, 245, 244, 250),
+        appBar: AppBar(
+          title: const Text('Stats and Blocks'),
+          bottom: const TabBar(
+            tabs: [
+              Tab(text: 'Boys Hostel'),
+              Tab(text: 'Girls Hostel'),
+            ],
+          ),
+        ),
+        drawer: const WardenDrawer(),
+        body: TabBarView(
+          children: [
+            ListView(
+              children: [
+                ...maleBlockTiles,
+                BlockTile(
+                  blockName: "Overall Count (Male)",
+                  inCount: maleStudents.length,
+                  outCount: maleInUsePasses.length,
+                )
+              ],
+            ),
+            ListView(
+              children: [
+                ...femaleBlockTiles,
+                BlockTile(
+                  blockName: "Overall Count (Female)",
+                  inCount: femaleStudents.length,
+                  outCount: femaleInUsePasses.length,
+                )
+              ],
+            ),
+          ],
+        ),
       ),
-      drawer: WardenDrawer(),
-      body: ListView(
-        children: [
-          ...blockTiles,
-          BlockTile(
-              blockName: "Overall Count",
-              inCount: totalStudentsIn,
-              outCount: totalStudentsOut)
-        ],
+    );
+  }
+
+  void _navigateToBlockDetails(
+    BuildContext context,
+    int blockNo,
+    List<BlockStudent> students,
+    List<PassRequest> passes,
+  ) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => BlockDetailPage(
+          blockNo: blockNo,
+          students:
+              students.where((student) => student.blockNo == blockNo).toList(),
+          inUsePasses: passes
+              .where(
+                  (pass) => pass.blockNo == blockNo && pass.status == 'In use')
+              .toList(),
+          usedPasses: passes
+              .where((pass) => pass.blockNo == blockNo && pass.status == 'Used')
+              .toList(),
+        ),
       ),
     );
   }

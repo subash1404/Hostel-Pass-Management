@@ -33,6 +33,10 @@ const RtSchema = new schema(
       type: String,
       required: true,
     },
+    isBoysHostelRt:{
+      type:Boolean,
+      required:true,
+    },
   },
   { timestamps: true }
 );

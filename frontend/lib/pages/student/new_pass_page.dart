@@ -4,10 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/providers/student_pass_provider.dart';
 
 class NewPassPage extends ConsumerStatefulWidget {
-  const NewPassPage({Key? key}) : super(key: key);
-
+  const NewPassPage({super.key});
   @override
-  _NewPassPageState createState() => _NewPassPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() {
+    return _NewPassPageState();
+  }
 }
 
 class _NewPassPageState extends ConsumerState<NewPassPage> {

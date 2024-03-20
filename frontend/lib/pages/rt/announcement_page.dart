@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hostel_pass_management/providers/rt_announcement_provider.dart';
+import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:hostel_pass_management/widgets/common/toast.dart';
 import 'package:hostel_pass_management/widgets/rt/rt_drawer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AnnouncementPage extends ConsumerStatefulWidget {
   const AnnouncementPage({Key? key}) : super(key: key);
@@ -19,15 +21,28 @@ class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _messageController = TextEditingController();
   bool isLoading = false;
+  var announcements;
   late FToast toast;
 
   @override
   Widget build(BuildContext context) {
+    SharedPreferences? prefs = SharedPreferencesManager.preferences;
     toast = FToast();
     toast.init(context);
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     TextTheme textTheme = Theme.of(context).textTheme;
-    final announcements = ref.watch(rtAnnouncementNotifier);
+    if (prefs!.getBool('isBoysHostelRt')!) {
+      announcements = ref
+          .watch(rtAnnouncementNotifier)
+          .where((announcement) => announcement.isBoysHostelRt)
+          .toList();
+    } else {
+      announcements = ref
+          .watch(rtAnnouncementNotifier)
+          .where((announcement) => !announcement.isBoysHostelRt)
+          .toList();
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Announcements"),
@@ -190,9 +205,10 @@ class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
     });
 
     try {
-      await ref
-          .read(rtAnnouncementNotifier.notifier)
-          .makeAnnouncement(title: title, message: message);
+      await ref.read(rtAnnouncementNotifier.notifier).makeAnnouncement(
+            title: title,
+            message: message,
+          );
       if (!mounted) {
         return;
       }
