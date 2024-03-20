@@ -63,16 +63,16 @@ const PassSchema = new schema(
       type: String,
       required: true,
     },
-    actualOut: {
-      type: String,
-    },
     expectedIn: {
       type: String,
       required: true,
     },
-    actualIn: {
-      type: String,
-    },
+    // actualOut: {
+    //   type: String,
+    // },
+    // actualIn: {
+    //   type: String,
+    // },
     isEntryLate: {
       type: Boolean,
     },

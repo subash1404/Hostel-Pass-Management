@@ -196,9 +196,6 @@ class LoginPageState extends ConsumerState<LoginPage> {
       if (!mounted) {
         return;
       }
-      setState(() {
-        isLoginLoading = false;
-      });
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -209,6 +206,9 @@ class LoginPageState extends ConsumerState<LoginPage> {
       );
     } finally {
       HapticFeedback.heavyImpact();
+      setState(() {
+        isLoginLoading = false;
+      });
     }
   }
 

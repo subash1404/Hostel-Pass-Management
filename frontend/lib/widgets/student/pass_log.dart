@@ -107,12 +107,12 @@ class PassLog extends StatelessWidget {
                                 Column(
                                   children: [
                                     Text(
-                                      pass.expectedOutDate,
+                                      pass.actualOutDate!,
                                       style: textTheme.bodyMedium!.copyWith(
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    Text(pass.expectedOutTime)
+                                    Text(pass.actualOutTime!)
                                   ],
                                 ),
                                 Spacer(),
@@ -137,12 +137,12 @@ class PassLog extends StatelessWidget {
                                 Column(
                                   children: [
                                     Text(
-                                      pass.expectedInDate,
+                                      pass.actualInDate!,
                                       style: textTheme.bodyMedium!.copyWith(
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    Text(pass.expectedInTime)
+                                    Text(pass.actualInTime!)
                                   ],
                                 ),
                               ],

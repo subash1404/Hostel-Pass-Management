@@ -35,34 +35,68 @@ class StudentPassNotifier extends StateNotifier<List<Pass>> {
 
       List<Pass> passes = [];
       for (var pass in responseData["data"]) {
-        passes.add(
-          Pass(
-            passId: pass["passId"],
-            studentId: pass["studentId"],
-            gender: pass['gender'],
-            qrId: pass["qrId"],
-            status: pass["status"],
-            destination: pass["destination"],
-            type: pass["type"],
-            isActive: pass["isActive"],
-            reason: pass["reason"],
-            expectedInDate:
-                "${DateTime.parse(pass['expectedIn']).day}-${DateTime.parse(pass['expectedIn']).month}-${DateTime.parse(pass['expectedIn']).year}",
-            expectedInTime:
-                "${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedIn'])).hour}:${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedIn'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedIn'])).period.name.toUpperCase()}",
-            expectedOutDate:
-                "${DateTime.parse(pass['expectedOut']).day}-${DateTime.parse(pass['expectedOut']).month}-${DateTime.parse(pass['expectedOut']).year}",
-            expectedOutTime:
-                "${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).hour}:${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).period.name.toUpperCase()}",
-            showQr: DateTime.parse(pass['expectedOut'])
-                    .add(Duration(minutes: 60))
-                    .isAfter(DateTime.now()) &&
-                DateTime.parse(pass['expectedOut'])
-                    .subtract(Duration(minutes: 60))
-                    .isBefore(DateTime.now()),
-            isSpecialPass: pass["isSpecialPass"],
-          ),
-        );
+        print(pass);
+        passes.add(pass["status"] == "Used"
+            ? Pass(
+                passId: pass["passId"],
+                studentId: pass["studentId"],
+                gender: pass['gender'],
+                qrId: pass["qrId"],
+                status: pass["status"],
+                destination: pass["destination"],
+                type: pass["type"],
+                isActive: pass["isActive"],
+                reason: pass["reason"],
+                expectedInDate:
+                    "${DateTime.parse(pass['expectedIn']).day}-${DateTime.parse(pass['expectedIn']).month}-${DateTime.parse(pass['expectedIn']).year}",
+                expectedInTime:
+                    "${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedIn'])).hour}:${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedIn'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedIn'])).period.name.toUpperCase()}",
+                expectedOutDate:
+                    "${DateTime.parse(pass['expectedOut']).day}-${DateTime.parse(pass['expectedOut']).month}-${DateTime.parse(pass['expectedOut']).year}",
+                expectedOutTime:
+                    "${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).hour}:${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).period.name.toUpperCase()}",
+                actualInDate:
+                    "${DateTime.parse(pass['entryScanAt']).day}-${DateTime.parse(pass['entryScanAt']).month}-${DateTime.parse(pass['entryScanAt']).year}",
+                actualInTime:
+                    "${TimeOfDay.fromDateTime(DateTime.parse(pass['entryScanAt'])).hour}:${TimeOfDay.fromDateTime(DateTime.parse(pass['entryScanAt'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(pass['entryScanAt'])).period.name.toUpperCase()}",
+                actualOutDate:
+                    "${DateTime.parse(pass['exitScanAt']).day}-${DateTime.parse(pass['exitScanAt']).month}-${DateTime.parse(pass['exitScanAt']).year}",
+                actualOutTime:
+                    "${TimeOfDay.fromDateTime(DateTime.parse(pass['exitScanAt'])).hour}:${TimeOfDay.fromDateTime(DateTime.parse(pass['exitScanAt'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(pass['exitScanAt'])).period.name.toUpperCase()}",
+                showQr: DateTime.parse(pass['expectedOut'])
+                        .add(Duration(minutes: 60))
+                        .isAfter(DateTime.now()) &&
+                    DateTime.parse(pass['expectedOut'])
+                        .subtract(Duration(minutes: 60))
+                        .isBefore(DateTime.now()),
+                isSpecialPass: pass["isSpecialPass"],
+              )
+            : Pass(
+                passId: pass["passId"],
+                studentId: pass["studentId"],
+                gender: pass['gender'],
+                qrId: pass["qrId"],
+                status: pass["status"],
+                destination: pass["destination"],
+                type: pass["type"],
+                isActive: pass["isActive"],
+                reason: pass["reason"],
+                expectedInDate:
+                    "${DateTime.parse(pass['expectedIn']).day}-${DateTime.parse(pass['expectedIn']).month}-${DateTime.parse(pass['expectedIn']).year}",
+                expectedInTime:
+                    "${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedIn'])).hour}:${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedIn'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedIn'])).period.name.toUpperCase()}",
+                expectedOutDate:
+                    "${DateTime.parse(pass['expectedOut']).day}-${DateTime.parse(pass['expectedOut']).month}-${DateTime.parse(pass['expectedOut']).year}",
+                expectedOutTime:
+                    "${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).hour}:${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).period.name.toUpperCase()}",
+                showQr: DateTime.parse(pass['expectedOut'])
+                        .add(Duration(minutes: 60))
+                        .isAfter(DateTime.now()) &&
+                    DateTime.parse(pass['expectedOut'])
+                        .subtract(Duration(minutes: 60))
+                        .isBefore(DateTime.now()),
+                isSpecialPass: pass["isSpecialPass"],
+              ));
       }
       state = passes;
     } catch (e) {

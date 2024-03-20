@@ -31,35 +31,75 @@ class WardenPassRequestsNotifier extends StateNotifier<List<PassRequest>> {
       }
       List<PassRequest> specialPasses = [];
       for (var pass in responseData) {
-        specialPasses.add(PassRequest(
-            passId: pass["passId"],
-            qrId: pass["qrId"],
-            studentId: pass["studentId"],
-            gender: pass['gender'],
-            status: pass["status"],
-            destination: pass["destination"],
-            type: pass["type"],
-            isActive: pass["isActive"],
-            reason: pass["reason"],
-            expectedInDate:
-                "${DateTime.parse(pass['expectedIn']).day}-${DateTime.parse(pass['expectedIn']).month}-${DateTime.parse(pass['expectedIn']).year}",
-            expectedInTime:
-                "${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedIn'])).hour}:${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedIn'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedIn'])).period.name.toUpperCase()}",
-            expectedOutDate:
-                "${DateTime.parse(pass['expectedOut']).day}-${DateTime.parse(pass['expectedOut']).month}-${DateTime.parse(pass['expectedOut']).year}",
-            expectedOutTime:
-                "${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).hour}:${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).period.name.toUpperCase()}",
-            isSpecialPass: pass["isSpecialPass"],
-            studentName: pass["studentName"],
-            dept: pass["dept"],
-            fatherPhNo: pass["fatherPhNo"],
-            motherPhNo: pass["motherPhNo"],
-            phNo: pass["phNo"],
-            roomNo: pass["roomNo"],
-            year: pass["year"],
-            blockNo: pass["blockNo"],
-            approvedBy: pass["approvedBy"],
-            confirmedWith: pass["confirmedWith"]));
+        specialPasses.add(pass["status"] == "Used"
+            ? PassRequest(
+                passId: pass["passId"],
+                qrId: pass["qrId"],
+                studentId: pass["studentId"],
+                gender: pass['gender'],
+                status: pass["status"],
+                destination: pass["destination"],
+                type: pass["type"],
+                isActive: pass["isActive"],
+                reason: pass["reason"],
+                expectedInDate:
+                    "${DateTime.parse(pass['expectedIn']).day}-${DateTime.parse(pass['expectedIn']).month}-${DateTime.parse(pass['expectedIn']).year}",
+                expectedInTime:
+                    "${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedIn'])).hour}:${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedIn'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedIn'])).period.name.toUpperCase()}",
+                expectedOutDate:
+                    "${DateTime.parse(pass['expectedOut']).day}-${DateTime.parse(pass['expectedOut']).month}-${DateTime.parse(pass['expectedOut']).year}",
+                expectedOutTime:
+                    "${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).hour}:${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).period.name.toUpperCase()}",
+                actualInDate:
+                    "${DateTime.parse(pass['actualIn']).day}-${DateTime.parse(pass['actualIn']).month}-${DateTime.parse(pass['actualIn']).year}",
+                actualInTime:
+                    "${TimeOfDay.fromDateTime(DateTime.parse(pass['actualIn'])).hour}:${TimeOfDay.fromDateTime(DateTime.parse(pass['actualIn'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(pass['actualIn'])).period.name.toUpperCase()}",
+                actualOutDate:
+                    "${DateTime.parse(pass['actualOut']).day}-${DateTime.parse(pass['actualOut']).month}-${DateTime.parse(pass['actualOut']).year}",
+                actualOutTime:
+                    "${TimeOfDay.fromDateTime(DateTime.parse(pass['actualOut'])).hour}:${TimeOfDay.fromDateTime(DateTime.parse(pass['actualOut'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(pass['actualOut'])).period.name.toUpperCase()}",
+                isSpecialPass: pass["isSpecialPass"],
+                studentName: pass["studentName"],
+                dept: pass["dept"],
+                fatherPhNo: pass["fatherPhNo"],
+                motherPhNo: pass["motherPhNo"],
+                phNo: pass["phNo"],
+                roomNo: pass["roomNo"],
+                year: pass["year"],
+                blockNo: pass["blockNo"],
+                approvedBy: pass["approvedBy"],
+                confirmedWith: pass["confirmedWith"],
+              )
+            : PassRequest(
+                passId: pass["passId"],
+                qrId: pass["qrId"],
+                studentId: pass["studentId"],
+                gender: pass['gender'],
+                status: pass["status"],
+                destination: pass["destination"],
+                type: pass["type"],
+                isActive: pass["isActive"],
+                reason: pass["reason"],
+                expectedInDate:
+                    "${DateTime.parse(pass['expectedIn']).day}-${DateTime.parse(pass['expectedIn']).month}-${DateTime.parse(pass['expectedIn']).year}",
+                expectedInTime:
+                    "${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedIn'])).hour}:${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedIn'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedIn'])).period.name.toUpperCase()}",
+                expectedOutDate:
+                    "${DateTime.parse(pass['expectedOut']).day}-${DateTime.parse(pass['expectedOut']).month}-${DateTime.parse(pass['expectedOut']).year}",
+                expectedOutTime:
+                    "${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).hour}:${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).period.name.toUpperCase()}",
+                isSpecialPass: pass["isSpecialPass"],
+                studentName: pass["studentName"],
+                dept: pass["dept"],
+                fatherPhNo: pass["fatherPhNo"],
+                motherPhNo: pass["motherPhNo"],
+                phNo: pass["phNo"],
+                roomNo: pass["roomNo"],
+                year: pass["year"],
+                blockNo: pass["blockNo"],
+                approvedBy: pass["approvedBy"],
+                confirmedWith: pass["confirmedWith"],
+              ));
       }
       state = specialPasses;
     } catch (err) {
