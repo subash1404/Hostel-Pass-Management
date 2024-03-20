@@ -24,10 +24,13 @@ class _StatsPageState extends ConsumerState<StatsPage> {
         students.where((student) => student.gender == 'M').toList();
     final femaleStudents =
         students.where((student) => student.gender == 'F').toList();
-    final maleInUsePasses = passes
-        .where((pass) => maleStudents.any((student) =>
-            student.studentId == pass.studentId && pass.status == "In use"))
-        .toList();
+
+    // final maleInUsePasses = passes
+    //     .where((pass) => maleStudents.any((student) =>
+    //         student.studentId == pass.studentId && pass.status == "In use"))
+    // .toList();
+    final maleInUsePasses =
+        passes.where((pass) => pass.gender == 'M' && pass.status == 'In use');
     final femaleInUsePasses = passes
         .where((pass) => femaleStudents.any((student) =>
             student.studentId == pass.studentId && pass.status == "In use"))
@@ -61,25 +64,14 @@ class _StatsPageState extends ConsumerState<StatsPage> {
     femaleInUsePasses.forEach((pass) {
       femalePassCount[pass.blockNo - 1]++;
     });
-    print(maleInUsePasses.length);
-    print("Male students${maleStudents.length}");
 
-    int totalMaleStudentsIn = maleInUsePasses.length;
-    int totalMaleStudentsOut = maleInUsePasses.length;
-    // int totalMaleStudentsIn =
-    //     maleBlockCounts.reduce((value, element) => value + element);
-    int totalFemaleStudentsIn =
-        femaleBlockCounts.reduce((value, element) => value + element);
-    // int totalMaleStudentsOut =
-    //     malePassCount.reduce((value, element) => value + element);
-    int totalFemaleStudentsOut =
-        femalePassCount.reduce((value, element) => value + element);
+    print(maleBlockCounts);
+    print(malePassCount);
 
     List<Widget> maleBlockTiles = [];
     List<Widget> femaleBlockTiles = [];
     final NO_OF_BLOCKS = maleBlockCounts.length;
 
-    // Create blocks for male and female students
     for (int i = 0; i < NO_OF_BLOCKS; i++) {
       maleBlockTiles.add(
         GestureDetector(
@@ -130,8 +122,8 @@ class _StatsPageState extends ConsumerState<StatsPage> {
                 ...maleBlockTiles,
                 BlockTile(
                   blockName: "Overall Count (Male)",
-                  inCount: totalMaleStudentsIn,
-                  outCount: totalMaleStudentsOut,
+                  inCount: maleStudents.length,
+                  outCount: maleInUsePasses.length,
                 )
               ],
             ),
@@ -140,8 +132,8 @@ class _StatsPageState extends ConsumerState<StatsPage> {
                 ...femaleBlockTiles,
                 BlockTile(
                   blockName: "Overall Count (Female)",
-                  inCount: totalFemaleStudentsIn,
-                  outCount: totalFemaleStudentsOut,
+                  inCount: femaleStudents.length,
+                  outCount: femaleInUsePasses.length,
                 )
               ],
             ),
