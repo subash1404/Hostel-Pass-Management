@@ -51,6 +51,7 @@ class _PassRequestPageState extends ConsumerState<PassRequestPage> {
 
   Future<void> fetchProfilePic() async {
     try {
+      print(widget.pass.studentId);
       var response = await http.get(
         Uri.parse(
             "${dotenv.env["BACKEND_BASE_API"]}/profile/studentProfile/${widget.pass.studentId}"),

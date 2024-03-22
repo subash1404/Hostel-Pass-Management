@@ -39,7 +39,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
       } else {
         response = await http.get(
           Uri.parse(
-              "${dotenv.env["BACKEND_BASE_API"]}/profile/studentProfile/${widget.studentData!.uid}"),
+              "${dotenv.env["BACKEND_BASE_API"]}/profile/studentProfile/${widget.studentData!.studentId}"),
           headers: {
             "Content-Type": "application/json",
             "Authorization": prefs!.getString("jwtToken")!,
