@@ -21,6 +21,7 @@ class ActivePasses extends ConsumerStatefulWidget {
 bool isDeletePassLoading = false;
 
 class _ActivePassesState extends ConsumerState<ActivePasses> {
+  late FToast toast;
   void deletePassConfirmation(BuildContext context) {
     // Create a TextEditingController to handle user input
 
