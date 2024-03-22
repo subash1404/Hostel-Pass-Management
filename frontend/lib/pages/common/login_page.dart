@@ -114,16 +114,6 @@ class LoginPageState extends ConsumerState<LoginPage> {
         await prefs?.setInt('permanentBlock', responseData['permanentBlock']);
         await prefs?.setBool('isBoysHostelRt', responseData['isBoysHostelRt']);
 
-        List<String> temporaryBlock = [];
-
-        responseData["temporaryBlock"].forEach(
-          (block) {
-            temporaryBlock.add(block.toString());
-          },
-        );
-
-        await prefs?.setStringList('temporaryBlock', temporaryBlock);
-
         await ref.read(blockStudentProvider.notifier).loadBlockStudentsFromDB();
 
         await ref.read(rtPassProvider.notifier).loadPassRequestsFromDB();

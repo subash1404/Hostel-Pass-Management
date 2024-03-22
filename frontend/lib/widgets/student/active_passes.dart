@@ -164,14 +164,15 @@ class _DeletePassDialogState extends ConsumerState<DeletePassDialog> {
 
     return AlertDialog(
       title: const Text(
-        "Delete active pass",
+        "Delete pass?",
+        style: TextStyle(fontWeight: FontWeight.bold),
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const Text(
-            "Type \"DELETE\" to delete",
+            "Type \"DELETE\" to confirm",
           ),
           const SizedBox(
             height: 20,
@@ -182,7 +183,7 @@ class _DeletePassDialogState extends ConsumerState<DeletePassDialog> {
             },
             controller: confirmController,
             decoration: InputDecoration(
-              hintText: "DELETE",
+              // hintText: "DELETE",
               contentPadding: const EdgeInsets.all(8),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -199,9 +200,10 @@ class _DeletePassDialogState extends ConsumerState<DeletePassDialog> {
           child: const Text("Cancel"),
         ),
         TextButton(
-          style: TextButton.styleFrom(
-              backgroundColor: colorScheme.errorContainer,
-              foregroundColor: colorScheme.error),
+          // style: TextButton.styleFrom(
+          //   backgroundColor: colorScheme.errorContainer,
+          //   foregroundColor: colorScheme.error,
+          // ),
           onPressed: isDeletePassLoading
               ? null
               : confirmController.text.trim() != "DELETE"

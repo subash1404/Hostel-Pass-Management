@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hostel_pass_management/models/pass_model.dart';
@@ -11,6 +14,7 @@ import 'package:hostel_pass_management/widgets/common/profile_item.dart';
 import 'package:hostel_pass_management/widgets/common/toast.dart';
 import 'package:hostel_pass_management/widgets/rt/rt_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class PassRequestPage extends ConsumerStatefulWidget {
   const PassRequestPage({
@@ -29,6 +33,15 @@ class PassRequestPage extends ConsumerStatefulWidget {
 
 class _PassRequestPageState extends ConsumerState<PassRequestPage> {
   late FToast toast;
+  late String? profileBuffer = null;
+  SharedPreferences? prefs = SharedPreferencesManager.preferences;
+
+  @override
+  void initState() {
+    fetchProfilePic();
+    super.initState();
+  }
+
   var selectedParent = null;
   void setSelectedParent(String? parent) {
     setState(() {
@@ -36,6 +49,37 @@ class _PassRequestPageState extends ConsumerState<PassRequestPage> {
     });
   }
 
+  Future<void> fetchProfilePic() async {
+    try {
+      var response = await http.get(
+        Uri.parse(
+            "${dotenv.env["BACKEND_BASE_API"]}/profile/studentProfile/${widget.pass.studentId}"),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": prefs!.getString("jwtToken")!,
+        },
+      );
+
+      var responseData = jsonDecode(response.body);
+
+      if (response.statusCode > 399) {
+        throw responseData["message"];
+      }
+
+      setState(() {
+        profileBuffer = responseData["profileBuffer"];
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Something went wrong"),
+        ),
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     toast = FToast();
     toast.init(context);
@@ -63,7 +107,7 @@ class _PassRequestPageState extends ConsumerState<PassRequestPage> {
               Container(
                 margin: const EdgeInsets.all(10),
                 clipBehavior: Clip.hardEdge,
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
@@ -81,17 +125,23 @@ class _PassRequestPageState extends ConsumerState<PassRequestPage> {
                     Row(
                       children: [
                         Container(
-                            height: 60,
-                            width: 60,
-                            clipBehavior: Clip.antiAlias,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.person_rounded,
-                              size: 30,
-                            )),
-                        // const SizedBox(width: 8),
+                          height: 60,
+                          width: 60,
+                          clipBehavior: Clip.antiAlias,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                          ),
+                          child: profileBuffer == null
+                              ? const Icon(
+                                  Icons.person_rounded,
+                                  size: 30,
+                                )
+                              : Image.memory(
+                                  base64Decode(profileBuffer!),
+                                  fit: BoxFit.cover,
+                                ),
+                        ),
+                            const SizedBox(width: 15),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -136,6 +186,16 @@ class _PassRequestPageState extends ConsumerState<PassRequestPage> {
                 content:
                     "Date: ${widget.pass.expectedInDate}  Time: ${widget.pass.expectedInTime}",
               ),
+              PassTile(
+                title: "Phone No",
+                content:
+                    prefs.getString("phNo")!,
+              ),
+              if (widget.pass.approvedBy != prefs.getString("username"))
+                PassTile(
+                  title: "Approved By",
+                  content: widget.pass.approvedBy,
+                ),
               if (!widget.passRequest && widget.pass.status == "Used")
                 PassTile(
                   title: "Actual Leaving Date & Time",

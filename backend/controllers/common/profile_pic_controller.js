@@ -1,11 +1,14 @@
 const express = require("express");
 const BugReport = require("../../models/bug_report_model");
+const Rt = require("../../models/rt_model");
 const path = require("path");
 const fs = require("fs");
 const { setTimeout } = require("timers");
 const router = express.Router();
 
 router.get("/fetch", async (req, res, next) => {
+  let rt;
+
   try {
     const role = req.body.USER_role;
     let photoFilePath;
@@ -18,12 +21,22 @@ router.get("/fetch", async (req, res, next) => {
         req.body.USER_uid +
         ".jpg"
     );
-    console.log(photoFilePath);
+
+    if (role === "rt") {
+      rt = await Rt.findOne({ rtId: req.body.USER_rtId });
+    }
 
     const photoBuffer = fs.readFileSync(photoFilePath);
     const profileBuffer = photoBuffer.toString("base64");
 
-    res.json({ profileBuffer: profileBuffer });
+    res.json({
+      profileBuffer: profileBuffer,
+      temporaryBlock: rt ? rt.temporaryBlock : undefined,
+    });
+    console.log({
+      profileBuffer: profileBuffer,
+      temporaryBlock: rt ? rt.temporaryBlock : undefined,
+    })
   } catch (error) {
     console.log(error);
     res.status(400).json({ message: "Internal Server Error" });
