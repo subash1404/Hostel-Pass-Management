@@ -7,23 +7,48 @@ const { setTimeout } = require("timers");
 const router = express.Router();
 
 router.get("/fetch", async (req, res, next) => {
-  let rt;
-
   try {
     const role = req.body.USER_role;
     let photoFilePath;
+    let rt;
 
-    photoFilePath = path.join(
-      __dirname +
-        "../../../images/profiles/" +
-        role +
-        "/" +
-        req.body.USER_uid +
-        ".jpg"
-    );
-
-    if (role === "rt") {
+    if (role === "student") {
+      photoFilePath = path.join(
+        __dirname +
+          "../../../images/profiles/" +
+          role +
+          "/" +
+          req.body.USER_studentId +
+          ".jpg"
+      );
+    } else if (role === "warden") {
+      photoFilePath = path.join(
+        __dirname +
+          "../../../images/profiles/" +
+          role +
+          "/" +
+          req.body.USER_wardenId +
+          ".jpg"
+      );
+    } else if (role === "rt") {
       rt = await Rt.findOne({ rtId: req.body.USER_rtId });
+      photoFilePath = path.join(
+        __dirname +
+          "../../../images/profiles/" +
+          role +
+          "/" +
+          req.body.USER_rtId +
+          ".jpg"
+      );
+    } else if (role === "security") {
+      photoFilePath = path.join(
+        __dirname +
+          "../../../images/profiles/" +
+          role +
+          "/" +
+          req.body.USER_securityId +
+          ".jpg"
+      );
     }
 
     const photoBuffer = fs.readFileSync(photoFilePath);
@@ -33,10 +58,6 @@ router.get("/fetch", async (req, res, next) => {
       profileBuffer: profileBuffer,
       temporaryBlock: rt ? rt.temporaryBlock : undefined,
     });
-    console.log({
-      profileBuffer: profileBuffer,
-      temporaryBlock: rt ? rt.temporaryBlock : undefined,
-    })
   } catch (error) {
     console.log(error);
     res.status(400).json({ message: "Internal Server Error" });
