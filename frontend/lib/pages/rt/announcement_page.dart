@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hostel_pass_management/models/announcement_model.dart';
 import 'package:hostel_pass_management/providers/rt_announcement_provider.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:hostel_pass_management/widgets/common/toast.dart';
@@ -21,12 +22,13 @@ class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _messageController = TextEditingController();
   bool isLoading = false;
-  var announcements;
+  List<Announcement>? announcements;
   late FToast toast;
 
   @override
   Widget build(BuildContext context) {
     SharedPreferences? prefs = SharedPreferencesManager.preferences;
+    announcements = ref.watch(rtAnnouncementNotifier);
     toast = FToast();
     toast.init(context);
     ColorScheme colorScheme = Theme.of(context).colorScheme;
@@ -48,9 +50,9 @@ class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
         title: const Text("Announcements"),
         centerTitle: true,
       ),
-      drawer: RtDrawer(),
+      drawer: const RtDrawer(),
       body: Padding(
-        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -96,7 +98,9 @@ class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
                   ),
                   const SizedBox(height: 20),
                   InkWell(
-                    onTap: isLoading ? null : _submitForm,
+                    onTap: isLoading || announcements!.length >= 2
+                        ? null
+                        : _submitForm,
                     child: Ink(
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(
@@ -104,7 +108,7 @@ class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
                         horizontal: 20,
                       ),
                       decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 1, 46, 76),
+                        color: const Color.fromARGB(255, 1, 46, 76),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: isLoading
@@ -128,10 +132,10 @@ class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
-            Text(
+            const Text(
               "Current Announcement(s)",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
@@ -140,16 +144,16 @@ class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: announcements.length,
+                itemCount: announcements!.length,
                 itemBuilder: (context, index) {
-                  final announcement = announcements[index];
+                  final announcement = announcements![index];
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ListTile(
                         title: Text(
                           announcement.title,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                         subtitle: Text(announcement.message),
@@ -199,6 +203,9 @@ class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
 
     final String title = _titleController.text;
     final String message = _messageController.text;
+
+    FocusScope.of(context).unfocus();
+    await Future.delayed(const Duration(milliseconds: 70));
 
     setState(() {
       isLoading = true;

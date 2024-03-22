@@ -68,11 +68,12 @@ class _ActivePassesState extends ConsumerState<ActivePasses> {
                   style: textTheme.titleLarge,
                 ),
                 IconButton(
-                  onPressed: widget.pass == null
-                      ? null
-                      : () {
-                          deletePassConfirmation(context);
-                        },
+                  onPressed:
+                      widget.pass == null || widget.pass!.status == "In use"
+                          ? null
+                          : () {
+                              deletePassConfirmation(context);
+                            },
                   icon: Icon(
                     Icons.delete,
                     color: colorScheme.onErrorContainer,
@@ -203,7 +204,7 @@ class _DeletePassDialogState extends ConsumerState<DeletePassDialog> {
               foregroundColor: colorScheme.error),
           onPressed: isDeletePassLoading
               ? null
-              : confirmController.text != "DELETE"
+              : confirmController.text.trim() != "DELETE"
                   ? null
                   : () async {
                       await deletePass();

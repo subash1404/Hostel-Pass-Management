@@ -21,15 +21,17 @@ class BlockStudentsPage extends ConsumerStatefulWidget {
 
 class _BlockStudentsPageState extends ConsumerState<BlockStudentsPage> {
   SharedPreferences? prefs = SharedPreferencesManager.preferences;
+  TextEditingController _searchController = TextEditingController();
+  List<BlockStudent> _filteredStudents = [];
+  List<BlockStudent> blockStudents = [];
+  var drawer;
+  var appbar;
 
   @override
-  Widget build(BuildContext context) {
-    var blockStudents;
-    var drawer;
-    var appbar;
-
-    if (widget.students == null) {
-      blockStudents = ref.watch(blockStudentProvider);
+  void initState() {
+    super.initState();
+    if (prefs!.getString('role') == "rt") {
+      blockStudents = widget.students!;
       if (prefs!.getBool('isBoysHostelRt')!) {
         blockStudents =
             blockStudents.where((student) => student.gender == 'M').toList();
@@ -37,17 +39,22 @@ class _BlockStudentsPageState extends ConsumerState<BlockStudentsPage> {
         blockStudents =
             blockStudents.where((student) => student.gender == 'F').toList();
       }
-      drawer = RtDrawer();
+      _filteredStudents = blockStudents;
+      drawer = const RtDrawer();
       appbar = AppBar(
         title: const Text('Block Students'),
         centerTitle: true,
       );
     } else {
-      blockStudents = widget.students;
+      blockStudents = widget.students!;
+      _filteredStudents = blockStudents;
       drawer = null;
       appbar = null;
     }
+  }
 
+  @override
+  Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
 
@@ -57,11 +64,43 @@ class _BlockStudentsPageState extends ConsumerState<BlockStudentsPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                  hintText: 'Search by student name...',
+                  border: InputBorder.none,
+                  hintStyle: const TextStyle(
+                    color: Color.fromARGB(137, 26, 26, 26),
+                  ),
+                  suffixIcon: _searchController.text.trim() == ""
+                      ? const Icon(
+                          Icons.search_rounded,
+                        )
+                      : InkWell(
+                          onTap: () {
+                            setState(() {
+                              _searchController.text = "";
+                              _filteredStudents = blockStudents;
+                            });
+                          },
+                          child: const Icon(Icons.cancel_outlined))),
+              style: const TextStyle(color: Colors.black),
+              onChanged: _filterStudents,
+            ),
+          ),
           Expanded(
             child: ListView.builder(
-              itemCount: blockStudents.length,
+              itemCount: _filteredStudents.isNotEmpty
+                  ? _filteredStudents.length
+                  : blockStudents.length,
               itemBuilder: (BuildContext context, int index) {
-                final student = blockStudents[index];
+                if (_filteredStudents.isEmpty) return null;
+                // final student = blockStudents[index];
+                final student = _searchController.text.trim() == ""
+                    ? blockStudents[index]
+                    : _filteredStudents[index];
                 return GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(
@@ -76,7 +115,7 @@ class _BlockStudentsPageState extends ConsumerState<BlockStudentsPage> {
                     child: Column(
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(left: 4),
+                          padding: const EdgeInsets.only(left: 4),
                           child: Row(
                             children: [
                               Container(
@@ -92,7 +131,7 @@ class _BlockStudentsPageState extends ConsumerState<BlockStudentsPage> {
                                   alignment: Alignment.center,
                                   child: Text(
                                     student.username[0],
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold),
                                   ),
@@ -113,7 +152,7 @@ class _BlockStudentsPageState extends ConsumerState<BlockStudentsPage> {
                                   ],
                                 ),
                               ),
-                              SizedBox(width: 20),
+                              const SizedBox(width: 20),
                               Padding(
                                 padding: const EdgeInsets.only(right: 12.0),
                                 child: Text(
@@ -124,10 +163,10 @@ class _BlockStudentsPageState extends ConsumerState<BlockStudentsPage> {
                             ],
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 8,
                         ),
-                        Divider(
+                        const Divider(
                           height: 1, // Adjust the height as needed
                           thickness: 1, // Adjust the thickness as needed
                           color: Color.fromARGB(255, 219, 219, 219),
@@ -142,5 +181,20 @@ class _BlockStudentsPageState extends ConsumerState<BlockStudentsPage> {
         ],
       ),
     );
+  }
+
+  void _filterStudents(String query) {
+    if (query.isEmpty) {
+      setState(() {
+        _filteredStudents = blockStudents;
+      });
+    } else {
+      setState(() {
+        _filteredStudents = blockStudents
+            .where((student) =>
+                student.username.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+      });
+    }
   }
 }
