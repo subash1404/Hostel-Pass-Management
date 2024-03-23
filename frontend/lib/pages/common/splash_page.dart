@@ -35,6 +35,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
   SharedPreferences? prefs = SharedPreferencesManager.preferences;
 
   Future<void> miscellaneous() async {
+    // return;
     try {
       var response = await http.get(
         Uri.parse("${dotenv.env["BACKEND_BASE_API"]}/miscellaneous"),

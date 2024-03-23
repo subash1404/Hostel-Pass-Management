@@ -98,6 +98,16 @@ class StudentDrawer extends StatelessWidget {
             title: Text("Bug Report"),
             leading: Icon(Icons.bug_report_rounded),
           ),
+          Spacer(),
+          Text(
+            'Made with ❤️ by Subash & Naveen',
+            textAlign: TextAlign.center,
+            style: textTheme.labelMedium!.copyWith(
+              fontWeight: FontWeight.bold,
+              color: const Color.fromARGB(255, 135, 135, 135),
+            ),
+          ),
+          SizedBox(height: 12),
           // ListTile(
           //   onTap: () {
           //     Navigator.pushReplacement(
