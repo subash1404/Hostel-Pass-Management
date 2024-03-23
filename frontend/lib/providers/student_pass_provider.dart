@@ -35,7 +35,6 @@ class StudentPassNotifier extends StateNotifier<List<Pass>> {
 
       List<Pass> passes = [];
       for (var pass in responseData["data"]) {
-        print(pass);
         passes.add(pass["status"] == "Used"
             ? Pass(
                 passId: pass["passId"],
@@ -64,10 +63,10 @@ class StudentPassNotifier extends StateNotifier<List<Pass>> {
                 actualOutTime:
                     "${TimeOfDay.fromDateTime(DateTime.parse(pass['exitScanAt'])).hour}:${TimeOfDay.fromDateTime(DateTime.parse(pass['exitScanAt'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(pass['exitScanAt'])).period.name.toUpperCase()}",
                 showQr: DateTime.parse(pass['expectedOut'])
-                        .add(Duration(minutes: 60))
+                        .add(const Duration(minutes: 60))
                         .isAfter(DateTime.now()) &&
                     DateTime.parse(pass['expectedOut'])
-                        .subtract(Duration(minutes: 60))
+                        .subtract(const Duration(minutes: 60))
                         .isBefore(DateTime.now()),
                 isSpecialPass: pass["isSpecialPass"],
                 isLate: pass["isLate"],
@@ -91,17 +90,16 @@ class StudentPassNotifier extends StateNotifier<List<Pass>> {
                 expectedOutTime:
                     "${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).hour}:${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).period.name.toUpperCase()}",
                 showQr: DateTime.parse(pass['expectedOut'])
-                        .add(Duration(minutes: 60))
+                        .add(const Duration(minutes: 60))
                         .isAfter(DateTime.now()) &&
                     DateTime.parse(pass['expectedOut'])
-                        .subtract(Duration(minutes: 60))
+                        .subtract(const Duration(minutes: 60))
                         .isBefore(DateTime.now()),
                 isSpecialPass: pass["isSpecialPass"],
               ));
       }
       state = passes;
     } catch (e) {
-      print(e);
       throw "Something went wrong";
     }
   }
@@ -165,7 +163,6 @@ class StudentPassNotifier extends StateNotifier<List<Pass>> {
         )
       ];
     } catch (e) {
-      print(e);
       throw responseData["message"];
     }
   }
@@ -181,7 +178,6 @@ class StudentPassNotifier extends StateNotifier<List<Pass>> {
           });
       state = state.where((pass) => pass.passId != passId).toList();
     } catch (err) {
-      print(err);
       throw "Something went wrong";
     }
   }

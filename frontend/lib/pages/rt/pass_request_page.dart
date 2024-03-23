@@ -4,15 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:hostel_pass_management/models/pass_model.dart';
 import 'package:hostel_pass_management/models/pass_request_model.dart';
 import 'package:hostel_pass_management/providers/rt_pass_provider.dart';
 import 'package:hostel_pass_management/providers/warden_pass_provider.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:hostel_pass_management/widgets/common/pass_tile.dart';
-import 'package:hostel_pass_management/widgets/common/profile_item.dart';
 import 'package:hostel_pass_management/widgets/common/toast.dart';
-import 'package:hostel_pass_management/widgets/rt/rt_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -305,8 +302,8 @@ class _PassRequestPageState extends ConsumerState<PassRequestPage> {
                                       if (await showDialog(
                                         context: context,
                                         builder: (context) => AlertDialog(
-                                          title: Text("Reject Pass?"),
-                                          content: Text(
+                                          title: const Text("Reject Pass?"),
+                                          content: const Text(
                                             "Are you sure you want to reject the pass?",
                                           ),
                                           actions: [
@@ -315,7 +312,7 @@ class _PassRequestPageState extends ConsumerState<PassRequestPage> {
                                                 Navigator.of(context)
                                                     .pop(false);
                                               },
-                                              child: Text("Cancel"),
+                                              child: const Text("Cancel"),
                                             ),
                                             ElevatedButton(
                                               style: ElevatedButton.styleFrom(
@@ -326,7 +323,7 @@ class _PassRequestPageState extends ConsumerState<PassRequestPage> {
                                               onPressed: () async {
                                                 Navigator.of(context).pop(true);
                                               },
-                                              child: Text("Reject"),
+                                              child: const Text("Reject"),
                                             )
                                           ],
                                         ),
@@ -454,7 +451,7 @@ class _PassRequestPageState extends ConsumerState<PassRequestPage> {
                                       }
                                     },
                           child: isLoading
-                              ? SizedBox(
+                              ? const SizedBox(
                                   height: 20,
                                   width: 20,
                                   child: CircularProgressIndicator(

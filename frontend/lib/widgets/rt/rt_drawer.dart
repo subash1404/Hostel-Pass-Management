@@ -1,20 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hostel_pass_management/pages/common/developer_page.dart';
 import 'package:hostel_pass_management/pages/common/bug_report_page.dart';
-import 'package:hostel_pass_management/pages/common/login_page.dart';
-import 'package:hostel_pass_management/pages/student/student_profile_page.dart';
 import 'package:hostel_pass_management/pages/rt/announcement_page.dart';
 import 'package:hostel_pass_management/pages/rt/block_students_page.dart';
 import 'package:hostel_pass_management/pages/rt/pass_logs_page.dart';
 import 'package:hostel_pass_management/pages/rt/rt_page.dart';
-import 'package:hostel_pass_management/pages/student/student_page.dart';
 import 'package:hostel_pass_management/pages/student/rules_page.dart';
 import 'package:hostel_pass_management/providers/block_students_provider.dart';
-import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:hostel_pass_management/pages/rt/rt_profile_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class RtDrawer extends ConsumerStatefulWidget {
   const RtDrawer({super.key});
@@ -26,7 +20,6 @@ class RtDrawer extends ConsumerStatefulWidget {
 class _RtDrawerState extends ConsumerState<RtDrawer> {
   @override
   Widget build(BuildContext context) {
-    SharedPreferences? prefs = SharedPreferencesManager.preferences;
     final students = ref.watch(blockStudentProvider);
 
     TextTheme textTheme = Theme.of(context).textTheme;
@@ -104,7 +97,7 @@ class _RtDrawerState extends ConsumerState<RtDrawer> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => AnnouncementPage(),
+                  builder: (context) => const AnnouncementPage(),
                 ),
               );
             },
@@ -128,7 +121,7 @@ class _RtDrawerState extends ConsumerState<RtDrawer> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => RulesPage(),
+                  builder: (context) => const RulesPage(),
                 ),
               );
             },
@@ -145,10 +138,10 @@ class _RtDrawerState extends ConsumerState<RtDrawer> {
                 ),
               );
             },
-            title: Text("Bug Report"),
-            leading: Icon(Icons.bug_report_rounded),
+            title: const Text("Bug Report"),
+            leading: const Icon(Icons.bug_report_rounded),
           ),
-          Spacer(),
+          const Spacer(),
           Text(
             'App version ${dotenv.env["VERSION"]}',
             textAlign: TextAlign.center,

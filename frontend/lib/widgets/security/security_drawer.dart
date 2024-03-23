@@ -1,18 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:hostel_pass_management/pages/common/developer_page.dart';
-import 'package:hostel_pass_management/pages/common/bug_report_page.dart';
 import 'package:hostel_pass_management/pages/common/login_page.dart';
 import 'package:hostel_pass_management/pages/security/security_page.dart';
-import 'package:hostel_pass_management/pages/student/student_profile_page.dart';
-import 'package:hostel_pass_management/pages/rt/announcement_page.dart';
-import 'package:hostel_pass_management/pages/rt/block_students_page.dart';
-import 'package:hostel_pass_management/pages/rt/pass_logs_page.dart';
-import 'package:hostel_pass_management/pages/rt/rt_page.dart';
-import 'package:hostel_pass_management/pages/student/student_page.dart';
-import 'package:hostel_pass_management/pages/student/rules_page.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
-import 'package:hostel_pass_management/pages/rt/rt_profile_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SecurityDrawer extends StatelessWidget {
@@ -79,7 +69,7 @@ class SecurityDrawer extends StatelessWidget {
             leading: const Icon(Icons.logout_rounded),
             title: const Text("Logout"),
           ),
-          Spacer(),
+          const Spacer(),
           Text(
             'App version ${dotenv.env["VERSION"]}',
             textAlign: TextAlign.center,

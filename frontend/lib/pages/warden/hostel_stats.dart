@@ -9,6 +9,8 @@ import 'package:hostel_pass_management/widgets/warden/block_tile.dart';
 import 'package:hostel_pass_management/widgets/warden/warden_drawer.dart';
 
 class StatsPage extends ConsumerStatefulWidget {
+  const StatsPage({super.key});
+
   @override
   _StatsPageState createState() => _StatsPageState();
 }
@@ -49,30 +51,27 @@ class _StatsPageState extends ConsumerState<StatsPage> {
     List<int> malePassCount = List.filled(8, 0);
     List<int> femalePassCount = List.filled(8, 0);
 
-    maleStudents.forEach((student) {
+    for (var student in maleStudents) {
       maleBlockCounts[student.blockNo - 1]++;
-    });
+    }
 
-    femaleStudents.forEach((student) {
+    for (var student in femaleStudents) {
       femaleBlockCounts[student.blockNo - 1]++;
-    });
+    }
 
-    maleInUsePasses.forEach((pass) {
+    for (var pass in maleInUsePasses) {
       malePassCount[pass.blockNo - 1]++;
-    });
+    }
 
-    femaleInUsePasses.forEach((pass) {
+    for (var pass in femaleInUsePasses) {
       femalePassCount[pass.blockNo - 1]++;
-    });
-
-    print(maleBlockCounts);
-    print(malePassCount);
+    }
 
     List<Widget> maleBlockTiles = [];
     List<Widget> femaleBlockTiles = [];
-    final NO_OF_BLOCKS = maleBlockCounts.length;
+    final noOfBlocks = maleBlockCounts.length;
 
-    for (int i = 0; i < NO_OF_BLOCKS; i++) {
+    for (int i = 0; i < noOfBlocks; i++) {
       maleBlockTiles.add(
         GestureDetector(
           onTap: () {

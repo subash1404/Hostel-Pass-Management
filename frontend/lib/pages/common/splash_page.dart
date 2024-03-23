@@ -45,23 +45,28 @@ class _SplashPageState extends ConsumerState<SplashPage> {
         throw responseData["message"];
       }
       if (responseData["maintenance"] == "true") {
+        if (!mounted) {
+          return;
+        }
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => MaintenancePage(),
+            builder: (context) => const MaintenancePage(),
           ),
         );
         return;
       } else if (responseData["version"] != dotenv.env["VERSION"]) {
+        if (!mounted) {
+          return;
+        }
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => UpdatePage(),
+            builder: (context) => const UpdatePage(),
           ),
         );
         return;
       }
       tokenCheck();
     } catch (err) {
-      print(err);
       if (!mounted) {
         return;
       }
@@ -84,9 +89,12 @@ class _SplashPageState extends ConsumerState<SplashPage> {
           await ref
               .read(studentAnnouncementNotifier.notifier)
               .loadAnnouncementsFromDB();
+          if (!mounted) {
+            return;
+          }
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-              builder: (context) => StudentPage(),
+              builder: (context) => const StudentPage(),
             ),
           );
           return;
@@ -98,10 +106,13 @@ class _SplashPageState extends ConsumerState<SplashPage> {
               .read(rtAnnouncementNotifier.notifier)
               .loadAnnouncementsFromDB();
           await ref.read(rtPassProvider.notifier).loadPassRequestsFromDB();
+          if (!mounted) {
+            return;
+          }
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               // builder: (context) => RtPage(),
-              builder: (context) => RtPage(),
+              builder: (context) => const RtPage(),
             ),
           );
           return;
@@ -110,6 +121,9 @@ class _SplashPageState extends ConsumerState<SplashPage> {
               .read(hostelStudentProvider.notifier)
               .loadHostelStudentsFromDB();
           await ref.read(specialPassProvider.notifier).getSpecailPassesFromDB();
+          if (!mounted) {
+            return;
+          }
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (context) => StatsPage(),
@@ -120,7 +134,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
         } else if (prefs!.getString("role") == "security") {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-              builder: (context) => SecurityPage(),
+              builder: (context) => const SecurityPage(),
             ),
           );
           return;
@@ -139,7 +153,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
       Future.delayed(const Duration(seconds: 3), () {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => LoginPage(),
+            builder: (context) => const LoginPage(),
           ),
         );
       });
@@ -198,7 +212,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
                         fontWeight: FontWeight.bold,
                         color: const Color.fromARGB(255, 135, 135, 135)),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                 ],
               ),
             ),
