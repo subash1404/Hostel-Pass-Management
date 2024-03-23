@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hostel_pass_management/pages/common/developer_page.dart';
 import 'package:hostel_pass_management/pages/common/bug_report_page.dart';
 import 'package:hostel_pass_management/pages/common/login_page.dart';
@@ -41,13 +42,13 @@ class SecurityDrawer extends StatelessWidget {
                       "assets/images/logo.png",
                       width: 200,
                     ),
-                    Text(
-                      "Hostel Pass Manager",
-                      style: textTheme.titleMedium!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 29, 79, 158),
-                      ),
-                    ),
+                    // Text(
+                    //   "Hostel Pass Manager",
+                    //   style: textTheme.titleMedium!.copyWith(
+                    //     fontWeight: FontWeight.bold,
+                    //     color: Color.fromARGB(255, 29, 79, 158),
+                    //   ),
+                    // ),
                   ],
                 ),
               ],
@@ -77,6 +78,15 @@ class SecurityDrawer extends StatelessWidget {
             },
             leading: const Icon(Icons.logout_rounded),
             title: const Text("Logout"),
+          ),
+          Spacer(),
+          Text(
+            'App version ${dotenv.env["VERSION"]}',
+            textAlign: TextAlign.center,
+            style: textTheme.labelMedium!.copyWith(
+              fontWeight: FontWeight.bold,
+              color: const Color.fromARGB(255, 135, 135, 135),
+            ),
           ),
           // ListTile(
           //   onTap: () {

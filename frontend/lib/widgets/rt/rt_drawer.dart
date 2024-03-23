@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/pages/common/developer_page.dart';
 import 'package:hostel_pass_management/pages/common/bug_report_page.dart';
@@ -48,13 +49,13 @@ class _RtDrawerState extends ConsumerState<RtDrawer> {
                       "assets/images/logo.png",
                       width: 200,
                     ),
-                    Text(
-                      "Hostel Pass Manager",
-                      style: textTheme.titleMedium!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 29, 79, 158),
-                      ),
-                    ),
+                    // Text(
+                    //   "Hostel Pass Manager",
+                    //   style: textTheme.titleMedium!.copyWith(
+                    //     fontWeight: FontWeight.bold,
+                    //     color: Color.fromARGB(255, 29, 79, 158),
+                    //   ),
+                    // ),
                   ],
                 ),
               ],
@@ -149,14 +150,13 @@ class _RtDrawerState extends ConsumerState<RtDrawer> {
           ),
           Spacer(),
           Text(
-            'Made with ❤️ by Subash & Naveen',
+            'App version ${dotenv.env["VERSION"]}',
             textAlign: TextAlign.center,
             style: textTheme.labelMedium!.copyWith(
               fontWeight: FontWeight.bold,
               color: const Color.fromARGB(255, 135, 135, 135),
             ),
           ),
-          SizedBox(height: 12),
           // ListTile(
           //   onTap: () {
           //     Navigator.pushReplacement(

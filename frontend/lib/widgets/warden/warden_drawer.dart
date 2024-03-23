@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/models/pass_request_model.dart';
 import 'package:hostel_pass_management/pages/common/developer_page.dart';
@@ -152,6 +153,15 @@ class _WardenDrawerState extends ConsumerState<WardenDrawer> {
             },
             title: Text("Bug Report"),
             leading: Icon(Icons.bug_report_rounded),
+          ),
+          Spacer(),
+          Text(
+            'App version ${dotenv.env["VERSION"]}',
+            textAlign: TextAlign.center,
+            style: textTheme.labelMedium!.copyWith(
+              fontWeight: FontWeight.bold,
+              color: const Color.fromARGB(255, 135, 135, 135),
+            ),
           ),
           // ListTile(
           //   onTap: () {

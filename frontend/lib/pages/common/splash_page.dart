@@ -193,7 +193,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
               child: Column(
                 children: [
                   Text(
-                    'App Version ${dotenv.env["VERSION"]}',
+                    'Made by Subash & Naveen Akash',
                     style: textTheme.labelMedium!.copyWith(
                         fontWeight: FontWeight.bold,
                         color: const Color.fromARGB(255, 135, 135, 135)),
