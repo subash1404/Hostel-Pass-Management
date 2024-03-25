@@ -80,7 +80,10 @@ class _RtPageState extends ConsumerState<RtPage> {
       // });
       if (prefs.getBool('isBoysHostelRt')!) {
         pendingPasses = passRequests
-            .where((pass) => pass.status == 'Pending' && pass.gender == 'M' && pass.isSpecialPass == false)
+            .where((pass) =>
+                pass.status == 'Pending' &&
+                pass.gender == 'M' &&
+                pass.isSpecialPass == false)
             .toList();
       } else {
         pendingPasses = passRequests
@@ -96,7 +99,7 @@ class _RtPageState extends ConsumerState<RtPage> {
     return Scaffold(
       drawer: drawer,
       appBar: AppBar(
-        title: const Text('SVCE Hostel'),
+        title: const Text('Pass Requests'),
         centerTitle: true,
       ),
       body: Column(

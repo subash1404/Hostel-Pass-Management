@@ -78,7 +78,9 @@ class _StudentPageState extends ConsumerState<StudentPage> {
     Widget _buildTickIcon(Announcement announcement) {
       if (!announcement.isRead) {
         return IconButton(
+
           icon: const Icon(Icons.check, color: Colors.green),
+
           onPressed: () async {
             await ref
                 .read(studentAnnouncementNotifier.notifier)
@@ -87,14 +89,16 @@ class _StudentPageState extends ConsumerState<StudentPage> {
           },
         );
       } else {
+
         return const SizedBox();
+
       }
     }
 
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('SVCE Hostel'),
+        title: const Text('Home'),
         scrolledUnderElevation: 0,
         centerTitle: true,
         actions: [
