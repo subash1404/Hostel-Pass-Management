@@ -42,6 +42,7 @@ class _RtDrawerState extends ConsumerState<RtDrawer> {
                       "assets/images/logo.png",
                       width: 200,
                     ),
+
                     // Text(
                     //   "Hostel Pass Manager",
                     //   style: textTheme.titleMedium!.copyWith(
@@ -49,6 +50,7 @@ class _RtDrawerState extends ConsumerState<RtDrawer> {
                     //     color: Color.fromARGB(255, 29, 79, 158),
                     //   ),
                     // ),
+
                   ],
                 ),
               ],

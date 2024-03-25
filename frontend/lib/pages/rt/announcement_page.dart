@@ -204,6 +204,7 @@ class _AnnouncementPageState extends ConsumerState<AnnouncementPage> {
 
     if (announcements!.length >= 2) {
       ScaffoldMessenger.of(context).clearSnackBars();
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Can post only two announcements. Try deleting one!"),

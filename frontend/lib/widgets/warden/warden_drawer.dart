@@ -83,6 +83,7 @@ class _WardenDrawerState extends ConsumerState<WardenDrawer> {
                     alignment: Alignment.center,
                     width: 25,
                     height: 50,
+
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
@@ -90,6 +91,7 @@ class _WardenDrawerState extends ConsumerState<WardenDrawer> {
                     ),
                     child: Text(
                       pendingpassesLength.toString(),
+
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   )
