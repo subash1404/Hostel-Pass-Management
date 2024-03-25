@@ -84,12 +84,12 @@ class StudentPassNotifier extends StateNotifier<List<Pass>> {
                 expectedInDate:
                     "${DateTime.parse(pass['expectedIn']).day}-${DateTime.parse(pass['expectedIn']).month}-${DateTime.parse(pass['expectedIn']).year}",
                 expectedInTime:
-                    "${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedIn'])).hour}:${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedIn'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedIn'])).period.name.toUpperCase()}",
+                    "${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedIn'])).hourOfPeriod}:${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedIn'])).minute.toString().padLeft(2, '0')} ${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedIn'])).period.name.toUpperCase()}",
                 expectedOutDate:
                     "${DateTime.parse(pass['expectedOut']).day}-${DateTime.parse(pass['expectedOut']).month}-${DateTime.parse(pass['expectedOut']).year}",
                 expectedOutTime:
-                    "${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).hour}:${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).period.name.toUpperCase()}",
-                showQr: DateTime.parse(pass['expectedOut'])
+                    "${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).hourOfPeriod}:${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).minute.toString().padLeft(2, '0')} ${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).period.name.toUpperCase()}",
+                showQr: pass['status']=="In use" ? true : DateTime.parse(pass['expectedOut'])
                         .add(const Duration(minutes: 60))
                         .isAfter(DateTime.now()) &&
                     DateTime.parse(pass['expectedOut'])
