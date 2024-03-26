@@ -3,7 +3,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/models/pass_request_model.dart';
 import 'package:hostel_pass_management/pages/common/bug_report_page.dart';
-import 'package:hostel_pass_management/pages/student/rules_page.dart';
 import 'package:hostel_pass_management/pages/warden/hostel_stats.dart';
 import 'package:hostel_pass_management/pages/warden/warden_pass_request_page.dart';
 import 'package:hostel_pass_management/providers/warden_pass_provider.dart';
