@@ -132,7 +132,25 @@ class LoginPageState extends ConsumerState<LoginPage> {
         await ref.read(specialPassProvider.notifier).getSpecailPassesFromDB();
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => StatsPage(),
+            builder: (context) => const StatsPage(),
+            // builder: (context) => StatsPage(),
+          ),
+        );
+      } else if (responseData["role"] == "faculty") {
+        await prefs?.setString('jwtToken', responseData['jwtToken']);
+        await prefs?.setString('uid', responseData['uid']);
+        await prefs?.setString('facultyId', responseData['facultyId']);
+        await prefs?.setString('username', responseData['username']);
+        await prefs?.setString('email', responseData['email']);
+        await prefs?.setString('role', responseData['role']);
+        await prefs?.setString('phNo', responseData['phNo']);
+
+        await ref
+            .read(hostelStudentProvider.notifier)
+            .loadHostelStudentsFromDB();
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const StatsPage(),
             // builder: (context) => StatsPage(),
           ),
         );
