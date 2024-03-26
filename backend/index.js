@@ -19,6 +19,8 @@ const Miscellaneous = require("./models/miscellaneous_model");
 const path = require("path");
 const fs = require("fs");
 
+process.env.TZ= 'Asia/Kolkata';
+
 app.use(helmet());
 app.use(cors());
 app.use(bodyParser.json());
