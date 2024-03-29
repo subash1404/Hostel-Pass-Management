@@ -29,9 +29,9 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return RefreshConfiguration(
         headerBuilder: () =>
-            WaterDropHeader(),
+            const WaterDropHeader(),
         headerTriggerDistance: 150.0, // header trigger refresh trigger distance
-        springDescription: SpringDescription(
+        springDescription: const SpringDescription(
           stiffness: 1200,
           damping: 100,
           mass: 2,

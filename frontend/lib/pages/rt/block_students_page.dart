@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hostel_pass_management/models/block_student_model.dart';
 import 'package:hostel_pass_management/pages/student/student_profile_page.dart';
@@ -114,7 +113,7 @@ class _BlockStudentsPageState extends ConsumerState<BlockStudentsPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Column(
                       children: [
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         Padding(
                           padding: const EdgeInsets.only(left: 4),
                           child: Row(
@@ -167,8 +166,8 @@ class _BlockStudentsPageState extends ConsumerState<BlockStudentsPage> {
                         // const SizedBox(
                         //   height: 8,
                         // ),
-                        SizedBox(height: 10),
-                        Divider(height: 0),
+                        const SizedBox(height: 10),
+                        const Divider(height: 0),
                       ],
                     ),
                   ),

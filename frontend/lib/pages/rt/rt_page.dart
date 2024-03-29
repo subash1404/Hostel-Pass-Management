@@ -1,6 +1,4 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hostel_pass_management/models/pass_request_model.dart';
@@ -24,13 +22,13 @@ class RtPage extends ConsumerStatefulWidget {
 }
 
 class _RtPageState extends ConsumerState<RtPage> {
-  RefreshController _refreshController =
+  final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
   @override
   Widget build(BuildContext context) {
-    final passRequests;
-    var studentPasses;
+    final List<PassRequest> passRequests;
+    Iterable<PassRequest> studentPasses;
     List<PassRequest> pendingPasses;
     var students = [];
     int studentsCount = 0;
@@ -110,7 +108,7 @@ class _RtPageState extends ConsumerState<RtPage> {
       ),
       body: SmartRefresher(
         controller: _refreshController,
-        header: ClassicHeader(),
+        header: const ClassicHeader(),
         onRefresh: () async {
           await ref.read(rtPassProvider.notifier).loadPassRequestsFromDB();
           _refreshController.refreshCompleted();

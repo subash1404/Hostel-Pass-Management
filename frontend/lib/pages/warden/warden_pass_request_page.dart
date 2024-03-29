@@ -17,7 +17,7 @@ class WardenPassRequestPage extends ConsumerStatefulWidget {
 }
 
 class _WardenPassRequestPageState extends ConsumerState<WardenPassRequestPage> {
-  RefreshController _refreshController =
+  final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class _WardenPassRequestPageState extends ConsumerState<WardenPassRequestPage> {
       ),
       body: SmartRefresher(
         controller: _refreshController,
-        header: ClassicHeader(),
+        header: const ClassicHeader(),
         onRefresh: () async {
           await ref.read(specialPassProvider.notifier).getSpecailPassesFromDB();
           _refreshController.refreshCompleted();

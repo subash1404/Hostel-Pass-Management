@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -210,7 +209,7 @@ class _StudentPageState extends ConsumerState<StudentPage> {
                                 ),
                               ),
                             )
-                          : Container(
+                          : SizedBox(
                               height: MediaQuery.of(context).size.height * 0.3,
                               child: const Align(
                                 alignment: Alignment.topLeft,
@@ -302,7 +301,7 @@ class _StudentPageState extends ConsumerState<StudentPage> {
       drawer: const StudentDrawer(),
       body: SmartRefresher(
         controller: _refreshController,
-        header: ClassicHeader(),
+        header: const ClassicHeader(),
         onRefresh: () async {
           // await ref
           //     .read(studentAnnouncementNotifier.notifier)

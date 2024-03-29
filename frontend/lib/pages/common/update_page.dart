@@ -25,7 +25,7 @@ class UpdatePage extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Center(
               child: SvgPicture.asset(
                 "assets/images/update.svg",
@@ -86,8 +86,8 @@ class UpdatePage extends StatelessWidget {
                   throw Exception('Could not launch the email Uri');
                 }
               },
-              icon: Icon(Icons.mail),
-              label: Text("Mail us"),
+              icon: const Icon(Icons.mail),
+              label: const Text("Mail us"),
             ),
             const Spacer(),
             const Spacer(),
