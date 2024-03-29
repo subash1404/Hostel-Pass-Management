@@ -44,8 +44,8 @@ app.use("/timeTest", (req, res) => {
 });
 mongoose
   .connect(
-    // "mongodb+srv://NaveenAkash:09naveen@cluster0.3n8lzcq.mongodb.net/outpass?retryWrites=true"
-    "mongodb+srv://NaveenAkash:09naveen@cluster0.3n8lzcq.mongodb.net/outpassTest?retryWrites=true"
+    "mongodb+srv://NaveenAkash:09naveen@cluster0.3n8lzcq.mongodb.net/outpass?retryWrites=true"
+    // "mongodb+srv://NaveenAkash:09naveen@cluster0.3n8lzcq.mongodb.net/outpassTest?retryWrites=true"
   )
   .then(async () => {
     app.listen(3000, () => {

@@ -5,6 +5,7 @@ import 'package:hostel_pass_management/models/pass_request_model.dart';
 import 'package:hostel_pass_management/providers/warden_pass_provider.dart';
 import 'package:hostel_pass_management/widgets/rt/pass_request_item.dart';
 import 'package:hostel_pass_management/widgets/warden/warden_drawer.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 class WardenPassRequestPage extends ConsumerStatefulWidget {
   const WardenPassRequestPage({Key? key}) : super(key: key);
@@ -16,6 +17,8 @@ class WardenPassRequestPage extends ConsumerStatefulWidget {
 }
 
 class _WardenPassRequestPageState extends ConsumerState<WardenPassRequestPage> {
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
   @override
   Widget build(BuildContext context) {
     final passRequests = ref.watch(specialPassProvider);
@@ -28,27 +31,35 @@ class _WardenPassRequestPageState extends ConsumerState<WardenPassRequestPage> {
         title: const Text('Pass Requests'),
         centerTitle: true,
       ),
-      body: DefaultTabController(
-        length: 2,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            const TabBar(
-              tabs: [
-                Tab(text: 'Boys'),
-                Tab(text: 'Girls'),
-              ],
-            ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  _buildPasses(pendingPasses, 'M'),
-                  _buildPasses(pendingPasses, 'F'),
+      body: SmartRefresher(
+        controller: _refreshController,
+        header: ClassicHeader(),
+        onRefresh: () async {
+          await ref.read(specialPassProvider.notifier).getSpecailPassesFromDB();
+          _refreshController.refreshCompleted();
+        },
+        child: DefaultTabController(
+          length: 2,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              const TabBar(
+                tabs: [
+                  Tab(text: 'Boys'),
+                  Tab(text: 'Girls'),
                 ],
               ),
-            ),
-          ],
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    _buildPasses(pendingPasses, 'M'),
+                    _buildPasses(pendingPasses, 'F'),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -56,8 +67,9 @@ class _WardenPassRequestPageState extends ConsumerState<WardenPassRequestPage> {
 
   Widget _buildPasses(List<PassRequest> passes, String gender) {
     TextTheme textTheme = Theme.of(context).textTheme;
-    final filteredPasses =
-        passes.where((pass) => pass.gender == gender).toList();
+    final filteredPasses = passes
+        .where((pass) => pass.gender == gender && pass.isSpecialPass)
+        .toList();
 
     if (filteredPasses.isEmpty) {
       return Center(
@@ -81,14 +93,13 @@ class _WardenPassRequestPageState extends ConsumerState<WardenPassRequestPage> {
         ),
       );
     } else {
-      return ListView.builder(
-        itemBuilder: (context, index) {
-          return PassRequestItem(
-            pass: filteredPasses[index],
-            passRequest: true,
-          );
-        },
-        itemCount: filteredPasses.length,
+      return Column(
+        children: filteredPasses
+            .map((pass) => PassRequestItem(
+                  pass: pass,
+                  passRequest: true,
+                ))
+            .toList(),
       );
     }
   }

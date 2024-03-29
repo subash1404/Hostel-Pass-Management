@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,6 +11,7 @@ import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:hostel_pass_management/widgets/student/active_passes.dart';
 import 'package:hostel_pass_management/widgets/student/student_drawer.dart';
 import 'package:hostel_pass_management/widgets/student/pass_log.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -24,6 +26,7 @@ class _StudentPageState extends ConsumerState<StudentPage> {
   SharedPreferences? prefs = SharedPreferencesManager.preferences;
   List<Announcement>? announcement;
   int unreadAnnouncements = 0;
+  bool isLoading = false;
 
   // Future<void> _markAnnouncementAsRead(String id) async {
   //   try {
@@ -50,6 +53,8 @@ class _StudentPageState extends ConsumerState<StudentPage> {
 
   @override
   Widget build(BuildContext context) {
+    RefreshController _refreshController =
+        RefreshController(initialRefresh: false);
     final List<Pass> passes = ref.watch(studentPassProvider);
     final List<Announcement> annoucement =
         ref.watch(studentAnnouncementNotifier);
@@ -78,9 +83,7 @@ class _StudentPageState extends ConsumerState<StudentPage> {
     Widget buildTickIcon(Announcement announcement) {
       if (!announcement.isRead) {
         return IconButton(
-
           icon: const Icon(Icons.check, color: Colors.green),
-
           onPressed: () async {
             await ref
                 .read(studentAnnouncementNotifier.notifier)
@@ -89,9 +92,7 @@ class _StudentPageState extends ConsumerState<StudentPage> {
           },
         );
       } else {
-
         return const SizedBox();
-
       }
     }
 
@@ -299,17 +300,29 @@ class _StudentPageState extends ConsumerState<StudentPage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
       drawer: const StudentDrawer(),
-      body: Column(
-        children: [
-          ActivePasses(
-            pass: activePass,
-          ),
-          Expanded(
-            child: PassLog(
-              passlog: usedPasses,
+      body: SmartRefresher(
+        controller: _refreshController,
+        header: ClassicHeader(),
+        onRefresh: () async {
+          // await ref
+          //     .read(studentAnnouncementNotifier.notifier)
+          //     .loadAnnouncementsFromDB();
+          await ref.read(studentPassProvider.notifier).loadPassFromDB();
+          _refreshController.refreshCompleted(); 
+        },
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ActivePasses(
+              pass: activePass,
             ),
-          ),
-        ],
+            Expanded(
+              child: PassLog(
+                passlog: usedPasses,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
