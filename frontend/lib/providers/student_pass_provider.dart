@@ -35,6 +35,12 @@ class StudentPassNotifier extends StateNotifier<List<Pass>> {
 
       List<Pass> passes = [];
       for (var pass in responseData["data"]) {
+        // print(DateTime.parse(pass['expectedOut'])
+        //         .add(const Duration(days: 1))
+        //         .isAfter(DateTime.now()) &&
+        //     DateTime.parse(pass['expectedOut'])
+        //         .subtract(const Duration(minutes: 60))
+        //         .isBefore(DateTime.now()));
         passes.add(
           pass["status"] == "Used"
               ? Pass(
@@ -64,7 +70,7 @@ class StudentPassNotifier extends StateNotifier<List<Pass>> {
                   actualOutTime:
                       "${TimeOfDay.fromDateTime(DateTime.parse(pass['exitScanAt'])).hour}:${TimeOfDay.fromDateTime(DateTime.parse(pass['exitScanAt'])).minute.toString().padLeft(2, '0')} ${TimeOfDay.fromDateTime(DateTime.parse(pass['exitScanAt'])).period.name.toUpperCase()}",
                   showQr: DateTime.parse(pass['expectedOut'])
-                          .add(const Duration(minutes: 60))
+                          .add(const Duration(days: 1))
                           .isAfter(DateTime.now()) &&
                       DateTime.parse(pass['expectedOut'])
                           .subtract(const Duration(minutes: 60))
@@ -93,7 +99,7 @@ class StudentPassNotifier extends StateNotifier<List<Pass>> {
                   showQr: pass['status'] == "In use"
                       ? true
                       : DateTime.parse(pass['expectedOut'])
-                              .add(const Duration(minutes: 60))
+                              .add(const Duration(days: 1))
                               .isAfter(DateTime.now()) &&
                           DateTime.parse(pass['expectedOut'])
                               .subtract(const Duration(minutes: 60))
@@ -103,7 +109,7 @@ class StudentPassNotifier extends StateNotifier<List<Pass>> {
         );
       }
       state = passes;
-      if(refreshComplete != null){
+      if (refreshComplete != null) {
         refreshComplete();
       }
       return;

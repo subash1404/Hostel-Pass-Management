@@ -24,7 +24,7 @@ router.get("/getPass", async (req, res) => {
         pass.qrId = aesEncrypt(pass.qrId, process.env.AES_KEY);
         if (pass.status == "Approved") {
           const expectedOutTime = new Date(pass.expectedOut).getTime();
-          const qrEndTime = expectedOutTime + 60 * 60000;
+          const qrEndTime = expectedOutTime + 24 * 60 * 60000;
           console.log(Date.now());
           console.log(qrEndTime);
           if (Date.now() > qrEndTime) {
@@ -58,7 +58,7 @@ router.get("/getPass", async (req, res) => {
     finalPasses.sort((a, b) => {
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     });
-    
+
     res.json({ data: finalPasses });
     // console.log(finalPasses);
   } catch (error) {

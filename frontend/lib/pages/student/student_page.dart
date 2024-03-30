@@ -265,7 +265,7 @@ class _StudentPageState extends ConsumerState<StudentPage> {
                 : () {
                     HapticFeedback.selectionClick();
                     showModalBottomSheet(
-                      scrollControlDisabledMaxHeightRatio: 0.65,
+                      scrollControlDisabledMaxHeightRatio: 0.6,
                       context: context,
                       builder: (context) {
                         return const QrBottomSheet();
@@ -391,11 +391,11 @@ class _QrBottomSheetState extends ConsumerState<QrBottomSheet> {
                           child: Text("Pass not yet approved"),
                         ),
                 ),
-                const SizedBox(height: 25),
-                const Text(
-                  "QR will be expired 1hour after specified leaving time",
-                  textAlign: TextAlign.center,
-                ),
+                // const SizedBox(height: 25),
+                // const Text(
+                //   "QR will be expired 1hour after specified leaving time",
+                //   textAlign: TextAlign.center,
+                // ),
               ],
             ),
           ),
