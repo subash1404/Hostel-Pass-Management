@@ -33,7 +33,6 @@ class _WardenPassRequestPageState extends ConsumerState<WardenPassRequestPage> {
       ),
       body: SmartRefresher(
         controller: _refreshController,
-        header: const ClassicHeader(),
         onRefresh: () async {
           await ref.read(specialPassProvider.notifier).getSpecailPassesFromDB();
           _refreshController.refreshCompleted();

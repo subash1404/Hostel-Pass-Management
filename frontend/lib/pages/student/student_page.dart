@@ -301,7 +301,7 @@ class _StudentPageState extends ConsumerState<StudentPage> {
       drawer: const StudentDrawer(),
       body: SmartRefresher(
         controller: _refreshController,
-        header: const ClassicHeader(),
+        // header: const ClassicHeader(),
         onRefresh: () async {
           // await ref
           //     .read(studentAnnouncementNotifier.notifier)

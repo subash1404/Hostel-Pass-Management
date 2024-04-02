@@ -108,7 +108,6 @@ class _RtPageState extends ConsumerState<RtPage> {
       ),
       body: SmartRefresher(
         controller: _refreshController,
-        header: const ClassicHeader(),
         onRefresh: () async {
           await ref.read(rtPassProvider.notifier).loadPassRequestsFromDB();
           _refreshController.refreshCompleted();

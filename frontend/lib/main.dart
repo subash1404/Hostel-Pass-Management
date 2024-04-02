@@ -28,9 +28,11 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RefreshConfiguration(
-        headerBuilder: () =>
-            const WaterDropHeader(),
-        headerTriggerDistance: 150.0, // header trigger refresh trigger distance
+        headerBuilder:() => ClassicHeader(),
+        // headerBuilder:() => WaterDropHeader(),
+        // headerBuilder:() => MaterialClassicHeader(),
+        // headerBuilder: () => WaterDropMaterialHeader(),
+        headerTriggerDistance: 100.0, // header trigger refresh trigger distance
         springDescription: const SpringDescription(
           stiffness: 1200,
           damping: 100,
