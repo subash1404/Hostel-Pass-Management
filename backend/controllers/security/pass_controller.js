@@ -26,7 +26,7 @@ router.get("/getDetails/:qrData", async (req, res) => {
   const profileBuffer = photoBuffer.toString("base64");
 
   if (
-    new Date(pass.expectedOut).setHours(23, 59, 59, 999).getTime() < Date.now() &&
+    new Date(pass.expectedOut).getTime() + 60 * 60000 < Date.now() &&
     pass.status === "Approved"
   ) {
     res.status(400).json({ message: "QR expired" });
