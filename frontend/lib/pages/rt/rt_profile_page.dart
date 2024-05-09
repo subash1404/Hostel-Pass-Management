@@ -133,7 +133,7 @@ class _RtProfilePageState extends State<RtProfilePage> {
             title: const Padding(
               padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               child: Text(
-                "Type \"SWITCH\" to delete",
+                "Type \"SWITCH\" to confirm",
                 style: TextStyle(fontSize: 18),
                 textAlign: TextAlign.center,
               ),
@@ -207,7 +207,7 @@ class _RtProfilePageState extends State<RtProfilePage> {
               title: const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 child: Text(
-                  "Type \"REVERT\" to delete",
+                  "Type \"REVERT\" to confirm",
                   style: TextStyle(fontSize: 18),
                   textAlign: TextAlign.center,
                 ),
