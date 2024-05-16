@@ -49,7 +49,9 @@ class HostelStudentsNotifier extends StateNotifier<List<BlockStudent>> {
       }
       state = hostelStudents;
     } catch (err) {
+      print(err);
       throw "Someting went wrong";
+      // throw err;
     }
   }
 }

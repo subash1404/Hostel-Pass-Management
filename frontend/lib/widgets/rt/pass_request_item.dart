@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hostel_pass_management/models/pass_request_model.dart';
 import 'package:hostel_pass_management/pages/rt/pass_request_page.dart';
+import 'package:hostel_pass_management/utils/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PassRequestItem extends StatefulWidget {
   const PassRequestItem({
@@ -23,6 +25,7 @@ class _PassRequestItemState extends State<PassRequestItem> {
   final TextEditingController _searchController = TextEditingController();
   // ignore: unused_field
   late List<PassRequest> _filteredPassRequests;
+  SharedPreferences? prefs = SharedPreferencesManager.preferences;
 
   @override
   void initState() {
@@ -36,17 +39,19 @@ class _PassRequestItemState extends State<PassRequestItem> {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
 
     return InkWell(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => PassRequestPage(
-              pass: widget.pass,
-              passRequest: widget.passRequest,
-            ),
-          ),
-        );
-      },
+      onTap: prefs!.getString("role") == "security"
+          ? null
+          : () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PassRequestPage(
+                    pass: widget.pass,
+                    passRequest: widget.passRequest,
+                  ),
+                ),
+              );
+            },
       child: Container(
         padding: const EdgeInsets.fromLTRB(15, 10, 10, 10),
         width: MediaQuery.of(context).size.width,

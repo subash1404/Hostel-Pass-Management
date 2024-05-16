@@ -103,7 +103,9 @@ class WardenPassRequestsNotifier extends StateNotifier<List<PassRequest>> {
       }
       state = specialPasses;
     } catch (err) {
+      print(err);
       throw "Something went wrong";
+      // throw err;
     }
   }
 

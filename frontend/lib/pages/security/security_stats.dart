@@ -73,6 +73,8 @@ class _SecurityStatsState extends ConsumerState<SecurityStats> {
 
     final noOfMaleBlocks = maleBlocksList.length;
     final noOfFemaleBlocks = femaleBlocksList.length;
+    maleInUsePasses.sort((a, b) => a.studentName.compareTo(b.studentName));
+    femaleInUsePasses.sort((a, b) => a.studentName.compareTo(b.studentName));
 
     for (int i = 0; i < noOfMaleBlocks; i++) {
       maleBlockTiles.add(

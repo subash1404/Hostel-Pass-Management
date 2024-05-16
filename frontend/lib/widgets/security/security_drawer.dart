@@ -60,7 +60,7 @@ class SecurityDrawer extends StatelessWidget {
           ),
           ListTile(
             onTap: () async {
-              await prefs!.clear();
+              // await prefs!.clear();
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
@@ -73,7 +73,7 @@ class SecurityDrawer extends StatelessWidget {
           ),
           ListTile(
             onTap: () async {
-              await prefs!.clear();
+              // await prefs!.clear();
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(

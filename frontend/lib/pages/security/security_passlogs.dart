@@ -41,8 +41,20 @@ class _SecurityPassLogsState extends State<SecurityPassLogs>
       appBar: AppBar(
         title: const Text('In Use Passes'),
       ),
-      body: WardenPassLogPage(
-          passes: widget.inUsePasses, blockNo: widget.blockNo),
+      body: widget.inUsePasses.isEmpty
+          ? const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Center(
+                  child: Text("No current in use passes"),
+                ),
+              ],
+            )
+          : WardenPassLogPage(
+              passes: widget.inUsePasses,
+              blockNo: widget.blockNo,
+            ),
     );
   }
 }

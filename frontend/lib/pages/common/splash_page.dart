@@ -83,6 +83,8 @@ class _SplashPageState extends ConsumerState<SplashPage> {
 
   void tokenCheck() async {
     try {
+      print(prefs!.getString("jwtToken"));
+      print(prefs!.getString("role"));
       if (prefs!.getString("jwtToken") != null) {
         if (prefs!.getString("role") == "student") {
           await ref.read(studentPassProvider.notifier).loadPassFromDB();
@@ -143,8 +145,11 @@ class _SplashPageState extends ConsumerState<SplashPage> {
           );
           return;
         } else if (prefs!.getString("role") == "security") {
+          print("Hehe");
           await ref.read(specialPassProvider.notifier).getSpecailPassesFromDB();
-
+          await ref
+              .read(hostelStudentProvider.notifier)
+              .loadHostelStudentsFromDB();
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (context) => const SecurityPage(),
