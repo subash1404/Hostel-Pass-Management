@@ -86,7 +86,7 @@ class _RtDrawerState extends ConsumerState<RtDrawer> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const PassLogsPage(),
+                  builder: (context) => PassLogsPage(),
                 ),
               );
             },

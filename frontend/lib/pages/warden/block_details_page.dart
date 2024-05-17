@@ -24,10 +24,22 @@ class BlockDetailPage extends StatefulWidget {
 class _BlockDetailPageState extends State<BlockDetailPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  bool isGatePass = true;
+  bool isStayPass = true;
+
+  late List<PassRequest> originalInUsePasses;
+  late List<PassRequest> originalUsedPasses;
+
+  List<PassRequest> _inUsePasses = [];
+  List<PassRequest> _usedPasses = [];
 
   @override
   void initState() {
     super.initState();
+    originalInUsePasses = widget.inUsePasses;
+    originalUsedPasses = widget.usedPasses;
+    _inUsePasses = List.from(originalInUsePasses);
+    _usedPasses = List.from(originalUsedPasses);
     _tabController = TabController(length: 3, vsync: this);
   }
 
@@ -37,6 +49,38 @@ class _BlockDetailPageState extends State<BlockDetailPage>
     super.dispose();
   }
 
+  void changeFilter() {
+    setState(() {
+      if (isGatePass && isStayPass) {
+        _inUsePasses = originalInUsePasses
+            .where((element) =>
+                element.type == "GatePass" || element.type == "StayPass")
+            .toList();
+        _usedPasses = originalUsedPasses
+            .where((element) =>
+                element.type == "GatePass" || element.type == "StayPass")
+            .toList();
+      } else if (!isGatePass && !isStayPass) {
+        _inUsePasses.clear();
+        _usedPasses.clear();
+      } else if (isGatePass) {
+        _inUsePasses = originalInUsePasses
+            .where((element) => element.type == "GatePass")
+            .toList();
+        _usedPasses = originalUsedPasses
+            .where((element) => element.type == "GatePass")
+            .toList();
+      } else if (isStayPass) {
+        _inUsePasses = originalInUsePasses
+            .where((element) => element.type == "StayPass")
+            .toList();
+        _usedPasses = originalUsedPasses
+            .where((element) => element.type == "StayPass")
+            .toList();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,41 +88,74 @@ class _BlockDetailPageState extends State<BlockDetailPage>
         title: const Text('Block Detail'),
         bottom: TabBar(
           controller: _tabController,
+          onTap: (value) => setState(() {}),
           tabs: const [
-            Tab(text: 'Details'),
+            Tab(
+              text: 'Details',
+            ),
             Tab(text: 'In use'),
             Tab(text: 'Used'),
           ],
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
+      body: Column(
         children: [
-          BlockStudentsPage(
-            students: widget.students,
-          ),
-          WardenPassLogPage(
-              passes: widget.inUsePasses, blockNo: widget.blockNo),
-          WardenPassLogPage(
-            blockNo: widget.blockNo,
-            passes: widget.usedPasses,
+          _tabController.index != 0 ? SizedBox(height: 10) : SizedBox(),
+          _tabController.index != 0
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(width: 18),
+                    FilterChip(
+                      label: const Text("GatePass"),
+                      onSelected: (val) {
+                        setState(() {
+                          isGatePass = val;
+                        });
+                        changeFilter();
+                      },
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      padding: EdgeInsets.all(0),
+                      selected: isGatePass,
+                    ),
+                    const SizedBox(width: 10),
+                    FilterChip(
+                      label: const Text("StayPass"),
+                      onSelected: (val) {
+                        setState(() {
+                          isStayPass = val;
+                        });
+                        changeFilter();
+                      },
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      padding: EdgeInsets.all(0),
+                      selected: isStayPass,
+                    ),
+                  ],
+                )
+              : SizedBox(),
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                BlockStudentsPage(
+                  students: widget.students,
+                ),
+                WardenPassLogPage(
+                    passes: _inUsePasses, blockNo: widget.blockNo),
+                WardenPassLogPage(
+                  blockNo: widget.blockNo,
+                  passes: _usedPasses,
+                ),
+              ],
+            ),
           ),
         ],
       ),
     );
   }
 }
-
-// class InUsePasses extends ConsumerStatefulWidget {
-//   @override
-//   ConsumerState<ConsumerStatefulWidget> createState() {
-//     return _InUsePassState();
-//   }
-// }
-
-// class _InUsePassState extends ConsumerState<InUsePasses> {
-//   @override
-//   Widget build(BuildContext context) {
-    
-//   }
-// }

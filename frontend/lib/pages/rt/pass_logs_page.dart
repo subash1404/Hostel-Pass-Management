@@ -10,11 +10,10 @@ import 'package:hostel_pass_management/widgets/warden/warden_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PassLogsPage extends ConsumerStatefulWidget {
-  const PassLogsPage(
-      {Key? key, this.inUsePasses, this.usedPasses, this.blockNo})
+  PassLogsPage({Key? key, this.inUsePasses, this.usedPasses, this.blockNo})
       : super(key: key);
-  final List<PassRequest>? inUsePasses;
-  final List<PassRequest>? usedPasses;
+  List<PassRequest>? inUsePasses;
+  List<PassRequest>? usedPasses;
   final int? blockNo;
   @override
   ConsumerState<PassLogsPage> createState() => _PassLogsPageState();
@@ -23,11 +22,87 @@ class PassLogsPage extends ConsumerStatefulWidget {
 class _PassLogsPageState extends ConsumerState<PassLogsPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  bool isGatePass = true;
+  bool isStayPass = true;
+
+  List<PassRequest> originalInUsePasses = [];
+  List<PassRequest> originalUsedPasses = [];
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+
+    // Initialize the original lists based on the role
+    SharedPreferences? prefs = SharedPreferencesManager.preferences;
+    if (prefs!.getString("role") == "warden" &&
+        widget.inUsePasses != null &&
+        widget.usedPasses != null) {
+      originalInUsePasses = widget.inUsePasses!
+          .where((pass) => pass.blockNo == widget.blockNo)
+          .toList();
+      originalUsedPasses = widget.usedPasses!
+          .where((pass) => pass.blockNo == widget.blockNo)
+          .toList();
+    } else if (prefs.getString("role") == "rt") {
+      final passRequests = ref.read(rtPassProvider);
+      if (prefs.getBool('isBoysHostelRt')!) {
+        originalInUsePasses = passRequests
+            .where((pass) => pass.status == 'In use' && pass.gender == 'M')
+            .toList();
+        originalUsedPasses = passRequests
+            .where((pass) => pass.status == 'Used' && pass.gender == 'M')
+            .toList();
+      } else {
+        originalInUsePasses = passRequests
+            .where((pass) => pass.status == 'In use' && pass.gender == 'F')
+            .toList();
+        originalUsedPasses = passRequests
+            .where((pass) => pass.status == 'Used' && pass.gender == 'F')
+            .toList();
+      }
+    }
+    // Initialize the state with the original lists
+    setState(() {
+      _inUsePasses = originalInUsePasses;
+      _usedPasses = originalUsedPasses;
+    });
+  }
+
+  List<PassRequest> _inUsePasses = [];
+  List<PassRequest> _usedPasses = [];
+
+  void changeFilter() {
+    setState(() {
+      if (isGatePass && isStayPass) {
+        _inUsePasses = originalInUsePasses
+            .where((element) =>
+                element.type == "GatePass" || element.type == "StayPass")
+            .toList();
+
+        _usedPasses = originalUsedPasses
+            .where((element) =>
+                element.type == "GatePass" || element.type == "StayPass")
+            .toList();
+      } else if (!isGatePass && !isStayPass) {
+        _inUsePasses.clear();
+        _usedPasses.clear();
+      } else if (isGatePass) {
+        _inUsePasses = originalInUsePasses
+            .where((element) => element.type == "GatePass")
+            .toList();
+        _usedPasses = originalUsedPasses
+            .where((element) => element.type == "GatePass")
+            .toList();
+      } else if (isStayPass) {
+        _inUsePasses = originalInUsePasses
+            .where((element) => element.type == "StayPass")
+            .toList();
+        _usedPasses = originalUsedPasses
+            .where((element) => element.type == "StayPass")
+            .toList();
+      }
+    });
   }
 
   @override
@@ -41,36 +116,6 @@ class _PassLogsPageState extends ConsumerState<PassLogsPage>
     }
     if (prefs.getString("role") == "warden") {
       drawer = const WardenDrawer();
-    }
-    final passRequests;
-    List<PassRequest> inUsePasses = [];
-    List<PassRequest> usedPasses = [];
-    if (prefs.getString("role") == "warden" &&
-        widget.inUsePasses != null &&
-        widget.usedPasses != null) {
-      inUsePasses = widget.inUsePasses!
-          .where((pass) => pass.blockNo == widget.blockNo)
-          .toList();
-      usedPasses = widget.usedPasses!
-          .where((pass) => pass.blockNo == widget.blockNo)
-          .toList();
-    } else if (prefs.getString("role") == "rt") {
-      passRequests = ref.watch(rtPassProvider);
-      if (prefs.getBool('isBoysHostelRt')!) {
-        inUsePasses = passRequests
-            .where((pass) => pass.status == 'In use' && pass.gender == 'M')
-            .toList();
-        usedPasses = passRequests
-            .where((pass) => pass.status == 'Used' && pass.gender == 'M')
-            .toList();
-      } else {
-        inUsePasses = passRequests
-            .where((pass) => pass.status == 'In use' && pass.gender == 'F')
-            .toList();
-        usedPasses = passRequests
-            .where((pass) => pass.status == 'Used' && pass.gender == 'F')
-            .toList();
-      }
     }
 
     return Scaffold(
@@ -86,26 +131,68 @@ class _PassLogsPageState extends ConsumerState<PassLogsPage>
           ],
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
+      body: Column(
         children: [
-          ListView.builder(
-            itemCount: inUsePasses.length,
-            itemBuilder: (context, index) {
-              return PassRequestItem(
-                pass: inUsePasses[index],
-                passRequest: false,
-              );
-            },
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const SizedBox(width: 18),
+              FilterChip(
+                label: Text("GatePass"),
+                onSelected: (val) {
+                  setState(() {
+                    isGatePass = val;
+                  });
+                  changeFilter();
+                },
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                padding: EdgeInsets.all(0),
+                selected: isGatePass,
+              ),
+              const SizedBox(width: 10),
+              FilterChip(
+                label: Text("StayPass"),
+                onSelected: (val) {
+                  setState(() {
+                    isStayPass = val;
+                  });
+                  changeFilter();
+                },
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                padding: EdgeInsets.all(0),
+                selected: isStayPass,
+              ),
+            ],
           ),
-          ListView.builder(
-            itemCount: usedPasses.length,
-            itemBuilder: (context, index) {
-              return PassRequestItem(
-                pass: usedPasses[index],
-                passRequest: false,
-              );
-            },
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                ListView.builder(
+                  itemCount: _inUsePasses.length,
+                  itemBuilder: (context, index) {
+                    return PassRequestItem(
+                      pass: _inUsePasses[index],
+                      passRequest: false,
+                    );
+                  },
+                ),
+                ListView.builder(
+                  itemCount: _usedPasses.length,
+                  itemBuilder: (context, index) {
+                    return PassRequestItem(
+                      pass: _usedPasses[index],
+                      passRequest: false,
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ],
       ),
