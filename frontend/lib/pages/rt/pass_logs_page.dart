@@ -138,35 +138,41 @@ class _PassLogsPageState extends ConsumerState<PassLogsPage>
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const SizedBox(width: 18),
-              FilterChip(
-                label: Text("GatePass"),
-                onSelected: (val) {
-                  setState(() {
-                    isGatePass = val;
-                  });
-                  changeFilter();
-                },
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                padding: EdgeInsets.all(0),
-                selected: isGatePass,
-              ),
-              const SizedBox(width: 10),
-              FilterChip(
-                label: Text("StayPass"),
-                onSelected: (val) {
-                  setState(() {
-                    isStayPass = val;
-                  });
-                  changeFilter();
-                },
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                padding: EdgeInsets.all(0),
-                selected: isStayPass,
-              ),
+                    FilterChip(
+                      label: const Text("GatePass"),
+                      labelPadding: EdgeInsets.symmetric(horizontal: 12),
+                      showCheckmark: false,
+                      onSelected: (val) {
+                        setState(() {
+                          isGatePass = val;
+                        });
+                        changeFilter();
+                      },
+                      // selectedColor: Theme.of(context).colorScheme.tertiaryContainer,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      padding: EdgeInsets.all(0),
+                      selected: isGatePass,
+                    ),
+                    const SizedBox(width: 10),
+                    FilterChip(
+                      label: const Text("StayPass"),
+                      // selectedColor: Theme.of(context).colorScheme.tertiaryContainer,
+                      labelPadding: EdgeInsets.symmetric(horizontal: 12),
+                      showCheckmark: false,
+                      onSelected: (val) {
+                        setState(() {
+                          isStayPass = val;
+                        });
+                        changeFilter();
+                      },
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      padding: EdgeInsets.all(0),
+                      selected: isStayPass,
+                    ),
             ],
           ),
           Expanded(

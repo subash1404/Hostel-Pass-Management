@@ -108,6 +108,8 @@ class _BlockDetailPageState extends State<BlockDetailPage>
                     const SizedBox(width: 18),
                     FilterChip(
                       label: const Text("GatePass"),
+                      labelPadding: EdgeInsets.symmetric(horizontal: 12),
+                      showCheckmark: false,
                       onSelected: (val) {
                         setState(() {
                           isGatePass = val;
@@ -123,6 +125,8 @@ class _BlockDetailPageState extends State<BlockDetailPage>
                     const SizedBox(width: 10),
                     FilterChip(
                       label: const Text("StayPass"),
+                      labelPadding: EdgeInsets.symmetric(horizontal: 12),
+                      showCheckmark: false,
                       onSelected: (val) {
                         setState(() {
                           isStayPass = val;
