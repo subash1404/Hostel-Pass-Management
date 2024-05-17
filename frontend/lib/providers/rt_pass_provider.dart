@@ -105,6 +105,7 @@ class RtPassRequestsNotifier extends StateNotifier<List<PassRequest>> {
                   blockNo: pass["blockNo"],
                   approvedBy: pass["approvedBy"],
                   confirmedWith: pass["confirmedWith"],
+                  isExceeding: pass["isExceeding"],
                 ),
         );
       }

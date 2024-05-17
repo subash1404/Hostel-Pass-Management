@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:hostel_pass_management/pages/security/success_page.dart';
 import 'package:hostel_pass_management/utils/shared_preferences.dart';
 import 'package:hostel_pass_management/widgets/common/profile_item.dart';
 import 'package:hostel_pass_management/widgets/security/security_drawer.dart';
@@ -83,14 +84,18 @@ class _PassDetailsState extends State<PassDetails> {
       if (response.statusCode > 399) {
         throw responseData["message"];
       }
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(responseData["message"]),
-        ),
-      );
+      // ScaffoldMessenger.of(context).clearSnackBars();
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     content: Text(responseData["message"]),
+      //   ),
+      // );
 
       Navigator.pop(context);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => SuccessPage()),
+      );
     } catch (e) {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
@@ -180,7 +185,7 @@ class _PassDetailsState extends State<PassDetails> {
                           height: 200,
                           width: 200,
                           clipBehavior: Clip.antiAlias,
-                          decoration:  BoxDecoration(
+                          decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Image.memory(

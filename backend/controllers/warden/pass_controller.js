@@ -18,17 +18,23 @@ router.get("/getPass", async (req, res) => {
         passes.push({
           ...pass._doc,
           studentName: student.username,
-          gender:student.gender,
+          gender: student.gender,
           dept: student.dept,
           fatherPhNo: student.fatherPhNo,
           motherPhNo: student.motherPhNo,
           phNo: student.phNo,
-          blockNo:student.blockNo,
+          blockNo: student.blockNo,
           roomNo: student.roomNo,
           year: student.year,
           isLate:
-          new Date(pass.entryScanAt).getTime() >
-          new Date(pass.expectedIn).getTime() + 60 * 60000,
+            new Date(pass.entryScanAt).getTime() >
+            new Date(pass.expectedIn).getTime() + 60 * 60000,
+          isExceeding:
+            pass.type === "GatePass"
+              ? new Date().getTime() >
+                new Date(pass.expectedIn).getTime() + 3 * 60 * 60000
+              : new Date().getTime() >
+                new Date(pass.expectedIn).getTime() + 24 * 60 * 60000,
         });
       }
     }

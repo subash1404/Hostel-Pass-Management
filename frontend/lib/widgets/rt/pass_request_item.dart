@@ -111,6 +111,24 @@ class _PassRequestItemState extends State<PassRequestItem> {
                             ),
                           ),
                         ),
+                      if (widget.pass.status == "In use" &&
+                          !widget.passRequest &&
+                          widget.pass.isExceeding!)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: colorScheme.errorContainer,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Text(
+                            "EXCEEDING",
+                            style: textTheme.labelSmall!.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: colorScheme.error,
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                 ),
