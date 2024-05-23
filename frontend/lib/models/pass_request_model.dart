@@ -23,6 +23,7 @@ class PassRequest extends Pass {
       super.actualOutDate,
       super.actualOutTime,
       super.isLate,
+      super.isExceeding,
 
       // This Class Constructor parameters
       required this.dept,
