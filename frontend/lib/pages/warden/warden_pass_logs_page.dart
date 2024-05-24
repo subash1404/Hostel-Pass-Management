@@ -13,15 +13,25 @@ class WardenPassLogPage extends StatelessWidget {
     final filteredpasses =
         passes.where((pass) => pass.blockNo == blockNo).toList();
     return Scaffold(
-      body: ListView.builder(
-        itemCount: filteredpasses.length,
-        itemBuilder: (context, index) {
-          return PassRequestItem(
-            pass: filteredpasses[index],
-            passRequest: false,
-          );
-        },
-      ),
+      body: filteredpasses.length == 0
+          ? const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Center(
+                  child: Text("No Passes Found"),
+                ),
+              ],
+            )
+          : ListView.builder(
+              itemCount: filteredpasses.length,
+              itemBuilder: (context, index) {
+                return PassRequestItem(
+                  pass: filteredpasses[index],
+                  passRequest: false,
+                );
+              },
+            ),
     );
   }
 }
