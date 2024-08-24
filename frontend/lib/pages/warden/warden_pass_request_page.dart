@@ -19,6 +19,7 @@ class WardenPassRequestPage extends ConsumerStatefulWidget {
 class _WardenPassRequestPageState extends ConsumerState<WardenPassRequestPage> {
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
+
   @override
   Widget build(BuildContext context) {
     final passRequests = ref.watch(specialPassProvider);
@@ -31,34 +32,27 @@ class _WardenPassRequestPageState extends ConsumerState<WardenPassRequestPage> {
         title: const Text('Pass Requests'),
         centerTitle: true,
       ),
-      body: SmartRefresher(
-        controller: _refreshController,
-        onRefresh: () async {
-          await ref.read(specialPassProvider.notifier).getSpecailPassesFromDB();
-          _refreshController.refreshCompleted();
-        },
-        child: DefaultTabController(
-          length: 2,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              const TabBar(
-                tabs: [
-                  Tab(text: 'Boys'),
-                  Tab(text: 'Girls'),
+      body: DefaultTabController(
+        length: 2,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            const TabBar(
+              tabs: [
+                Tab(text: 'Boys'),
+                Tab(text: 'Girls'),
+              ],
+            ),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  _buildPasses(pendingPasses, 'M'),
+                  _buildPasses(pendingPasses, 'F'),
                 ],
               ),
-              Expanded(
-                child: TabBarView(
-                  children: [
-                    _buildPasses(pendingPasses, 'M'),
-                    _buildPasses(pendingPasses, 'F'),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -92,13 +86,22 @@ class _WardenPassRequestPageState extends ConsumerState<WardenPassRequestPage> {
         ),
       );
     } else {
-      return Column(
-        children: filteredPasses
-            .map((pass) => PassRequestItem(
-                  pass: pass,
-                  passRequest: true,
-                ))
-            .toList(),
+      return SmartRefresher(
+        controller: _refreshController,
+        onRefresh: () async {
+          await ref.read(specialPassProvider.notifier).getSpecailPassesFromDB();
+          _refreshController.refreshCompleted();
+        },
+        child: SingleChildScrollView(
+          child: Column(
+            children: filteredPasses
+                .map((pass) => PassRequestItem(
+                      pass: pass,
+                      passRequest: true,
+                    ))
+                .toList(),
+          ),
+        ),
       );
     }
   }
