@@ -77,6 +77,10 @@ class _StudentPageState extends ConsumerState<StudentPage> {
           .read(studentAnnouncementNotifier)
           .where((announcement) => !announcement.isBoysHostelRt)
           .toList();
+      unreadAnnouncements = announcement!
+          .where((announcement) => announcement.isRead == false)
+          .toList()
+          .length;
     }
 
     Widget buildTickIcon(Announcement announcement) {
@@ -108,10 +112,9 @@ class _StudentPageState extends ConsumerState<StudentPage> {
                 icon: const Icon(Icons.notifications_none),
                 onPressed: () {
                   showModalBottomSheet(
-                    scrollControlDisabledMaxHeightRatio: 0.6,
                     context: context,
                     builder: (context) {
-                      return announcement!.isNotEmpty
+                      return announcement != null && announcement!.isNotEmpty
                           ? Align(
                               alignment: Alignment.topLeft,
                               child: Padding(
@@ -127,83 +130,53 @@ class _StudentPageState extends ConsumerState<StudentPage> {
                                         ),
                                       ),
                                       const SizedBox(height: 10),
-                                      if (announcement != null &&
-                                          announcement!.isNotEmpty) ...[
-                                        ListTile(
-                                          trailing: !annoucement[0].isRead
-                                              ? buildTickIcon(announcement![0])
-                                              : null,
-                                          // tileColor: announcement![0].isRead
-                                          //     ? Colors.transparent
-                                          //     : Colors.blue[50],
-                                          title: Text(
-                                            "1. ${announcement![0].title}",
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20,
-                                            ),
-                                          ),
-                                          subtitle: Text(
-                                            announcement![0].message,
-                                            style:
-                                                const TextStyle(fontSize: 16),
-                                          ),
-                                          onTap: () async {
-                                            if (!announcement![0].isRead) {
-                                              await ref
-                                                  .read(
-                                                      studentAnnouncementNotifier
-                                                          .notifier)
-                                                  .markAnnouncementAsRead(
-                                                      announcement![0]
-                                                          .announcementId);
-                                              Navigator.of(context).pop();
-                                            }
-                                          },
-                                        ),
-                                        if (announcement!.length > 1) ...[
-                                          const Divider(),
-                                          ListTile(
-                                            trailing: !announcement![1].isRead
-                                                ? buildTickIcon(
-                                                    announcement![1])
-                                                : null,
-                                            // tileColor: announcement![1].isRead
-                                            //     ? Colors.transparent
-                                            //     : Colors.blue[50],
-                                            title: Text(
-                                              "2. ${announcement![1].title}",
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20,
+                                      ListView.builder(
+                                        shrinkWrap: true,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        itemCount: announcement!.length,
+                                        itemBuilder: (context, index) {
+                                          final currentAnnouncement =
+                                              announcement![index];
+                                          return Column(
+                                            children: [
+                                              ListTile(
+                                                trailing:
+                                                    !currentAnnouncement.isRead
+                                                        ? buildTickIcon(
+                                                            currentAnnouncement)
+                                                        : null,
+                                                title: Text(
+                                                  "${index + 1}. ${currentAnnouncement.title}",
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 20,
+                                                  ),
+                                                ),
+                                                subtitle: Text(
+                                                  currentAnnouncement.message,
+                                                  style: const TextStyle(
+                                                      fontSize: 16),
+                                                ),
+                                                onTap: () async {
+                                                  if (!currentAnnouncement
+                                                      .isRead) {
+                                                    await ref
+                                                        .read(
+                                                            studentAnnouncementNotifier
+                                                                .notifier)
+                                                        .markAnnouncementAsRead(
+                                                            currentAnnouncement
+                                                                .announcementId);
+                                                    Navigator.of(context).pop();
+                                                  }
+                                                },
                                               ),
-                                            ),
-                                            subtitle: Text(
-                                              announcement![1].message,
-                                              style:
-                                                  const TextStyle(fontSize: 16),
-                                            ),
-                                            onTap: () async {
-                                              if (!announcement![1].isRead) {
-                                                await ref
-                                                    .read(
-                                                        studentAnnouncementNotifier
-                                                            .notifier)
-                                                    .markAnnouncementAsRead(
-                                                        announcement![1]
-                                                            .announcementId);
-                                                Navigator.of(context).pop();
-                                              }
-                                            },
-                                          ),
-                                          const Divider(),
-                                        ],
-                                      ] else ...[
-                                        const Text(
-                                          "No announcements",
-                                          style: TextStyle(fontSize: 16),
-                                        ),
-                                      ],
+                                              const Divider(),
+                                            ],
+                                          );
+                                        },
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -217,7 +190,7 @@ class _StudentPageState extends ConsumerState<StudentPage> {
                                   child: Text("No announcements"),
                                 ),
                               ),
-                            ); // Return empty SizedBox if there's no announcement
+                            );
                     },
                   );
                 },
@@ -307,7 +280,7 @@ class _StudentPageState extends ConsumerState<StudentPage> {
           //     .read(studentAnnouncementNotifier.notifier)
           //     .loadAnnouncementsFromDB();
           await ref.read(studentPassProvider.notifier).loadPassFromDB();
-          _refreshController.refreshCompleted(); 
+          _refreshController.refreshCompleted();
         },
         child: Column(
           mainAxisSize: MainAxisSize.min,

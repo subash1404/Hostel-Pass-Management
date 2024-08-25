@@ -28,10 +28,10 @@ router.get("/getPass", async (req, res) => {
 
         let expiredPasses=[];
 
-        passes.filter((pass) => {
+        passes.filter(async (pass) => {
             if (pass.isActive) {
                 pass.qrId = aesEncrypt(pass.qrId, process.env.AES_KEY);
-                if (pass.status === "Approved") {
+                if (pass.status === "Approved" || pass.status === "Pending") {
                     const expectedOutTime = new Date(pass.expectedOut).getTime();
                     const qrEndTime = getEndOfDay(expectedOutTime).getTime();
                     // console.log(Date.now());
@@ -42,11 +42,12 @@ router.get("/getPass", async (req, res) => {
                     if (Date.now() > qrEndTime) {
                         pass.isActive = false;
                         pass.status = "Expired";
-                        pass.save();
-                        // await Pass.findOneAndUpdate(
-                        //     {passId: pass.passId},
-                        //     {isActive: false, status: "Expired"}
-                        // );
+                        // pass.save();
+                        console.log("Hellooooo");
+                        await Pass.findOneAndUpdate(
+                            {passId: pass.passId},
+                            {isActive: false, status: "Expired"}
+                        );
                         return false;
                     }
                 }
@@ -177,6 +178,8 @@ router.delete("/deletePass/:passId", async (req, res) => {
         let pass = await Pass.findOne({passId: passId});
         if (pass.status == "In use" || pass.status == "Used") {
             res.status(400).json({message: "Cannot delete In use pass"});
+            console.log("cannot delete pass");
+            return;
         }
         await Pass.deleteOne({passId: passId});
         res.json({message: "Pass deleted Successfully"});

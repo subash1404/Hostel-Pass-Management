@@ -69,17 +69,12 @@ class _ActivePassesState extends ConsumerState<ActivePasses> {
                   style: textTheme.titleLarge,
                 ),
                 IconButton(
-                  onPressed:
-                      widget.pass == null || widget.pass!.status == "In use"
-                          ? null
-                          : () {
-                              deletePassConfirmation(context);
-                            },
-                  icon: Icon(
-                    Icons.delete,
-                    color: colorScheme.onErrorContainer,
-                  ),
-                )
+                    onPressed: () {
+                      deletePassConfirmation(context);
+                    },
+                    icon: widget.pass == null || widget.pass!.status == "In use"
+                        ? const SizedBox.shrink()
+                        : const Icon(Icons.delete))
               ],
             ),
           ),
@@ -132,9 +127,6 @@ class _DeletePassDialogState extends ConsumerState<DeletePassDialog> {
         await ref
             .read(studentPassProvider.notifier)
             .deletePass(widget.pass!.passId);
-        setState(() {
-          isDeletePassLoading = false;
-        });
         toast.removeQueuedCustomToasts();
         toast.showToast(
           child: ToastMsg(
@@ -147,12 +139,14 @@ class _DeletePassDialogState extends ConsumerState<DeletePassDialog> {
     } catch (e) {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            e.toString(),
-          ),
+        const SnackBar(
+          content: Text("Cannot delete pass"),
         ),
       );
+    } finally {
+      setState(() {
+        isDeletePassLoading = false;
+      });
     }
   }
 
