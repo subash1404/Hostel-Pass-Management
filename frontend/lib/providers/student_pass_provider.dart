@@ -183,16 +183,20 @@ class StudentPassNotifier extends StateNotifier<List<Pass>> {
 
   Future<void> deletePass(String passId) async {
     try {
-      await http.delete(
+      var response = await http.delete(
           Uri.parse(
               "${dotenv.env["BACKEND_BASE_API"]}/${prefs!.getString("role")}/pass/deletePass/$passId"),
           headers: {
             "Content-Type": "application/json",
             "Authorization": prefs!.getString("jwtToken")!
           });
+      if (response.statusCode >= 400) {
+        var responseData = jsonDecode(response.body);
+        throw Exception(responseData["message"]);
+      }
       state = state.where((pass) => pass.passId != passId).toList();
     } catch (err) {
-      throw "Something went wrong";
+      throw err.toString();
     }
   }
 

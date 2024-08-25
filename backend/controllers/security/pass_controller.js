@@ -16,20 +16,32 @@ router.get("/getDetails/:qrData", async (req, res) => {
 
   const qr = await Qr.findOne({ qrId: qrId });
   const pass = await Pass.findOne({ passId: qr.passId, isActive: true });
+  console.log(pass);
+  if (pass === null) {
+        res
+          .status(400)
+          .json({ message: "Pass Expired" });
+        return;
+  }
   const student = await Student.findOne({ studentId: pass.studentId });
 
   let photoFilePath = path.join(
     __dirname + "../../../images/profiles/student/" + student.studentId + ".jpg"
   );
-  
+
   const photoBuffer = fs.readFileSync(photoFilePath);
   const profileBuffer = photoBuffer.toString("base64");
 
+  function getEndOfDay(date) {
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999);
+    return endOfDay;
+  }
+
   if (
-    new Date(pass.expectedOut).getTime() + 720 * 60000 < Date.now() &&
-    pass.status === "Approved"
+    getEndOfDay(pass.expectedOut).getTime() < Date.now() && pass.status != "In use"
   ) {
-    res.status(400).json({ message: "QR expired" });
+    res.status(400).json({ message: "Pass expired" });
     return;
   }
 

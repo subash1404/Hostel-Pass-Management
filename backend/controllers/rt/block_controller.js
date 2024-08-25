@@ -20,8 +20,6 @@ router.get("/getStudents", async (req, res, next) => {
         email: student._doc.studentId + "@svce.ac.in",
       });
     }
-
-    console.log(blockStudents);
     res.json(blockStudents);
   } catch (e) {
     console.log(e);
