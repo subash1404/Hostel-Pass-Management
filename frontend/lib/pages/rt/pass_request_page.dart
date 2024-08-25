@@ -188,7 +188,8 @@ class _PassRequestPageState extends ConsumerState<PassRequestPage> {
               ),
               PassTile(
                 title: "Phone No",
-                content: prefs.getString("phNo")!,
+                // content: prefs.getString("phNo")!,
+                content: widget.pass.phNo,
               ),
               if (!widget.passRequest)
                 PassTile(
@@ -407,7 +408,7 @@ class _PassRequestPageState extends ConsumerState<PassRequestPage> {
                                         ));
                                       } else {
                                         ScaffoldMessenger.of(context)
-                                            .clearMaterialBanners();
+                                            .clearSnackBars();
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
                                           const SnackBar(
