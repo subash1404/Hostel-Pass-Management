@@ -11,6 +11,12 @@ const Security = require("../../models/security_model");
 const Pass = require("../../models/pass_model");
 const { aesEncrypt, aesDecrypt } = require("../../utils/aes");
 
+function getEndOfDay(date) {
+  const endOfDay = new Date(date);
+  endOfDay.setHours(23, 59, 59, 999);
+  return endOfDay;
+}
+
 router.get("/getDetails/:qrData", async (req, res) => {
   const qrId = aesDecrypt(req.params.qrData, process.env.AES_KEY);
 
@@ -31,12 +37,6 @@ router.get("/getDetails/:qrData", async (req, res) => {
 
   const photoBuffer = fs.readFileSync(photoFilePath);
   const profileBuffer = photoBuffer.toString("base64");
-
-  function getEndOfDay(date) {
-    const endOfDay = new Date(date);
-    endOfDay.setHours(23, 59, 59, 999);
-    return endOfDay;
-  }
 
   if (
     getEndOfDay(pass.expectedOut).getTime() < Date.now() && pass.status != "In use"
