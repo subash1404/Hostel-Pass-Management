@@ -64,8 +64,17 @@ router.get("/getPass", async (req, res) => {
             finalPasses.push({
                 ...pass,
                 isLate:
-                    new Date(pass.entryScanAt).getTime() >
-                    new Date(pass.expectedIn).getTime() + 60 * 60000,
+                    pass.type === "GatePass"
+                        ? new Date(pass.entryScanAt).getTime() >
+                        new Date(pass.expectedIn).getTime() + 60 * 60000
+                        : new Date().getTime() >
+                        getEndOfDay(pass.expectedIn).getTime(),
+                isExceeding:
+                    pass.type === "GatePass"
+                        ? new Date().getTime() >
+                        new Date(pass.expectedIn).getTime() + 3 * 60 * 60000
+                        : new Date().getTime() >
+                        getEndOfDay(pass.expectedIn).getTime(),
             });
         });
 
