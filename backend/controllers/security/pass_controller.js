@@ -11,6 +11,12 @@ const Security = require("../../models/security_model");
 const Pass = require("../../models/pass_model");
 const { aesEncrypt, aesDecrypt } = require("../../utils/aes");
 
+function getEndOfDay(date) {
+  const endOfDay = new Date(date);
+  endOfDay.setHours(23, 59, 59, 999);
+  return endOfDay;
+}
+
 router.get("/getDetails/:qrData", async (req, res) => {
   const qrId = aesDecrypt(req.params.qrData, process.env.AES_KEY);
 
@@ -31,12 +37,6 @@ router.get("/getDetails/:qrData", async (req, res) => {
 
   const photoBuffer = fs.readFileSync(photoFilePath);
   const profileBuffer = photoBuffer.toString("base64");
-
-  function getEndOfDay(date) {
-    const endOfDay = new Date(date);
-    endOfDay.setHours(23, 59, 59, 999);
-    return endOfDay;
-  }
 
   if (
     getEndOfDay(pass.expectedOut).getTime() < Date.now() && pass.status != "In use"
@@ -104,14 +104,17 @@ router.get("/getPass", async (req, res) => {
           roomNo: student.roomNo,
           year: student.year,
           isLate:
-            new Date(pass.entryScanAt).getTime() >
-            new Date(pass.expectedIn).getTime() + 60 * 60000,
+              pass.type === "GatePass"
+                  ? new Date(pass.entryScanAt).getTime() >
+                  new Date(pass.expectedIn).getTime() + 60 * 60000
+                  : new Date().getTime() >
+                  getEndOfDay(pass.expectedIn).getTime(),
           isExceeding:
-            pass.type === "GatePass"
-              ? new Date().getTime() >
-                new Date(pass.expectedIn).getTime() + 3 * 60 * 60000
-              : new Date().getTime() >
-                new Date(pass.expectedIn).getTime() + 24 * 60 * 60000,
+              pass.type === "GatePass"
+                  ? new Date().getTime() >
+                  new Date(pass.expectedIn).getTime() + 3 * 60 * 60000
+                  : new Date().getTime() >
+                  getEndOfDay(pass.expectedIn).getTime(),
         });
       }
     }
