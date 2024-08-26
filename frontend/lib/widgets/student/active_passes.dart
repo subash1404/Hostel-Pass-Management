@@ -132,9 +132,6 @@ class _DeletePassDialogState extends ConsumerState<DeletePassDialog> {
         await ref
             .read(studentPassProvider.notifier)
             .deletePass(widget.pass!.passId);
-        setState(() {
-          isDeletePassLoading = false;
-        });
         toast.removeQueuedCustomToasts();
         toast.showToast(
           child: ToastMsg(
@@ -147,12 +144,14 @@ class _DeletePassDialogState extends ConsumerState<DeletePassDialog> {
     } catch (e) {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            e.toString(),
-          ),
+        const SnackBar(
+          content: Text("Cannot delete pass"),
         ),
       );
+    } finally {
+      setState(() {
+        isDeletePassLoading = false;
+      });
     }
   }
 

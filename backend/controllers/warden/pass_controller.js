@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const Student = require("../../models/student_model");
 const Pass = require("../../models/pass_model");
+const { aesEncrypt, aesDecrypt } = require("../../utils/aes");
+
 
 router.get("/getPass", async (req, res) => {
   try {
@@ -38,6 +40,39 @@ router.get("/getPass", async (req, res) => {
         });
       }
     }
+
+    function getEndOfDay(date) {
+      const endOfDay = new Date(date);
+      endOfDay.setHours(23, 59, 59, 999);
+      return endOfDay;
+    }
+    
+    passes.filter(async (pass) => {
+      if (pass.isActive) {
+        pass.qrId = aesEncrypt(pass.qrId, process.env.AES_KEY);
+        if (pass.status === "Approved" || pass.status === "Pending") {
+          const expectedOutTime = new Date(pass.expectedOut).getTime();
+          const qrEndTime = getEndOfDay(expectedOutTime).getTime();
+          // console.log(Date.now());
+          // console.log(qrEndTime);
+          // const timestamp = 1715192999999;
+          // const date = new Date(timestamp);
+          // console.log(date.toString());
+          if (Date.now() > qrEndTime) {
+            pass.isActive = false;
+            pass.status = "Expired";
+            // pass.save();
+            console.log("rt");
+            await Pass.findOneAndUpdate(
+              { passId: pass.passId },
+              { isActive: false, status: "Expired" }
+            );
+            return false;
+          }
+        }
+      }
+      return true;
+    });
 
     passes.sort((a, b) => {
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
