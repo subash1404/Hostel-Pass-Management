@@ -54,8 +54,8 @@ class LoginPageState extends ConsumerState<LoginPage> {
         body: jsonEncode(
           {
             "email": _emailController.text.length == 10
-                ? _emailController.text + "svce.ac.in"
-                : _emailController.text,
+                ? "${_emailController.text.toLowerCase()}@svce.ac.in"
+                : _emailController.text.toLowerCase(),
             "password": _passController.text,
           },
         ),
