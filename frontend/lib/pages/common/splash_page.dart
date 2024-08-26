@@ -25,6 +25,7 @@ import 'package:http/http.dart' as http;
 
 class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});
+
   @override
   ConsumerState<SplashPage> createState() {
     return _SplashPageState();
@@ -73,9 +74,9 @@ class _SplashPageState extends ConsumerState<SplashPage> {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            err.toString(),
-          ),
+          content: Text("Please check your internet connection"),
+          action:
+              SnackBarAction(label: "Retry", onPressed: () => {initState()}),
         ),
       );
     }

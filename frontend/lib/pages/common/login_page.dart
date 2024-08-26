@@ -53,7 +53,9 @@ class LoginPageState extends ConsumerState<LoginPage> {
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(
           {
-            "email": _emailController.text,
+            "email": _emailController.text.length == 10
+                ? _emailController.text + "svce.ac.in"
+                : _emailController.text,
             "password": _passController.text,
           },
         ),
@@ -267,6 +269,7 @@ class LoginPageState extends ConsumerState<LoginPage> {
   }
 
   bool _obscureText = true;
+
   @override
   Widget build(BuildContext context) {
     // ignore: unused_local_variable

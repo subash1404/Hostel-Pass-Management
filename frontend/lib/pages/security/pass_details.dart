@@ -239,13 +239,13 @@ class _PassDetailsState extends State<PassDetails> {
                               ProfileItem(
                                 attribute: "Leaving Time",
                                 value:
-                                    "${DateTime.parse(passData['leavingDateTime']).day}-${DateTime.parse(passData['leavingDateTime']).month}-${DateTime.parse(passData['leavingDateTime']).year} ${TimeOfDay.fromDateTime(DateTime.parse(passData['leavingDateTime'])).hourOfPeriod}:${TimeOfDay.fromDateTime(DateTime.parse(passData['leavingDateTime'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(passData['leavingDateTime'])).period.name}",
+                                    "${DateTime.parse(passData['leavingDateTime']).day}-${DateTime.parse(passData['leavingDateTime']).month}-${DateTime.parse(passData['leavingDateTime']).year} ${TimeOfDay.fromDateTime(DateTime.parse(passData['leavingDateTime'])).hourOfPeriod}:${TimeOfDay.fromDateTime(DateTime.parse(passData['leavingDateTime'])).minute.toString().padLeft(2, '0')} ${TimeOfDay.fromDateTime(DateTime.parse(passData['leavingDateTime'])).period.name}",
                               ),
                               const Divider(height: 0),
                               ProfileItem(
                                 attribute: "Retruning Time",
                                 value:
-                                    "${DateTime.parse(passData['returningDateTime']).day}-${DateTime.parse(passData['returningDateTime']).month}-${DateTime.parse(passData['returningDateTime']).year} ${TimeOfDay.fromDateTime(DateTime.parse(passData['returningDateTime'])).hourOfPeriod}:${TimeOfDay.fromDateTime(DateTime.parse(passData['returningDateTime'])).minute} ${TimeOfDay.fromDateTime(DateTime.parse(passData['returningDateTime'])).period.name}",
+                                    "${DateTime.parse(passData['returningDateTime']).day}-${DateTime.parse(passData['returningDateTime']).month}-${DateTime.parse(passData['returningDateTime']).year} ${TimeOfDay.fromDateTime(DateTime.parse(passData['returningDateTime'])).hourOfPeriod}:${TimeOfDay.fromDateTime(DateTime.parse(passData['returningDateTime'])).minute.toString().padLeft(2, '0')} ${TimeOfDay.fromDateTime(DateTime.parse(passData['returningDateTime'])).period.name}",
                               ),
                               const Divider(height: 0),
                               ProfileItem(

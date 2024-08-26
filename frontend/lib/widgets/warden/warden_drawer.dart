@@ -90,8 +90,7 @@ class _WardenDrawerState extends ConsumerState<WardenDrawer> {
                       color: Theme.of(context).colorScheme.tertiaryContainer,
                     ),
                     child: Text(
-                      "10",
-                      // pendingpassesLength.toString(),
+                      pendingpassesLength.toString(),
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   )

@@ -99,7 +99,7 @@ class _ActivePassesState extends ConsumerState<ActivePasses> {
                 const Padding(
                   padding: EdgeInsets.all(20.0),
                   child: Center(
-                    child: Text("No Currently Active Passes"),
+                    child: Text("No Active Pass"),
                   ),
                 ),
             ],

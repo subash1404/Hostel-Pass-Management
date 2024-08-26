@@ -7,6 +7,7 @@ import 'package:hostel_pass_management/providers/student_pass_provider.dart';
 
 class NewPassPage extends ConsumerStatefulWidget {
   const NewPassPage({super.key});
+
   @override
   ConsumerState<ConsumerStatefulWidget> createState() {
     return _NewPassPageState();
@@ -607,6 +608,16 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
       );
       return;
     }
+
+    if (passType == "GatePass" && outTime == inTime) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('In time and out time cannot be same'),
+        ),
+      );
+      return;
+    }
+
     FocusScope.of(context).unfocus();
     try {
       setState(() {
