@@ -579,6 +579,8 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
         inTime != null &&
         outDate != null &&
         outTime != null) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+
       if (passType == 'StayPass' && (inDate!.isBefore(outDate!))) {
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('In date should be after out date')));
@@ -601,6 +603,8 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
         return;
       }
     } else {
+      ScaffoldMessenger.of(context).clearSnackBars();
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Please select all date and time fields.'),
@@ -610,6 +614,8 @@ class _NewPassPageState extends ConsumerState<NewPassPage> {
     }
 
     if (passType == "GatePass" && outTime == inTime) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('In time and out time cannot be same'),

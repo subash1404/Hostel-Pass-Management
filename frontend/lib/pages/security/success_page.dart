@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 class SuccessPage extends StatefulWidget {
   @override
@@ -21,8 +22,10 @@ class _SuccessPageState extends State<SuccessPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: Image.asset(
-          "assets/animations/success.webp",
+        child: LottieBuilder.asset(
+          'assets/animations/success2.json',
+          width: 300,
+          // repeat: true,
           fit: BoxFit.cover,
         ),
       ),

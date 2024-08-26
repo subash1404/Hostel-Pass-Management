@@ -69,16 +69,15 @@ class _ActivePassesState extends ConsumerState<ActivePasses> {
                   style: textTheme.titleLarge,
                 ),
                 IconButton(
-                  onPressed:
-                      widget.pass == null || widget.pass!.status == "In use"
-                          ? null
-                          : () {
-                              deletePassConfirmation(context);
-                            },
-                  icon: Icon(
-                    Icons.delete,
-                    color: colorScheme.onErrorContainer,
-                  ),
+                  onPressed: () {
+                    deletePassConfirmation(context);
+                  },
+                  icon: widget.pass == null || widget.pass!.status == "In use"
+                      ? const SizedBox.shrink()
+                      : Icon(
+                          Icons.delete,
+                          color: colorScheme.onErrorContainer,
+                        ),
                 )
               ],
             ),

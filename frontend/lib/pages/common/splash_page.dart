@@ -74,9 +74,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Please check your internet connection"),
-          action:
-              SnackBarAction(label: "Retry", onPressed: () => {initState()}),
+          content: Text("Please check your internet connection and try again"),
         ),
       );
     }
