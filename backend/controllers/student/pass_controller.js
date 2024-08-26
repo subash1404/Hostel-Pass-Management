@@ -28,7 +28,7 @@ router.get("/getPass", async (req, res) => {
 
         let expiredPasses=[];
 
-        passes.filter((pass) => {
+        passes.filter(async (pass) => {
             if (pass.isActive) {
                 pass.qrId = aesEncrypt(pass.qrId, process.env.AES_KEY);
                 if (pass.status === "Approved") {
@@ -41,12 +41,12 @@ router.get("/getPass", async (req, res) => {
                     // console.log(date.toString());
                     if (Date.now() > qrEndTime) {
                         pass.isActive = false;
-                        pass.status = "Expired";
-                        pass.save();
-                        // await Pass.findOneAndUpdate(
-                        //     {passId: pass.passId},
-                        //     {isActive: false, status: "Expired"}
-                        // );
+                        pass.status = "Expired1";
+                        // pass.save();
+                        await Pass.findOneAndUpdate(
+                            {passId: pass.passId},
+                            {isActive: false, status: "Expired"},
+                        );
                         return false;
                     }
                 }

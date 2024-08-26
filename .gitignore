@@ -17,6 +17,13 @@ frontend/*.iws
 frontend/.idea/
 
 
+#data export
+data_export/package-lock.json
+data_export/*.csv
+data_export/node_modules/
+data_export/outpass*.json
+data_export/.env
+
 
 
 # The .vscode folder contains launch configuration and tasks you configure in
