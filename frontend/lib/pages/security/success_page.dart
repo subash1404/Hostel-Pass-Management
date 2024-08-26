@@ -23,7 +23,7 @@ class _SuccessPageState extends State<SuccessPage> {
       backgroundColor: Colors.white,
       body: Center(
         child: LottieBuilder.asset(
-          'assets/animations/success2.json',
+          'assets/animations/success.json',
           width: 300,
           // repeat: true,
           fit: BoxFit.cover,
