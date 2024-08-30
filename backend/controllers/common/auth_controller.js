@@ -24,7 +24,8 @@ const transporter = nodemailer.createTransport({
 });
 
 router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
+  let { email, password } = req.body;
+  email = email.trim().toLowerCase();
 
   const user = await User.findOne({ email });
   if (!user) {
