@@ -26,7 +26,7 @@ const transporter = nodemailer.createTransport({
 router.post("/login", async (req, res) => {
   let { email, password } = req.body;
   email = email.trim().toLowerCase();
-
+  
   const user = await User.findOne({ email });
   if (!user) {
     return res.status(401).json({ message: "User not found" });
