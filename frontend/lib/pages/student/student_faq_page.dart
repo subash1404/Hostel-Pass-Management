@@ -64,12 +64,6 @@ class StudentFaqPage extends StatelessWidget {
                   title: 'Pass Expiry',
                   subtitle:
                       'Failure to scan your pass 1 hour after the mentioned out time will result in pass expiry',
-                ),
-                FaqItem(
-                  icon: Icons.question_answer,
-                  title: 'Pass Expiry',
-                  subtitle:
-                      'Failure to scan your pass 1 hour after the mentioned out time will result in pass expiry',
                   isFinal: true,
                 ),
               ],
