@@ -61,7 +61,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Something went wrong"),
+          content: Text("Unable to fetch profile photo"),
         ),
       );
     }
