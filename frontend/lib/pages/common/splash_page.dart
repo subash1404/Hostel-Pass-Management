@@ -73,8 +73,8 @@ class _SplashPageState extends ConsumerState<SplashPage> {
       }
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Please check your internet connection and try again"),
+        const SnackBar(
+          content: Text("Internet connection error"),
         ),
       );
     }

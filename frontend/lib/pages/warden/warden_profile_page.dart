@@ -44,7 +44,7 @@ class _WardenProfilePageState extends State<WardenProfilePage> {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Something went wrong"),
+          content: Text("Unable to fetch profile photo"),
         ),
       );
     }
