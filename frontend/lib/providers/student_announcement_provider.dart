@@ -12,7 +12,7 @@ class StudentAnnouncementNotifier extends StateNotifier<List<Announcement>> {
   SharedPreferences? prefs = SharedPreferencesManager.preferences;
 
   Future<void> loadAnnouncementsFromDB() async {
-    if (prefs?.getString("jwtToken") == null) {
+    if (prefs?.getString("jwtToken") == null) { 
       return;
     }
     try {
