@@ -9,6 +9,7 @@ frontend/.buildlog/
 frontend/.history
 frontend/.svn/
 frontend/migrate_working_dir/
+frontend/pubspec.lock
 
 # IntelliJ related
 frontend/*.iml
