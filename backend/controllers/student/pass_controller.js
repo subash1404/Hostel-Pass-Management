@@ -78,7 +78,7 @@ router.get("/getPass", async (req, res) => {
                 showQr: pass.status === "In use"
                     ? true
                     : new Date(pass.expectedOut).getTime() + 24 * 60 * 60000 > Date.now() &&
-                    new Date(pass.expectedOut).getTime() - 60 * 60000 < Date.now(),
+                    new Date(pass.expectedOut).getTime() - 180 * 60000 < Date.now(),
 
             });
         });
@@ -143,7 +143,7 @@ router.post("/newPass", async (req, res) => {
 
         if (oldPassCount >= parseInt(process.env.PASS_LIMIT)) {
             res.status(400).json({
-                message: `Limit of ${process.env.PASS_LIMIT} pass has been reached this month. Please apply for special pass`,
+                message: `Passes allocated for this month are over. Please apply for a special pass`,
             });
             return;
         }
