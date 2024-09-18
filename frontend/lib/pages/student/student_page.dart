@@ -356,7 +356,7 @@ class _QrBottomSheetState extends ConsumerState<QrBottomSheet> {
                             )
                           : const Center(
                               child: Text(
-                                "QR will be generated 1hour before leaving time",
+                                "QR will be generated 3hour before leaving time",
                                 textAlign: TextAlign.center,
                               ),
                             )

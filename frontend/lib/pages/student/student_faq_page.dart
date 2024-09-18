@@ -33,7 +33,12 @@ class StudentFaqPage extends StatelessWidget {
                   icon: Icons.question_answer,
                   title: 'Pass Limit',
                   subtitle:
-                      'You are allotted 5 passes per month.If you want more apply for a special pass',
+                      'You are allotted only a limited number of passes per month. If you want more, apply for a special pass',
+                ),
+                FaqItem(
+                  icon: Icons.question_answer,
+                  title: 'Special Pass',
+                  subtitle: 'Special pass requests are sent to Warden',
                 ),
                 FaqItem(
                   icon: Icons.question_answer,
