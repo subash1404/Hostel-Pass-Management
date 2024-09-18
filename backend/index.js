@@ -62,6 +62,10 @@ app.get("/miscellaneous", async (req, res) => {
   }
 });
 
+app.get("/getBranch", (req, res) => {
+  res.json({branch: "main"});
+});
+
 app.get("/getTime", (req, res) => {
   res.json({
     dateNow: Date.now(),
