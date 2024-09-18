@@ -6,8 +6,8 @@ const User = require("../../models/user_model");
 const Pass = require("../../models/pass_model");
 const QR = require("../../models/qr_model");
 const Student = require("../../models/student_model");
-const {v4: uuidv4} = require("uuid");
-const {aesEncrypt, aesDecrypt} = require("../../utils/aes");
+const { v4: uuidv4 } = require("uuid");
+const { aesEncrypt, aesDecrypt } = require("../../utils/aes");
 
 router.get("/getPass", async (req, res) => {
     try {
@@ -26,7 +26,7 @@ router.get("/getPass", async (req, res) => {
             return endOfDay;
         }
 
-        let expiredPasses=[];
+        let expiredPasses = [];
 
         passes.filter(async (pass) => {
             if (pass.isActive) {
@@ -45,8 +45,8 @@ router.get("/getPass", async (req, res) => {
                         // pass.save();
                         console.log("Hellooooo");
                         await Pass.findOneAndUpdate(
-                            {passId: pass.passId},
-                            {isActive: false, status: "Expired"}
+                            { passId: pass.passId },
+                            { isActive: false, status: "Expired" }
                         );
                         return false;
                     }
@@ -75,6 +75,11 @@ router.get("/getPass", async (req, res) => {
                         new Date(pass.expectedIn).getTime() + 3 * 60 * 60000
                         : new Date().getTime() >
                         getEndOfDay(pass.expectedIn).getTime(),
+                showQr: pass.status === "In use"
+                    ? true
+                    : new Date(pass.expectedOut).getTime() + 24 * 60 * 60000 > Date.now() &&
+                    new Date(pass.expectedOut).getTime() - 60 * 60000 < Date.now(),
+
             });
         });
 
@@ -82,10 +87,10 @@ router.get("/getPass", async (req, res) => {
             return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
         });
 
-        res.json({data: finalPasses});
+        res.json({ data: finalPasses });
         // console.log(finalPasses);
     } catch (error) {
-        res.status(500).json({message: "Internal Server Error"});
+        res.status(500).json({ message: "Internal Server Error" });
     }
 });
 
@@ -143,7 +148,7 @@ router.post("/newPass", async (req, res) => {
             return;
         }
 
-        await new QR({passId, qrId, studentId}).save();
+        await new QR({ passId, qrId, studentId }).save();
         const student = await Student.findOne({
             studentId: req.body.USER_studentId,
         });
@@ -177,21 +182,21 @@ router.post("/newPass", async (req, res) => {
         });
     } catch (e) {
         console.log(e);
-        res.status(500).json({message: "Internal Server Error"});
+        res.status(500).json({ message: "Internal Server Error" });
     }
 });
 
 router.delete("/deletePass/:passId", async (req, res) => {
     try {
         const passId = req.params.passId;
-        let pass = await Pass.findOne({passId: passId});
+        let pass = await Pass.findOne({ passId: passId });
         if (pass.status == "In use" || pass.status == "Used") {
-            res.status(400).json({message: "Cannot delete In use pass"});
+            res.status(400).json({ message: "Cannot delete In use pass" });
             console.log("cannot delete pass");
             return;
         }
-        await Pass.deleteOne({passId: passId});
-        res.json({message: "Pass deleted Successfully"});
+        await Pass.deleteOne({ passId: passId });
+        res.json({ message: "Pass deleted Successfully" });
     } catch (err) {
         console.log(err);
         res.status(500).json("Internal Server Error");

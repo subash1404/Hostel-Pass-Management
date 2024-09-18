@@ -96,14 +96,15 @@ class StudentPassNotifier extends StateNotifier<List<Pass>> {
                       "${DateTime.parse(pass['expectedOut']).day}-${DateTime.parse(pass['expectedOut']).month}-${DateTime.parse(pass['expectedOut']).year}",
                   expectedOutTime:
                       "${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).hourOfPeriod}:${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).minute.toString().padLeft(2, '0')} ${TimeOfDay.fromDateTime(DateTime.parse(pass['expectedOut'])).period.name.toUpperCase()}",
-                  showQr: pass['status'] == "In use"
-                      ? true
-                      : DateTime.parse(pass['expectedOut'])
-                              .add(const Duration(days: 1))
-                              .isAfter(DateTime.now()) &&
-                          DateTime.parse(pass['expectedOut'])
-                              .subtract(const Duration(minutes: 60))
-                              .isBefore(DateTime.now()),
+                  // showQr: pass['status'] == "In use"
+                  //     ? true
+                  //     : DateTime.parse(pass['expectedOut'])
+                  //             .add(const Duration(days: 1))
+                  //             .isAfter(DateTime.now()) &&
+                  //         DateTime.parse(pass['expectedOut'])
+                  //             .subtract(const Duration(minutes: 60))
+                  //             .isBefore(DateTime.now()),
+                  showQr: pass["showQr"],
                   isSpecialPass: pass["isSpecialPass"],
                 ),
         );

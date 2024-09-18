@@ -69,9 +69,7 @@ const backupDatabase = async () => {
 
 // Set up a route to serve the backup file
 app.get("/backup", (req, res) => {
-  if (fs.existsSync(backupFilePath)) {
-    res.sendFile(backupFilePath);
-  } else {
-    res.status(404).send("Backup file not found");
-  }
+  backupDatabase().then(()=>{
+    res.send("Success");
+  })
 });
