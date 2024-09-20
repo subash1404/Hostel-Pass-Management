@@ -1,8 +1,7 @@
 const { MongoClient } = require("mongodb");
-const createCsvWriter = require("csv-writer").createObjectCsvWriter;
+const { Readable } = require("stream");
+const createCsvWriter = require("csv-writer").createObjectCsvStringifier;
 const express = require("express");
-const fs = require("fs");
-const path = require("path");
 const moment = require("moment");
 require("dotenv").config();
 
@@ -18,7 +17,7 @@ function formatDate(date) {
   return moment(date).format("DD-MM-YYYY hh:mm A");
 }
 
-async function exportData(blockNoFilter, genderFilter) {
+async function exportData(res, blockNoFilter, genderFilter) {
   const client = new MongoClient(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -28,13 +27,6 @@ async function exportData(blockNoFilter, genderFilter) {
   try {
     await client.connect();
     console.log("Connected to database!");
-
-    const filePath = "passes_students_data.csv";
-
-    // If the file exists, delete it to prevent appending to old data
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
-    }
 
     const db = client.db(dbName);
     const passCollection = db.collection(passCollectionName);
@@ -102,9 +94,8 @@ async function exportData(blockNoFilter, genderFilter) {
       })
       .filter(record => record !== null); // Filter out any null records (passes without matching students)
 
-    // Create a new CSV writer for each export to ensure headers are written first
-    const csvWriter = createCsvWriter({
-      path: filePath,
+    // Create a CSV stringifier
+    const csvStringifier = createCsvWriter({
       header: [
         { id: "studentId", title: "Student ID" },
         { id: "type", title: "Type" },
@@ -137,14 +128,24 @@ async function exportData(blockNoFilter, genderFilter) {
       ],
     });
 
-    if (records.length > 0) {
-      await csvWriter.writeRecords(records);
-      console.log("Data exported to CSV successfully!");
-    } else {
-      console.log("No records found to export.");
-    }
+    // Write CSV data to a string
+    const csvData = csvStringifier.getHeaderString() + csvStringifier.stringifyRecords(records);
+
+    // Create a readable stream from the CSV data
+    const csvStream = new Readable();
+    csvStream.push(csvData);
+    csvStream.push(null); // Signal end of stream
+
+    // Set the response headers for a file download
+    res.setHeader("Content-disposition", "attachment; filename=passes_students_data.csv");
+    res.setHeader("Content-Type", "text/csv");
+
+    // Pipe the CSV stream directly to the response
+    csvStream.pipe(res);
+
   } catch (err) {
     console.error("An error occurred:", err);
+    res.status(500).send("An error occurred while exporting data.");
   } finally {
     await client.close();
   }
@@ -153,27 +154,13 @@ async function exportData(blockNoFilter, genderFilter) {
 // Boys' Hostel API
 app.get("/fetch/boys", async (req, res) => {
   const blockNo = req.query.blockNo ? parseInt(req.query.blockNo, 10) : null;
-  await exportData(blockNo, "M");
-  const filePath = path.join(__dirname, "passes_students_data.csv");
-  res.download(filePath, "boys_passes_students_data.csv", (err) => {
-    if (err) {
-      console.error("Error sending file:", err);
-      res.status(500).send("Error sending file.");
-    }
-  });
+  await exportData(res, blockNo, "M");
 });
 
 // Girls' Hostel API
 app.get("/fetch/girls", async (req, res) => {
   const blockNo = req.query.blockNo ? parseInt(req.query.blockNo, 10) : null;
-  await exportData(blockNo, "F");
-  const filePath = path.join(__dirname, "passes_students_data.csv");
-  res.download(filePath, "girls_passes_students_data.csv", (err) => {
-    if (err) {
-      console.error("Error sending file:", err);
-      res.status(500).send("Error sending file.");
-    }
-  });
+  await exportData(res, blockNo, "F");
 });
 
 app.listen(port, () => {
