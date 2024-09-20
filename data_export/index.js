@@ -4,9 +4,7 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const moment = require("moment");
-const { type } = require("os");
 require("dotenv").config();
-
 
 const app = express();
 const port = 3000;
@@ -19,41 +17,6 @@ const studentCollectionName = "students";
 function formatDate(date) {
   return moment(date).format("DD-MM-YYYY hh:mm A");
 }
-
-const csvWriter = createCsvWriter({
-  path: "passes_students_data.csv",
-  header: [
-    { id: "studentId", title: "Student ID" },
-    { id: "type", title: "Type" },
-    { id: "reason", title: "Reason" },
-    { id: "status", title: "Status" },
-    { id: "destination", title: "Destination" },
-    { id: "isActive", title: "Is Active" },
-    { id: "approvedBy", title: "Approved By" },
-    { id: "confirmedWith", title: "Confirmed With" },
-    { id: "expectedOut", title: "Expected Out" },
-    { id: "expectedIn", title: "Expected In" },
-    { id: "isSpecialPass", title: "Is Special Pass" },
-    { id: "exitScanAt", title: "Exit Scan At" },
-    { id: "exitScanBy", title: "Exit Scan By" },
-    { id: "entryScanAt", title: "Entry Scan At" },
-    { id: "entryScanBy", title: "Entry Scan By" },
-    // Student fields
-    { id: "username", title: "Student Name" },
-    { id: "gender", title: "Gender" },
-    { id: "regNo", title: "Registration Number" },
-    { id: "phNo", title: "Phone Number" },
-    { id: "fatherName", title: "Father Name" },
-    { id: "motherName", title: "Mother Name" },
-    { id: "fatherPhNo", title: "Father Phone Number" },
-    { id: "motherPhNo", title: "Mother Phone Number" },
-    { id: "dept", title: "Department" },
-    { id: "year", title: "Year" },
-    { id: "section", title: "Section" },
-    { id: "blockNo", title: "Block Number" },
-    { id: "roomNo", title: "Room Number" },
-  ],
-});
 
 async function exportData(blockNoFilter, genderFilter) {
   const client = new MongoClient(url, {
@@ -68,6 +31,7 @@ async function exportData(blockNoFilter, genderFilter) {
 
     const filePath = "passes_students_data.csv";
 
+    // If the file exists, delete it to prevent appending to old data
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
@@ -80,52 +44,98 @@ async function exportData(blockNoFilter, genderFilter) {
     if (blockNoFilter) {
       studentQuery.blockNo = blockNoFilter;
     }
-    console.log(studentQuery);
 
+    // Fetch all passes
     const passes = await passCollection.find().toArray();
-    let records = [];
 
-    console.log(passes.length);
-    for (const pass of passes) {
-      const student = await studentCollection.findOne({
-        studentId: pass.studentId,
-        ...studentQuery,
-      });
+    // Collect all studentIds from the passes
+    const studentIds = passes.map(pass => pass.studentId);
 
-      if (student) {
-        const combinedData = {
-          studentId: pass.studentId,
-          type: pass.type,
-          reason: pass.reason,
-          status: pass.status,
-          destination: pass.destination,
-          isActive: pass.isActive,
-          approvedBy: pass.approvedBy,
-          confirmedWith: pass.confirmedWith,
-          expectedOut: formatDate(pass.expectedOut),
-          expectedIn: formatDate(pass.expectedIn),
-          isSpecialPass: pass.isSpecialPass,
-          exitScanAt: formatDate(pass.exitScanAt),
-          exitScanBy: pass.exitScanBy,
-          entryScanAt: formatDate(pass.entryScanAt),
-          entryScanBy: pass.entryScanBy,
-          username: student.username,
-          gender: student.gender,
-          regNo: student.regNo,
-          phNo: student.phNo,
-          fatherName: student.fatherName,
-          motherName: student.motherName,
-          fatherPhNo: student.fatherPhNo,
-          motherPhNo: student.motherPhNo,
-          dept: student.dept,
-          year: student.year,
-          section: student.section,
-          blockNo: student.blockNo,
-          roomNo: student.roomNo,
-        };
-        records.push(combinedData);
-      }
-    }
+    // Query all students in bulk using $in operator
+    const students = await studentCollection
+      .find({ studentId: { $in: studentIds }, ...studentQuery })
+      .toArray();
+
+    // Create a map of studentId to student data for fast lookup
+    const studentMap = students.reduce((map, student) => {
+      map[student.studentId] = student;
+      return map;
+    }, {});
+
+    // Prepare the combined data
+    const records = passes
+      .map(pass => {
+        const student = studentMap[pass.studentId];
+        if (student) {
+          return {
+            studentId: pass.studentId,
+            type: pass.type,
+            reason: pass.reason,
+            status: pass.status,
+            destination: pass.destination,
+            isActive: pass.isActive,
+            approvedBy: pass.approvedBy,
+            confirmedWith: pass.confirmedWith,
+            expectedOut: formatDate(pass.expectedOut),
+            expectedIn: formatDate(pass.expectedIn),
+            isSpecialPass: pass.isSpecialPass,
+            exitScanAt: formatDate(pass.exitScanAt),
+            exitScanBy: pass.exitScanBy,
+            entryScanAt: formatDate(pass.entryScanAt),
+            entryScanBy: pass.entryScanBy,
+            username: student.username,
+            gender: student.gender,
+            regNo: student.regNo,
+            phNo: student.phNo,
+            fatherName: student.fatherName,
+            motherName: student.motherName,
+            fatherPhNo: student.fatherPhNo,
+            motherPhNo: student.motherPhNo,
+            dept: student.dept,
+            year: student.year,
+            section: student.section,
+            blockNo: student.blockNo,
+            roomNo: student.roomNo,
+          };
+        }
+        return null;
+      })
+      .filter(record => record !== null); // Filter out any null records (passes without matching students)
+
+    // Create a new CSV writer for each export to ensure headers are written first
+    const csvWriter = createCsvWriter({
+      path: filePath,
+      header: [
+        { id: "studentId", title: "Student ID" },
+        { id: "type", title: "Type" },
+        { id: "reason", title: "Reason" },
+        { id: "status", title: "Status" },
+        { id: "destination", title: "Destination" },
+        { id: "isActive", title: "Is Active" },
+        { id: "approvedBy", title: "Approved By" },
+        { id: "confirmedWith", title: "Confirmed With" },
+        { id: "expectedOut", title: "Expected Out" },
+        { id: "expectedIn", title: "Expected In" },
+        { id: "isSpecialPass", title: "Is Special Pass" },
+        { id: "exitScanAt", title: "Exit Scan At" },
+        { id: "exitScanBy", title: "Exit Scan By" },
+        { id: "entryScanAt", title: "Entry Scan At" },
+        { id: "entryScanBy", title: "Entry Scan By" },
+        { id: "username", title: "Student Name" },
+        { id: "gender", title: "Gender" },
+        { id: "regNo", title: "Registration Number" },
+        { id: "phNo", title: "Phone Number" },
+        { id: "fatherName", title: "Father Name" },
+        { id: "motherName", title: "Mother Name" },
+        { id: "fatherPhNo", title: "Father Phone Number" },
+        { id: "motherPhNo", title: "Mother Phone Number" },
+        { id: "dept", title: "Department" },
+        { id: "year", title: "Year" },
+        { id: "section", title: "Section" },
+        { id: "blockNo", title: "Block Number" },
+        { id: "roomNo", title: "Room Number" },
+      ],
+    });
 
     if (records.length > 0) {
       await csvWriter.writeRecords(records);
