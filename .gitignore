@@ -61,3 +61,4 @@ frontend/.env
 /backup/.env
 /backup/node_modules
 /backup/package-lock.json
+/backup/backups
