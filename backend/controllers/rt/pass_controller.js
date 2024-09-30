@@ -7,14 +7,23 @@ const Pass = require("../../models/pass_model");
 const QR = require("../../models/qr_model");
 const Student = require("../../models/student_model");
 const Rt = require("../../models/rt_model");
-const {v4: uuidv4} = require("uuid");
-const {aesEncrypt, aesDecrypt} = require("../../utils/aes");
+const { v4: uuidv4 } = require("uuid");
+const { aesEncrypt, aesDecrypt } = require("../../utils/aes");
+const nodemailer = require("nodemailer");
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL,
+    pass: process.env.PASSWD,
+  },
+});
 
 router.get("/getPass", async (req, res) => {
-    try {
-        const rt = await Rt.findOne({
-            uid: req.body.USER_uid,
-        });
+  try {
+    const rt = await Rt.findOne({
+      uid: req.body.USER_uid,
+    });
 
     if (!rt) {
       return res.status(404).json({ message: "Rt not found" });
@@ -42,18 +51,18 @@ router.get("/getPass", async (req, res) => {
           roomNo: student.roomNo,
           blockNo: student.blockNo,
           year: student.year,
-            isLate:
-                pass.type === "GatePass"
-                    ? new Date(pass.entryScanAt).getTime() >
-                    new Date(pass.expectedIn).getTime() + 60 * 60000
-                    : new Date().getTime() >
-                    getEndOfDay(pass.expectedIn).getTime(),
-            isExceeding:
-                pass.type === "GatePass"
-                    ? new Date().getTime() >
-                    new Date(pass.expectedIn).getTime() + 3 * 60 * 60000
-                    : new Date().getTime() >
-                    getEndOfDay(pass.expectedIn).getTime(),
+          isLate:
+            pass.type === "GatePass"
+              ? new Date(pass.entryScanAt).getTime() >
+              new Date(pass.expectedIn).getTime() + 60 * 60000
+              : new Date().getTime() >
+              getEndOfDay(pass.expectedIn).getTime(),
+          isExceeding:
+            pass.type === "GatePass"
+              ? new Date().getTime() >
+              new Date(pass.expectedIn).getTime() + 3 * 60 * 60000
+              : new Date().getTime() >
+              getEndOfDay(pass.expectedIn).getTime(),
         });
       }
 
@@ -94,14 +103,14 @@ router.get("/getPass", async (req, res) => {
       return true;
     });
 
-        passes.sort((a, b) => {
-            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-        });
+    passes.sort((a, b) => {
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
 
-        res.json({data: passes});
-    } catch (error) {
-        res.status(500).json({message: "Internal Server Error"});
-    }
+    res.json({ data: passes });
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 });
 // router.get("/getPass", async (req, res) => {
 //   try {
@@ -148,6 +157,103 @@ router.post("/approvePass", async (req, res) => {
     if (!pass) {
       return res.status(404).json({ message: "Pass not found" });
     }
+    const user = await User.findOne({ uid: pass.uid });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const approvalMailOptions = {
+      from: process.env.EMAIL,
+      to: user.email,
+      subject: "Pass Request Approved",
+      html: `
+      <html>
+      <head>
+        <style>
+      body {
+        font-family: 'Arial', sans-serif;
+        background-color: #fffbff;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #fffbff;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .header {
+        background-color: #a0f57d;
+        color: #000;
+        text-align: center;
+        padding: 20px;
+      }
+
+      .content {
+        padding: 30px;
+        text-align: center;
+      }
+
+      .content h2 {
+        color: #4CAF50;
+      }
+
+      .pass-details {
+        font-size: 18px;
+        color: #333333;
+        margin-top: 20px;
+      }
+
+      .footer {
+        background-color: #eeeeee;
+        padding: 10px;
+        text-align: center;
+        font-size: 12px;
+      }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>SVCE Hostel Management System</h1>
+          </div>
+          <div class="content">
+            <h2>Hi ${user.username},</h2>
+            <p>Your pass request has been <strong style="color: #4CAF50;">APPROVED</strong> by ${rtName}.</p>
+            <div class="pass-details">
+              <p><strong>Pass Type:</strong> ${pass.type}</p>
+              <p><strong>Leaving Time:</strong> ${new Date(pass.expectedOut).toLocaleString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true
+      })}</p>
+              <p><strong>Returning Time:</strong> ${new Date(pass.expectedIn).toLocaleString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true
+      })}</p>
+            </div>
+            <p>Please present the QR code generated in the app at the main gate before your departure.</p>
+          </div>
+          <div class="footer">
+            <p>If you have any questions, feel free to reach out at <a href="mailto:svcehostel@svce.ac.in">svcehostel@svce.ac.in</a></p>
+          </div>
+        </div>
+      </body>
+    </html>`,
+    };
+    await transporter.sendMail(approvalMailOptions);
     res.json(pass);
   } catch (error) {
     console.error("Error approving pass:", error);
@@ -171,6 +277,84 @@ router.post("/rejectPass", async (req, res) => {
     if (!pass) {
       return res.status(404).json({ message: "Pass not found" });
     }
+    const user = await User.findOne({ uid: pass.uid });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const rejectionMailOptions = {
+      from: process.env.EMAIL,
+      to: user.email,
+      subject: "Pass Request Rejected",
+      html: `
+      <html>
+      <head>
+        <style>
+          body {
+            font-family: 'Arial', sans-serif;
+            background-color: #fffbff;
+            margin: 0;
+            padding: 0;
+          }
+    
+          .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fffbff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          }
+    
+          .header {
+            background-color: #f57d7d;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+          }
+    
+          .content {
+            padding: 30px;
+            text-align: center;
+          }
+    
+          .content h2 {
+            color: #e43f3f;
+          }
+    
+          .pass-details {
+            font-size: 18px;
+            color: #333333;
+            margin-top: 20px;
+          }
+    
+          .footer {
+            background-color: #eeeeee;
+            padding: 10px;
+            text-align: center;
+            font-size: 12px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>SVCE Hostel Management System</h1>
+          </div>
+          <div class="content">
+            <h2>Hi ${user.username},</h2>
+            <p>We regret to inform you that your pass request has been <strong style="color: #e43f3f;">REJECTED</strong> by ${rtName}.</p>
+            <div class="pass-details">
+              <p><strong>Pass Type:</strong> ${pass.type}</p>
+            </div>
+            <p>Please contact ${rtName} for further details.</p>
+          </div>
+          <div class="footer">
+            <p>If you have any questions, feel free to reach at <a href="mailto:svcehostel@svce.ac.in">svcehostel@svce.ac.in</a></p>
+          </div>
+        </div>
+      </body>
+    </html>`,
+    };
     res.json(pass);
   } catch (error) {
     console.error("Error rejecting pass:", error);
