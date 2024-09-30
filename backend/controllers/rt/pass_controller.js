@@ -355,6 +355,7 @@ router.post("/rejectPass", async (req, res) => {
       </body>
     </html>`,
     };
+    await transporter.sendMail(rejectionMailOptions);
     res.json(pass);
   } catch (error) {
     console.error("Error rejecting pass:", error);
