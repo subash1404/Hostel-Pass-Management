@@ -18,6 +18,11 @@ const checkAuth = require("./middleware/checkAuth");
 const Miscellaneous = require("./models/miscellaneous_model");
 const path = require("path");
 const fs = require("fs");
+const Pass = require("./models/pass_model");
+const cron = require("node-cron");
+const Student = require("./models/student_model")
+
+
 
 process.env.TZ = "Asia/Kolkata";
 
@@ -63,7 +68,7 @@ app.get("/miscellaneous", async (req, res) => {
 });
 
 app.get("/getBranch", (req, res) => {
-  res.json({branch: "main"});
+  res.json({ branch: "main" });
 });
 
 app.get("/getTime", (req, res) => {
@@ -90,3 +95,39 @@ app.use("/student", checkAuth, studentRoute);
 app.use("/warden", checkAuth, wardenRoute);
 app.use("/rt", checkAuth, rtRoute);
 app.use("/security", checkAuth, securityRoute);
+
+function getEndOfDay(date) {
+  const endOfDay = new Date(date);
+  endOfDay.setHours(23, 59, 59, 999);
+  return endOfDay;
+}
+
+cron.schedule('1 0 * * *', async () => {
+  try {
+    const passes = await Pass.find({
+      isActive: true,
+      status: { $in: ["Approved", "Pending"] },
+    });
+
+    for (let pass of passes) {
+      // if (pass.status === "Approved" || pass.status === "Pending") {
+        const expectedOutTime = new Date(pass.expectedOut).getTime();
+        const qrEndTime = getEndOfDay(expectedOutTime).getTime();
+
+        if (Date.now() > qrEndTime) {
+          pass.isActive = false;
+          pass.status = "Expired";
+
+          await Pass.findOneAndUpdate(
+            { passId: pass.passId },
+            { isActive: false, status: "Expired" }
+          );
+
+          console.log(`Pass with ID: ${pass.passId} marked as Expired.`);
+        }
+      // }
+    }
+  } catch (error) {
+    console.error("Error updating expired passes:", error);
+  }
+});
