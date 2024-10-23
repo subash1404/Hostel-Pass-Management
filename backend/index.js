@@ -21,6 +21,8 @@ const fs = require("fs");
 const Pass = require("./models/pass_model");
 const cron = require("node-cron");
 const Student = require("./models/student_model")
+const User = require("./models/user_model")
+const nodemailer = require("nodemailer");
 
 
 
@@ -29,6 +31,14 @@ process.env.TZ = "Asia/Kolkata";
 app.use(helmet());
 app.use(cors());
 app.use(bodyParser.json());
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL,
+    pass: process.env.PASSWD,
+  },
+});
 
 app.use("/test", (req, res) => {
   res.json({ message: "Hello from server" });
@@ -109,22 +119,116 @@ cron.schedule('1 0 * * *', async () => {
       status: { $in: ["Approved", "Pending"] },
     });
 
+
     for (let pass of passes) {
       // if (pass.status === "Approved" || pass.status === "Pending") {
-        const expectedOutTime = new Date(pass.expectedOut).getTime();
-        const qrEndTime = getEndOfDay(expectedOutTime).getTime();
-
-        if (Date.now() > qrEndTime) {
-          pass.isActive = false;
-          pass.status = "Expired";
-
-          await Pass.findOneAndUpdate(
-            { passId: pass.passId },
-            { isActive: false, status: "Expired" }
-          );
-
-          console.log(`Pass with ID: ${pass.passId} marked as Expired.`);
-        }
+      const expectedOutTime = new Date(pass.expectedOut).getTime();
+      const qrEndTime = getEndOfDay(expectedOutTime).getTime();
+      
+      if (Date.now() > qrEndTime) {
+        pass.isActive = false;
+        pass.status = "Expired";
+        console.log(pass);
+        await Pass.findOneAndUpdate(
+          { passId: pass.passId },
+          { isActive: false, status: "Expired" }
+        );
+        const user = await User.findOne({ uid: pass.uid });
+        const expiredMailOptions = {
+          from: process.env.EMAIL,
+          to: user.email,
+          subject: "Pass Expired Notification",
+          html: `
+          <html>
+          <head>
+            <style>
+              body {
+                font-family: 'Arial', sans-serif;
+                background-color: #fffbff;
+                margin: 0;
+                padding: 0;
+              }
+        
+              .container {
+                max-width: 600px;
+                margin: 0 auto;
+                background-color: #fffbff;
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+              }
+        
+              .header {
+                background-color: #f57d7d;
+                color: #ffffff;
+                text-align: center;
+                padding: 20px;
+              }
+        
+              .content {
+                padding: 30px;
+                text-align: center;
+              }
+        
+              .content h2 {
+                color: #e43f3f;
+              }
+        
+              .pass-details {
+                font-size: 18px;
+                color: #333333;
+                margin-top: 20px;
+              }
+        
+              .footer {
+                background-color: #eeeeee;
+                padding: 10px;
+                text-align: center;
+                font-size: 12px;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <h1>SVCE Hostel Management System</h1>
+              </div>
+              <div class="content">
+                <h2>Hi ${user.username},</h2>
+                <p>Your pass has <strong style="color: #ff4d4f;">EXPIRED</strong>.</p>
+                <div class="pass-details">
+                  <p><strong>Pass Type:</strong> ${pass.type}</p>
+                  <p><strong>Destination:</strong> ${pass.destination}</p>
+                                <p><strong>Leaving Time:</strong> ${new Date(pass.expectedOut).toLocaleString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true
+      })}</p>
+              <p><strong>Returning Time:</strong> ${new Date(pass.expectedIn).toLocaleString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true
+      })}</p>
+                </div>
+                <p>Unfortunately, your pass has expired. If you need a new pass, please submit a new request.</p>
+              </div>
+              <div class="footer">
+                <p>If you have any questions, feel free to reach at <a href="mailto:svcehostel@svce.ac.in">svcehostel@svce.ac.in</a></p>
+              </div>
+            </div>
+          </body>
+        </html>`,
+        };
+        await transporter.sendMail(expiredMailOptions)
+      }
       // }
     }
   } catch (error) {

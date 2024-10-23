@@ -225,6 +225,7 @@ router.post("/approvePass", async (req, res) => {
             <p>Your pass request has been <strong style="color: #4CAF50;">APPROVED</strong> by ${rtName}.</p>
             <div class="pass-details">
               <p><strong>Pass Type:</strong> ${pass.type}</p>
+              <p><strong>Destination:</strong> ${pass.destination}</p>
               <p><strong>Leaving Time:</strong> ${new Date(pass.expectedOut).toLocaleString('en-US', {
         weekday: 'long',
         year: 'numeric',
@@ -345,6 +346,25 @@ router.post("/rejectPass", async (req, res) => {
             <p>We regret to inform you that your pass request has been <strong style="color: #e43f3f;">REJECTED</strong> by ${rtName}.</p>
             <div class="pass-details">
               <p><strong>Pass Type:</strong> ${pass.type}</p>
+              <p><strong>Destination:</strong> ${pass.destination}</p>
+                            <p><strong>Leaving Time:</strong> ${new Date(pass.expectedOut).toLocaleString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true
+      })}</p>
+              <p><strong>Returning Time:</strong> ${new Date(pass.expectedIn).toLocaleString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true
+      })}</p>
             </div>
             <p>Please contact ${rtName} for further details.</p>
           </div>
