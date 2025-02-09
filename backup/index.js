@@ -17,7 +17,7 @@ process.env.TZ = "Asia/Kolkata";
 
 
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect("mongodb+srv://NaveenAkash:09naveen@cluster0.3n8lzcq.mongodb.net/outpass?retryWrites=true")
   .then(async () => {
     app.listen(3000, () => {
       console.log("Server running on port 3000");
