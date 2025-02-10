@@ -5,7 +5,8 @@
       "src": "./index.js",
       "use": "@vercel/node",
       "config": {
-        "maxDuration": 120
+        "maxDuration": 30,
+        "serverTimeout": 30
       }
     }
   ],
