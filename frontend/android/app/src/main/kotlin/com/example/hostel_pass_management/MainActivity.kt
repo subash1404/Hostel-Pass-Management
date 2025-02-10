@@ -1,4 +1,4 @@
-package com.example.hostel_pass_management
+package com.svce.hostel_pass
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -24,6 +24,11 @@ data_export/node_modules/
 data_export/outpass*.json
 data_export/.env
 
+#image compressor
+image_compressor/package-lock.json
+image_compressor/node_modules/
+image_compressor/.env
+
 
 
 # The .vscode folder contains launch configuration and tasks you configure in
