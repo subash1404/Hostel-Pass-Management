@@ -7,83 +7,76 @@ const {aesEncrypt, aesDecrypt} = require("../../utils/aes");
 
 router.get("/getPass", async (req, res) => {
     try {
-        const allStudents = await Student.find({});
+        const passes = await Pass.aggregate([
+            {
+                $lookup: {
+                    from: "students",
+                    localField: "studentId",
+                    foreignField: "studentId",
+                    as: "studentInfo",
+                },
+            },
+            {
+                $unwind: "$studentInfo",
+            },
+        ]);
 
-        let passes = [];
-        for (const student of allStudents) {
-            const studentPasses = await Pass.find({
-                studentId: student.studentId,
-                // isSpecialPass: true,
-            });
+        const currentTime = Date.now();
+        const updatedPasses = [];
 
-            for (const pass of studentPasses) {
-                passes.push({
-                    ...pass._doc,
-                    studentName: student.username,
-                    gender: student.gender,
-                    dept: student.dept,
-                    fatherPhNo: student.fatherPhNo,
-                    motherPhNo: student.motherPhNo,
-                    phNo: student.phNo,
-                    blockNo: student.blockNo,
-                    roomNo: student.roomNo,
-                    year: student.year,
-                    isLate:
-                        pass.type === "GatePass"
-                            ? new Date(pass.entryScanAt).getTime() >
-                            new Date(pass.expectedIn).getTime() + 60 * 60000
-                            : new Date().getTime() >
-                            getEndOfDay(pass.expectedIn).getTime(),
-                    isExceeding:
-                        pass.type === "GatePass"
-                            ? new Date().getTime() >
-                            new Date(pass.expectedIn).getTime() + 3 * 60 * 60000
-                            : new Date().getTime() >
-                            getEndOfDay(pass.expectedIn).getTime(),
-                });
-            }
-        }
+        for (const pass of passes) {
+            const isLate =
+                pass.type === "GatePass"
+                    ? new Date(pass.entryScanAt).getTime() >
+                    new Date(pass.expectedIn).getTime() + 60 * 60000
+                    : currentTime > getEndOfDay(pass.expectedIn).getTime();
 
-        function getEndOfDay(date) {
-            const endOfDay = new Date(date);
-            endOfDay.setHours(23, 59, 59, 999);
-            return endOfDay;
-        }
+            const isExceeding =
+                pass.type === "GatePass"
+                    ? currentTime > new Date(pass.expectedIn).getTime() + 3 * 60 * 60000
+                    : currentTime > getEndOfDay(pass.expectedIn).getTime();
 
-        passes.filter(async (pass) => {
             if (pass.isActive) {
-                pass.qrId = aesEncrypt(pass.qrId, process.env.AES_KEY);
                 if (pass.status === "Approved" || pass.status === "Pending") {
-                    const expectedOutTime = new Date(pass.expectedOut).getTime();
-                    const qrEndTime = getEndOfDay(expectedOutTime).getTime();
-                    // console.log(Date.now());
-                    // console.log(qrEndTime);
-                    // const timestamp = 1715192999999;
-                    // const date = new Date(timestamp);
-                    // console.log(date.toString());
-                    if (Date.now() > qrEndTime) {
+                    const qrEndTime = getEndOfDay(new Date(pass.expectedOut)).getTime();
+                    if (currentTime > qrEndTime) {
                         pass.isActive = false;
                         pass.status = "Expired";
-                        // pass.save();
-                        console.log("rt");
                         await Pass.findOneAndUpdate(
-                            {passId: pass.passId},
-                            {isActive: false, status: "Expired"}
+                            { passId: pass.passId },
+                            { isActive: false, status: "Expired" }
                         );
-                        return false;
                     }
                 }
             }
-            return true;
-        });
 
-        passes.sort((a, b) => {
-            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-        });
+            updatedPasses.push({
+                ...pass,
+                studentName: pass.studentInfo.username,
+                gender: pass.studentInfo.gender,
+                dept: pass.studentInfo.dept,
+                fatherPhNo: pass.studentInfo.fatherPhNo,
+                motherPhNo: pass.studentInfo.motherPhNo,
+                phNo: pass.studentInfo.phNo,
+                blockNo: pass.studentInfo.blockNo,
+                roomNo: pass.studentInfo.roomNo,
+                year: pass.studentInfo.year,
+                isLate,
+                isExceeding,
+            });
+        }
 
-        res.json(passes);
+        updatedPasses.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+        res.json(updatedPasses);
     } catch (error) {
-        res.status(500).json({message: "Internal Server Error"});
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+
+    function getEndOfDay(date) {
+        const endOfDay = new Date(date);
+        endOfDay.setHours(23, 59, 59, 999);
+        return endOfDay;
     }
 });
 
