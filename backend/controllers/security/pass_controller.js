@@ -82,17 +82,24 @@ router.get("/getDetails/:qrData", async (req, res) => {
 
 router.get("/getPass", async (req, res) => {
   try {
-    const allStudents = await Student.find({});
+    const students = await Student.find(
+      {},
+      "studentId username gender dept fatherPhNo motherPhNo phNo blockNo roomNo year"
+    );
 
-    let passes = [];
-    for (const student of allStudents) {
-      const studentPasses = await Pass.find({
-        studentId: student.studentId,
-        // isSpecialPass: true,
-      });
+    const studentMap = new Map();
+    students.forEach((student) => {
+      studentMap.set(student.studentId, student);
+    });
 
-      for (const pass of studentPasses) {
-        passes.push({
+    const allPasses = await Pass.find({});
+
+    const passes = allPasses
+      .map((pass) => {
+        const student = studentMap.get(pass.studentId);
+        if (!student) return null;
+
+        return {
           ...pass._doc,
           studentName: student.username,
           gender: student.gender,
@@ -104,30 +111,29 @@ router.get("/getPass", async (req, res) => {
           roomNo: student.roomNo,
           year: student.year,
           isLate:
-              pass.type === "GatePass"
-                  ? new Date(pass.entryScanAt).getTime() >
-                  new Date(pass.expectedIn).getTime() + 60 * 60000
-                  : new Date().getTime() >
-                  getEndOfDay(pass.expectedIn).getTime(),
+            pass.type === "GatePass"
+              ? new Date(pass.entryScanAt).getTime() >
+                new Date(pass.expectedIn).getTime() + 60 * 60000
+              : new Date().getTime() > getEndOfDay(pass.expectedIn).getTime(),
           isExceeding:
-              pass.type === "GatePass"
-                  ? new Date().getTime() >
-                  new Date(pass.expectedIn).getTime() + 3 * 60 * 60000
-                  : new Date().getTime() >
-                  getEndOfDay(pass.expectedIn).getTime(),
-        });
-      }
-    }
-
-    passes.sort((a, b) => {
-      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-    });
+            pass.type === "GatePass"
+              ? new Date().getTime() >
+                new Date(pass.expectedIn).getTime() + 3 * 60 * 60000
+              : new Date().getTime() > getEndOfDay(pass.expectedIn).getTime(),
+        };
+      })
+      .filter(Boolean);
+    passes.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
 
     res.json(passes);
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
 
 router.post("/confirmScan/:qrData", async (req, res) => {
   const qrId = aesDecrypt(req.params.qrData, process.env.AES_KEY);
